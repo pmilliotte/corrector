@@ -1,0 +1,10 @@
+{
+  "hosted-zone:account=058290060730:domainName=app.corrector.fr:region=eu-west-1": {
+    "Id": "/hostedzone/Z10198591MZOIMDBJIW5C",
+    "Name": "app.corrector.fr."
+  },
+  "hosted-zone:account=058290060730:domainName=app.staging.corrector.fr:region=eu-west-1": {
+    "Id": "/hostedzone/Z0841892RJ9D99DQI8DC",
+    "Name": "app.staging.corrector.fr."
+  }
+}

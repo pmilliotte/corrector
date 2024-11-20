@@ -1,0 +1,18 @@
+{
+  "name": "@corrector/backend-shared",
+  "version": "0.0.0",
+  "scripts": {
+    "test": "sst bind vitest",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "circular": "pnpm depcruise --validate .dependency-cruiser.js ."
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.5",
+    "dependency-cruiser": "^16.3.0",
+    "vitest": "^1.4.0"
+  },
+  "dependencies": {
+    "sst": "^2.41.4"
+  }
+}

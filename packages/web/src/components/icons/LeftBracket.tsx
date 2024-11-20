@@ -1,0 +1,25 @@
+import { HTMLAttributes, ReactElement } from 'react';
+
+import { cn } from '~/lib';
+
+export const LeftBracket = (
+  props: HTMLAttributes<Element> & { height?: number },
+): ReactElement => (
+  <div
+    className={`${cn(props.className)} relative`}
+    style={{
+      height: props.height,
+      width:
+        props.height === undefined ? undefined : Math.ceil(props.height / 5),
+    }}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      version="1.1"
+      viewBox="0 0 20 100"
+      className="absolute top-0 right-0 left-0 bottom-0"
+    >
+      <path d="m 7.5,50 a 5,5 0 0 0 5,-5 v -30 a 5,10 0 0 1 5,-10 a 10,10 0 0 0 -10,10 v 30 a 5,5 0 0 1 -5,5 a 5,5 0 0 1 5,5 v 30 a 10,10 0 0 0 10,10 a 5,10 0 0 1 -5,-10 v -30 a 5,5 0 0 0 -5,-5 z" />
+    </svg>
+  </div>
+);
