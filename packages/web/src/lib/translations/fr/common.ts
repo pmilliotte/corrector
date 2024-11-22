@@ -28,6 +28,8 @@ export const commonMessages = {
     products: 'Abonnement',
     sidebar: {
       organization: "Organisation de l'espace",
+      products: 'Mes documents',
+      exam: 'Examens',
       exams: 'Mes devoirs',
       space: 'Espace',
       people: 'Personnes',

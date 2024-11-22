@@ -1,5 +1,5 @@
 import flatMap from 'lodash/flatMap';
-import { Network, Settings, Users } from 'lucide-react';
+import { BookCheck, Network, Settings, Users } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 import { AppRoute } from '../constants';
@@ -14,7 +14,6 @@ export const useSidebarItems = (): {
   const { pathname } = useLocation();
   const groups: SidebarGroup[] = [
     {
-      className: '',
       title: t.formatMessage({ id: 'common.sidebar.organization' }),
       displayTitle: true,
       items: [
@@ -27,6 +26,17 @@ export const useSidebarItems = (): {
           title: t.formatMessage({ id: 'common.sidebar.divisions' }),
           url: AppRoute.Divisions,
           icon: Network,
+        },
+      ],
+    },
+    {
+      title: t.formatMessage({ id: 'common.sidebar.products' }),
+      displayTitle: true,
+      items: [
+        {
+          title: t.formatMessage({ id: 'common.sidebar.exam' }),
+          url: AppRoute.Exams,
+          icon: BookCheck,
         },
       ],
     },

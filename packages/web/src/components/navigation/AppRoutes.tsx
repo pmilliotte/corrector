@@ -5,6 +5,7 @@ import { AppRoute } from '~/lib';
 import {
   Divisions,
   Error,
+  Exams,
   Home,
   Login,
   NotFound,
@@ -23,6 +24,7 @@ export const AppRoutes = (): ReactElement => (
           <Route path={AppRoute.People} element={<People />} />
           <Route path={AppRoute.Divisions} element={<Divisions />} />
           <Route path={AppRoute.Settings} element={<Settings />} />
+          <Route path={AppRoute.Exams} element={<Exams />} />
           <Route path={AppRoute.NotFound} element={<NotFound />} />
           <Route path={AppRoute.Error} element={<Error />} />
         </>

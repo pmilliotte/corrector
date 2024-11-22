@@ -9,4 +9,5 @@ export enum AppRoute {
   People = '/people',
   Divisions = '/divisions',
   Settings = '/settings',
+  Exams = '/exams',
 }

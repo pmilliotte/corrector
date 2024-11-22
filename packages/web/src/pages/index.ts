@@ -5,3 +5,4 @@ export * from './NotFound';
 export * from './People';
 export * from './Divisions';
 export * from './Settings';
+export * from './Exams';
