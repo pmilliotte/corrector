@@ -1,6 +1,6 @@
 import type { SSTConfig } from 'sst';
 
-import { Core, Web } from './stacks';
+import { Core, Exam, Web } from './stacks';
 
 export default {
   config: _input => ({
@@ -15,6 +15,7 @@ export default {
     });
 
     app.stack(Core);
+    app.stack(Exam);
     app.stack(Web);
   },
 } satisfies SSTConfig;

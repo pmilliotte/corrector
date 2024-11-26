@@ -23,3 +23,4 @@ export * from './checkbox';
 export * from './sheet';
 export * from './sidebar';
 export * from './breadcrumb';
+export * from './scroll-area';

@@ -26,6 +26,8 @@ export const commonMessages = {
     male: 'Masculin',
     female: 'Féminin',
     products: 'Abonnement',
+    delete: 'Supprimer',
+    upload: 'Télécharger',
     sidebar: {
       organization: "Organisation de l'espace",
       products: 'Mes documents',
@@ -34,6 +36,9 @@ export const commonMessages = {
       space: 'Espace',
       people: 'Personnes',
       divisions: 'Classes',
+    },
+    subjects: {
+      mathematics: 'Mathématiques',
     },
     personalSpace: 'Espace personnel',
     settings: 'Paramètres',

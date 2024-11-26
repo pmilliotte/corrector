@@ -6,6 +6,6 @@ import { AppRoute } from '~/lib';
 
 export const Home = (): ReactElement => (
   <Layout>
-    <Navigate to={AppRoute.People} />
+    <Navigate to={AppRoute.Exams} />
   </Layout>
 );

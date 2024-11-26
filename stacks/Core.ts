@@ -1,12 +1,15 @@
-// import { CfnUserPool } from 'aws-cdk-lib/aws-cognito';
 import { Api, Cognito, Function, StackContext, Table } from 'sst/constructs';
+
+import {
+  LSI1,
+  LSI1_SK,
+  PARTITION_KEY,
+  SORT_KEY,
+} from '@corrector/backend-shared';
 
 import { getDomain } from './utils/constants';
 
-// const EMAIL_SENDING_ADRESS = 'pierre@corrector.com';
-
 enum Route {
-  UserCreate = 'POST /userCreate',
   OrganizationsGet = 'GET /organizationsGet',
 }
 
@@ -24,19 +27,24 @@ export const Core = ({
     };
   }>;
   auth: Cognito;
-  usersTable: Table;
+  organizationTable: Table;
 } => {
-  const usersTable = new Table(stack, 'user', {
+  const organizationTable = new Table(stack, 'organization-table', {
     fields: {
-      id: 'string',
+      [PARTITION_KEY]: 'string',
+      [SORT_KEY]: 'string',
+      [LSI1_SK]: 'string',
     },
-    primaryIndex: { partitionKey: 'id' },
+    primaryIndex: { partitionKey: PARTITION_KEY, sortKey: SORT_KEY },
+    localIndexes: {
+      [LSI1]: { sortKey: LSI1_SK },
+    },
   });
 
   const preTokenGenerationTrigger = new Function(stack, 'PreTokenGeneration', {
     handler: 'packages/functions/src/core/functions/preTokenGeneration.handler',
   });
-  preTokenGenerationTrigger.bind([usersTable]);
+  preTokenGenerationTrigger.bind([organizationTable]);
 
   const auth = new Cognito(stack, 'users', {
     login: ['email'],
@@ -102,18 +110,10 @@ export const Core = ({
       authorizer: 'jwt',
     },
     routes: {
-      [Route.UserCreate]: {
-        function: {
-          handler: 'packages/functions/src/core/functions/index.handler',
-          environment: { USER_POOL_ID: auth.userPoolId },
-          permissions: ['cognito-idp:AdminCreateUser'],
-          bind: [usersTable, auth],
-        },
-      },
       [Route.OrganizationsGet]: {
         function: {
           handler: 'packages/functions/src/core/functions/index.handler',
-          bind: [usersTable],
+          bind: [organizationTable],
         },
       },
     },
@@ -131,6 +131,6 @@ export const Core = ({
   return {
     api,
     auth,
-    usersTable,
+    organizationTable,
   };
 };

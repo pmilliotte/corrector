@@ -51,17 +51,19 @@ export const OrganizationSwitcher = ({
             className="w-[--radix-dropdown-menu-trigger-width]"
             align="start"
           >
-            {userOrganizations.organizations.map(({ id, name }) => (
-              <DropdownMenuItem
-                key={id}
-                onSelect={() => setSelectedOrganizationId(id)}
-              >
-                {name}
-                {id === userOrganizations.selectedOrganization.id && (
-                  <Check className="ml-auto" />
-                )}
-              </DropdownMenuItem>
-            ))}
+            {userOrganizations.organizations
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map(({ id, name }) => (
+                <DropdownMenuItem
+                  key={id}
+                  onSelect={() => setSelectedOrganizationId(id)}
+                >
+                  {name}
+                  {id === userOrganizations.selectedOrganization.id && (
+                    <Check className="ml-auto" />
+                  )}
+                </DropdownMenuItem>
+              ))}
           </DropdownMenuContent>
         )}
       </DropdownMenu>

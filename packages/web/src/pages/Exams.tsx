@@ -1,13 +1,9 @@
 import { ReactElement } from 'react';
 
-import { Layout } from '~/components';
-import { Input, Label } from '~/components/ui';
+import { ExamsTable, Layout } from '~/components';
 
 export const Exams = (): ReactElement => (
   <Layout>
-    <>
-      <Label htmlFor="picture">Picture</Label>
-      <Input id="picture" type="file" />
-    </>
+    <ExamsTable />
   </Layout>
 );

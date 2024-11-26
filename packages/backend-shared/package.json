@@ -14,5 +14,8 @@
   },
   "dependencies": {
     "sst": "^2.41.4"
+  },
+  "peerDependencies": {
+    "@aws-sdk/client-sso-oidc": "^3.699.0"
   }
 }

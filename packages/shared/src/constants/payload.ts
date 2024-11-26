@@ -2,13 +2,16 @@ import { z } from 'zod';
 
 export const payloadOrganizationsSchema = z.record(
   z.string(),
-  z.object({
-    admin: z.boolean(),
-  }),
+  z.union([
+    z.object({
+      admin: z.boolean(),
+    }),
+    z.undefined(),
+  ]),
 );
 
 export const payloadSchema = z.object({
-  sub: z.string(),
+  userId: z.string(),
   given_name: z.string(),
   family_name: z.string(),
   email: z.string(),

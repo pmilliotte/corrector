@@ -10,7 +10,7 @@ export const getSession = (payload: { [key: string]: unknown }): Session => {
 
   return {
     email: parsedPayload.email,
-    id: parsedPayload.sub,
+    id: parsedPayload.userId,
     firstName: parsedPayload.given_name,
     lastName: parsedPayload.family_name,
     organizations: parsedOgranizations,

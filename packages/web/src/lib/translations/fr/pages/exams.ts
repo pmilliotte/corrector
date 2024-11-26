@@ -1,0 +1,30 @@
+export const examsMessages = {
+  exams: {
+    importExam: 'Télécharger le sujet',
+    dragAndDrop: 'Cliquer ou déposer le fichier ici',
+    name: 'Nom',
+    statement: 'Énoncé',
+    solution: 'Solution',
+    answers: 'Réponses',
+    created: 'Date',
+    title: 'Liste des examens',
+    noResults: 'Aucun résultat',
+    create: 'Créer un examen',
+    createDescription: 'Créer un examen avant de télécharger les documents.',
+    subject: 'Matière',
+    save: 'Enregistrer',
+    namePlaceholder: 'Examen blanc',
+    createdOn: 'Créé le {date}',
+    files: {
+      confirmDeletion: 'Supprimer définitivement le fichier ?',
+      upload: 'Télécharger le fichier.',
+      empty: 'Aucun fichier chargé',
+      title: 'Fichiers',
+      description:
+        "Télécharger les fichiers de l'examen nécessaires à sa correction.",
+      'exam-blank': 'Énoncé',
+      'exam-solutions': 'Solutions',
+      'exam-responses': 'Réponses',
+    },
+  },
+};

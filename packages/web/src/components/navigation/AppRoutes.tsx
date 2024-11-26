@@ -5,6 +5,7 @@ import { AppRoute } from '~/lib';
 import {
   Divisions,
   Error,
+  Exam,
   Exams,
   Home,
   Login,
@@ -13,6 +14,7 @@ import {
   Settings,
 } from '~/pages';
 
+import { Layout } from '../Layout';
 import { AuthenticationRequired } from './AuthenticationRequired';
 
 export const AppRoutes = (): ReactElement => (
@@ -24,6 +26,14 @@ export const AppRoutes = (): ReactElement => (
           <Route path={AppRoute.People} element={<People />} />
           <Route path={AppRoute.Divisions} element={<Divisions />} />
           <Route path={AppRoute.Settings} element={<Settings />} />
+          <Route
+            path={`${AppRoute.Exams}/:examId`}
+            element={
+              <Layout>
+                <Exam />
+              </Layout>
+            }
+          />
           <Route path={AppRoute.Exams} element={<Exams />} />
           <Route path={AppRoute.NotFound} element={<NotFound />} />
           <Route path={AppRoute.Error} element={<Error />} />

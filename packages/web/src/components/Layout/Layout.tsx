@@ -1,7 +1,12 @@
 import { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
-import { AppRoute, useOrganizations, useSidebarItems } from '~/lib';
+import {
+  AppRoute,
+  useOrganizations,
+  UserOrganizationsContext,
+  useSidebarItems,
+} from '~/lib';
 
 import {
   Breadcrumb,
@@ -61,7 +66,15 @@ export const Layout = ({ children }: LayoutProps): ReactElement => {
             </BreadcrumbList>
           </Breadcrumb>
         </header>
-        <div className="p-4">{children}</div>
+        <div className="p-4">
+          {userOrganizations === undefined ? (
+            <></>
+          ) : (
+            <UserOrganizationsContext.Provider value={userOrganizations}>
+              {children}
+            </UserOrganizationsContext.Provider>
+          )}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );
