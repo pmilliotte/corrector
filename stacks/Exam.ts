@@ -1,18 +1,20 @@
 import { StorageClass } from 'aws-cdk-lib/aws-s3';
 import { Duration } from 'aws-cdk-lib/core';
-import { Bucket, StackContext, Table, use } from 'sst/constructs';
+import { Bucket, Config, StackContext, Table, use } from 'sst/constructs';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
 
 import { Core } from './Core';
 
 enum Route {
-  PresignedUrlGet = 'POST /presignedUrlGet',
+  PresignedUrlGet = 'GET /presignedUrlGet',
+  PresignedUrlPost = 'POST /presignedUrlPost',
   ExamCreate = 'POST /examCreate',
   ExamList = 'GET /examList',
   ExamGet = 'GET /examGet',
   ExamFilesGet = 'GET /examFilesGet',
   ExamFileDelete = 'POST /examFileDelete',
+  ExamCorrect = 'POST /examCorrect',
 }
 
 export const Exam = ({ stack, app }: StackContext): void => {
@@ -45,8 +47,13 @@ export const Exam = ({ stack, app }: StackContext): void => {
     },
   });
 
+  const openAiApiKey = new Config.Secret(stack, 'OPENAI_API_KEY');
+  const openAiProjectId = new Config.Secret(stack, 'OPENAI_PROJECT_ID');
+
   api.addRoutes(stack, {
     [Route.PresignedUrlGet]:
+      'packages/functions/src/exam/functions/index.handler',
+    [Route.PresignedUrlPost]:
       'packages/functions/src/exam/functions/index.handler',
     [Route.ExamCreate]: 'packages/functions/src/exam/functions/index.handler',
     [Route.ExamList]: 'packages/functions/src/exam/functions/index.handler',
@@ -54,12 +61,20 @@ export const Exam = ({ stack, app }: StackContext): void => {
     [Route.ExamFilesGet]: 'packages/functions/src/exam/functions/index.handler',
     [Route.ExamFileDelete]:
       'packages/functions/src/exam/functions/index.handler',
+    [Route.ExamCorrect]: 'packages/functions/src/exam/functions/index.handler',
   });
 
   api.bindToRoute(Route.PresignedUrlGet, [examBucket, examTable]);
+  api.bindToRoute(Route.PresignedUrlPost, [examBucket, examTable]);
   api.bindToRoute(Route.ExamCreate, [examTable]);
   api.bindToRoute(Route.ExamList, [examTable]);
   api.bindToRoute(Route.ExamGet, [examTable]);
   api.bindToRoute(Route.ExamFilesGet, [examTable, examBucket]);
   api.bindToRoute(Route.ExamFileDelete, [examTable, examBucket]);
+  api.bindToRoute(Route.ExamCorrect, [
+    examTable,
+    examBucket,
+    openAiApiKey,
+    openAiProjectId,
+  ]);
 };

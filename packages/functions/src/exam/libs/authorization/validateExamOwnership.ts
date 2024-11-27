@@ -3,7 +3,7 @@ import { GetItemCommand } from 'dynamodb-toolbox';
 
 import { Session } from '@corrector/shared';
 
-import { ExamEntity } from '../entities';
+import { Exam, ExamEntity } from '../entities';
 
 export const validateExamOwnership = async (
   {
@@ -14,7 +14,7 @@ export const validateExamOwnership = async (
     examId: string;
   },
   session: Session,
-): Promise<void> => {
+): Promise<Exam> => {
   const { Item: exam } = await ExamEntity.build(GetItemCommand)
     .key({ id: examId, organizationId })
     .send();
@@ -22,4 +22,6 @@ export const validateExamOwnership = async (
   if (exam === undefined || exam.userId !== session.id) {
     throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
+
+  return exam;
 };

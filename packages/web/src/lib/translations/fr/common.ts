@@ -40,6 +40,10 @@ export const commonMessages = {
     subjects: {
       mathematics: 'Mathématiques',
     },
+    divisions: {
+      '9': 'Troisième',
+      '10': 'Seconde',
+    },
     personalSpace: 'Espace personnel',
     settings: 'Paramètres',
   },

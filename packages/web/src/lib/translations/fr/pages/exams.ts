@@ -12,9 +12,16 @@ export const examsMessages = {
     create: 'Créer un examen',
     createDescription: 'Créer un examen avant de télécharger les documents.',
     subject: 'Matière',
+    division: 'Niveau',
     save: 'Enregistrer',
     namePlaceholder: 'Examen blanc',
     createdOn: 'Créé le {date}',
+    correct: 'Corriger',
+    tabs: {
+      files: 'Fichiers',
+      marks: 'Notation',
+      correction: 'Correction',
+    },
     files: {
       confirmDeletion: 'Supprimer définitivement le fichier ?',
       upload: 'Télécharger le fichier.',
@@ -25,6 +32,11 @@ export const examsMessages = {
       'exam-blank': 'Énoncé',
       'exam-solutions': 'Solutions',
       'exam-responses': 'Réponses',
+    },
+    marks: {
+      title: 'Notation',
+      description: 'Valider les questions et le barême.',
+      analyze: 'Analyser le sujet',
     },
   },
 };

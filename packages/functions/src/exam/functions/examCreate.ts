@@ -1,7 +1,7 @@
 import { PutItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
-import { SUBJECTS } from '@corrector/shared';
+import { DIVISIONS, SUBJECTS } from '@corrector/shared';
 
 import { validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
@@ -14,10 +14,14 @@ export const examCreate = authedProcedure
       name: z.string(),
       organizationId: z.string(),
       subject: z.enum(SUBJECTS),
+      division: z.enum(DIVISIONS),
     }),
   )
   .mutation(
-    async ({ ctx: { session }, input: { name, organizationId, subject } }) => {
+    async ({
+      ctx: { session },
+      input: { name, organizationId, subject, division },
+    }) => {
       validateOrganizationAccess(organizationId, session);
 
       const { id: userId } = session;
@@ -31,6 +35,7 @@ export const examCreate = authedProcedure
           organizationId,
           subject,
           userId,
+          division,
         })
         .options({
           condition: {

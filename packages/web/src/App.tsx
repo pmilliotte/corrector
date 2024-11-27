@@ -5,6 +5,7 @@ import { Amplify } from 'aws-amplify';
 import { MathJaxContext } from 'better-react-mathjax';
 import { ReactElement, useState } from 'react';
 import { IntlProvider } from 'react-intl';
+import { pdfjs } from 'react-pdf';
 
 import { AppRoutes } from './components/navigation';
 import { Toaster } from './components/ui';
@@ -67,6 +68,11 @@ export const App = (): ReactElement => {
       ],
     },
   };
+
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url,
+  ).toString();
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>

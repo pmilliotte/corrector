@@ -1,7 +1,7 @@
-import { Entity, schema, string } from 'dynamodb-toolbox';
+import { Entity, FormattedItem, schema, string } from 'dynamodb-toolbox';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
-import { Subject, SUBJECTS } from '@corrector/shared';
+import { DIVISIONS, Subject, SUBJECTS } from '@corrector/shared';
 
 import { ExamTable } from '../table';
 
@@ -10,6 +10,7 @@ export const EXAM_ENTITY_NAME = 'Exam';
 const examSchema = schema({
   id: string().key(),
   subject: string().enum(...SUBJECTS),
+  division: string().enum(...DIVISIONS),
   organizationId: string().key(),
   userId: string(),
   name: string(),
@@ -67,4 +68,4 @@ export const ExamEntity = new Entity({
   }),
 });
 
-export type Exam = typeof ExamEntity;
+export type Exam = FormattedItem<typeof ExamEntity>;

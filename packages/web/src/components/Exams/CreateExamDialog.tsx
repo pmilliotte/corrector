@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Plus } from 'lucide-react';
 import { ReactElement } from 'react';
@@ -6,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
-import { SUBJECTS } from '@corrector/shared';
+import { DIVISIONS, SUBJECTS } from '@corrector/shared';
 
 import {
   Form,
@@ -37,6 +38,7 @@ import {
 const formSchema = z.object({
   name: z.string(),
   subject: z.enum(SUBJECTS),
+  division: z.enum(DIVISIONS),
 });
 
 export const CreateExamDialog = (): ReactElement => {
@@ -58,10 +60,15 @@ export const CreateExamDialog = (): ReactElement => {
     },
   });
 
-  const onSubmit = ({ name, subject }: z.infer<typeof formSchema>) => {
+  const onSubmit = ({
+    name,
+    subject,
+    division,
+  }: z.infer<typeof formSchema>) => {
     mutate({
       name,
       subject,
+      division,
       organizationId: selectedOrganization.id,
     });
   };
@@ -114,11 +121,57 @@ export const CreateExamDialog = (): ReactElement => {
               />
               <FormField
                 control={form.control}
+                name="division"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <FormLabel htmlFor="division" className="text-right">
+                        <FormattedMessage id="exams.division" />
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger
+                            id="division"
+                            className="whitespace-normal [&>span]:text-left [&>svg]:shrink-0 col-span-3"
+                          >
+                            <SelectValue
+                              placeholder={t.formatMessage({
+                                id: 'common.select',
+                              })}
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent
+                          position="popper"
+                          className="max-w-[var(--radix-select-trigger-width)] overflow-y-auto max-h-[12rem]"
+                        >
+                          {DIVISIONS.map(division => (
+                            <SelectItem
+                              value={division}
+                              key={division}
+                              className="max-w-100"
+                            >
+                              <FormattedMessage
+                                id={`common.divisions.${division}`}
+                              />
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="subject"
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel htmlFor="framework" className="text-right">
+                      <FormLabel htmlFor="subject" className="text-right">
                         <FormattedMessage id="exams.subject" />
                       </FormLabel>
                       <Select

@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.137",
+    "@types/i18n": "^0.13.12",
     "@types/lodash": "^4.17.0",
     "@types/node": "^20.12.5",
     "@types/nodemailer": "^6.4.15",
@@ -33,6 +34,7 @@
     "@trpc/server": "11.0.0-rc.332",
     "crypto": "^1.0.1",
     "dynamodb-toolbox": "^1.13.4",
+    "i18n": "^0.15.1",
     "langchain": "^0.1.34",
     "lodash": "^4.17.21",
     "nodemailer": "^6.9.13",

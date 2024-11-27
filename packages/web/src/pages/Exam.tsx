@@ -1,12 +1,16 @@
-import { Ban, FileCheck } from 'lucide-react';
-import { Fragment, ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
-import { FILE_TYPES } from '@corrector/shared';
-
-import { DeleteFileDialog, UploadFileDialog } from '~/components';
-import { Separator } from '~/components/ui';
+import { ExamFiles } from '~/components/Exams/ExamFiles';
+import { ExamMarks } from '~/components/Exams/ExamMarks';
+import {
+  Separator,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '~/components/ui';
 import { trpc, useUserOrganizations } from '~/lib';
 
 export const Exam = (): ReactElement => {
@@ -17,6 +21,7 @@ export const Exam = (): ReactElement => {
     id: examId,
     organizationId: selectedOrganization.id,
   });
+
   const { data: fileNames } = trpc.examFilesGet.useQuery({
     id: examId,
     organizationId: selectedOrganization.id,
@@ -26,8 +31,11 @@ export const Exam = (): ReactElement => {
     <></>
   ) : (
     <div className="flex flex-col gap-2">
-      <div className="flex flex-col">
-        <div className="font-semibold text-xl">{exam.exam.name}</div>
+      <div className="flex items-baseline justify-between">
+        <div className="font-semibold text-xl">
+          <FormattedMessage id={`common.subjects.${exam.exam.subject}`} /> -{' '}
+          {exam.exam.name}
+        </div>
         <div className="text-muted-foreground text-sm">
           <FormattedMessage
             id="exams.createdOn"
@@ -38,59 +46,25 @@ export const Exam = (): ReactElement => {
         </div>
       </div>
       <Separator />
-      <div className="flex flex-col">
-        <div className="font-semibold">
-          <FormattedMessage id="exams.files.title" />
-        </div>
-        <div className="text-muted-foreground text-sm">
-          <FormattedMessage id="exams.files.description" />
-        </div>
-      </div>
-      <div className="flex flex-col gap-2 rounded-lg border p-4">
-        {FILE_TYPES.map((fileType, index) => (
-          <Fragment key={fileType}>
-            <div
-              key={fileType}
-              className="text-sm flex items-center justify-between"
-            >
-              {fileNames?.[fileType] !== undefined ? (
-                <>
-                  <div className="flex items-center gap-2">
-                    <FileCheck />
-                    <div>
-                      <div className="font-semibold">
-                        <FormattedMessage id={`exams.files.${fileType}`} />
-                      </div>
-                      <div className="text-xs">
-                        {fileNames[fileType] ?? (
-                          <FormattedMessage id="common." />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <DeleteFileDialog fileType={fileType} examId={examId} />
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center gap-2">
-                    <Ban className="text-muted-foreground" />
-                    <div>
-                      <div className="text-muted-foreground">
-                        <FormattedMessage id={`exams.files.${fileType}`} />
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        <FormattedMessage id="exams.files.empty" />
-                      </div>
-                    </div>
-                  </div>
-                  <UploadFileDialog fileType={fileType} examId={examId} />
-                </>
-              )}
-            </div>
-            {index !== FILE_TYPES.length - 1 && <Separator />}
-          </Fragment>
-        ))}
-      </div>
+      <Tabs defaultValue="files" className="space-y-4">
+        <TabsList className="w-full">
+          <TabsTrigger value="files" className="flex-auto">
+            <FormattedMessage id="exams.tabs.files" />
+          </TabsTrigger>
+          <TabsTrigger value="marks" className="flex-auto">
+            <FormattedMessage id="exams.tabs.marks" />
+          </TabsTrigger>
+          <TabsTrigger value="correction" className="flex-auto">
+            <FormattedMessage id="exams.tabs.correction" />
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="files" className="space-y-4">
+          <ExamFiles examId={examId} fileNames={fileNames} />
+        </TabsContent>
+        <TabsContent value="marks" className="space-y-4">
+          <ExamMarks examId={examId} fileNames={fileNames} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

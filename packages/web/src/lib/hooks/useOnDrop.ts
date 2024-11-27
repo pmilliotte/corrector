@@ -8,7 +8,7 @@ import { trpc, uploadFileOnS3 } from '../utils';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useOnDrop = (callback?: () => PromiseLike<void>) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { mutate } = trpc.presignedUrlGet.useMutation();
+  const { mutate } = trpc.presignedUrlPost.useMutation();
   const { selectedOrganization } = useUserOrganizations();
 
   const onDrop = useCallback(
