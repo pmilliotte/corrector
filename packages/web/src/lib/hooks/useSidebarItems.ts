@@ -1,13 +1,13 @@
-import flatMap from 'lodash/flatMap';
+import flatMapDeep from 'lodash/flatMapDeep';
 import { BookCheck, Network, Settings, Users } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 import { AppRoute } from '../constants';
 import { SidebarGroup, SidebarItem } from '../types';
-import { useIntl } from '../utils';
+import { isSidebarItemActive, useIntl } from '../utils';
 
 export const useSidebarItems = (): {
-  selectedItemTitle?: string;
+  selectedItemTitle?: string[];
   groups: SidebarGroup[];
 } => {
   const t = useIntl();
@@ -19,24 +19,48 @@ export const useSidebarItems = (): {
       items: [
         {
           title: t.formatMessage({ id: 'common.sidebar.people' }),
-          url: AppRoute.People,
+          url: { type: 'url', path: AppRoute.People },
           icon: Users,
         },
         {
           title: t.formatMessage({ id: 'common.sidebar.divisions' }),
-          url: AppRoute.Divisions,
+          url: { type: 'url', path: AppRoute.Divisions },
           icon: Network,
         },
       ],
     },
     {
-      title: t.formatMessage({ id: 'common.sidebar.products' }),
+      title: t.formatMessage({ id: 'common.sidebar.documents' }),
       displayTitle: true,
       items: [
         {
-          title: t.formatMessage({ id: 'common.sidebar.exam' }),
-          url: AppRoute.Exams,
+          title: t.formatMessage({ id: 'common.sidebar.exams.title' }),
           icon: BookCheck,
+          disableActive: true,
+          url: { type: 'url', path: AppRoute.Exams },
+          items: [
+            {
+              title: t.formatMessage({ id: 'common.sidebar.exams.list' }),
+              breadcrumbItems: [
+                t.formatMessage({ id: 'common.sidebar.exams.title' }),
+                t.formatMessage({ id: 'common.sidebar.exams.list' }),
+              ],
+              url: { type: 'url', path: AppRoute.Exams },
+            },
+            {
+              title: t.formatMessage({ id: 'common.sidebar.exams.edit' }),
+              breadcrumbItems: [
+                t.formatMessage({ id: 'common.sidebar.exam' }),
+                t.formatMessage({ id: 'common.sidebar.exams.edit' }),
+              ],
+              url: {
+                type: 'regexp',
+                path: new RegExp(
+                  `^${AppRoute.Exams}/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$`,
+                ),
+              },
+            },
+          ],
         },
       ],
     },
@@ -47,7 +71,7 @@ export const useSidebarItems = (): {
       items: [
         {
           title: t.formatMessage({ id: 'common.settings' }),
-          url: AppRoute.Settings,
+          url: { type: 'url', path: AppRoute.Settings },
           icon: Settings,
         },
       ],
@@ -55,10 +79,13 @@ export const useSidebarItems = (): {
   ];
 
   // @ts-expect-error : flatMap is crazy
-  const selectedItemTitle = flatMap<SidebarGroup, SidebarItem>(
-    groups,
-    'items',
-  ).find(item => pathname === (item.url as string))?.title;
+  const selectedItem = flatMapDeep<SidebarGroup, SidebarItem>(groups, group =>
+    group.items.map(item => [item, ...(item.items ?? [])]),
+  ).find(item => isSidebarItemActive(pathname, item));
+
+  const selectedItemTitle =
+    selectedItem?.breadcrumbItems ??
+    (selectedItem?.title !== undefined ? [selectedItem.title] : undefined);
 
   return { selectedItemTitle, groups };
 };

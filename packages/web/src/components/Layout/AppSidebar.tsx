@@ -4,7 +4,11 @@ import { ComponentProps, ReactElement, useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useLocation } from 'react-router-dom';
 
-import { SidebarGroup as SidebarGroupType, UserOrganizations } from '~/lib';
+import {
+  isSidebarItemActive,
+  SidebarGroup as SidebarGroupType,
+  UserOrganizations,
+} from '~/lib';
 
 import {
   Button,
@@ -18,6 +22,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarRail,
 } from '../ui';
 import { OrganizationSwitcher } from './OrganizationSwitcher';
@@ -61,13 +68,40 @@ export const AppSidebar = ({
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
-                      isActive={pathname === (item.url as string)}
+                      isActive={isSidebarItemActive(pathname, item)}
                     >
                       <span>
-                        <item.icon className="mr-2 h-4 w-4" />
-                        <Link to={item.url}>{item.title}</Link>
+                        <item.icon className="h-4 w-4" />
+                        {item.url.type === 'url' ? (
+                          <Link to={item.url.path}>{item.title}</Link>
+                        ) : (
+                          <span>{item.title}</span>
+                        )}
                       </span>
                     </SidebarMenuButton>
+
+                    {item.items !== undefined && (
+                      <SidebarMenuSub>
+                        {item.items.map(subItem => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton
+                              asChild
+                              isActive={isSidebarItemActive(pathname, subItem)}
+                            >
+                              <span>
+                                {subItem.url.type === 'url' ? (
+                                  <Link to={subItem.url.path}>
+                                    {subItem.title}
+                                  </Link>
+                                ) : (
+                                  <span>{subItem.title}</span>
+                                )}
+                              </span>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    )}
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>

@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { Fragment, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
@@ -55,14 +55,14 @@ export const Layout = ({ children }: LayoutProps): ReactElement => {
               ) : (
                 <Skeleton className="h-4 w-[100px]" />
               )}
-              {selectedItemTitle !== undefined && (
-                <>
+              {selectedItemTitle?.map(title => (
+                <Fragment key={title}>
                   <BreadcrumbSeparator className="hidden md:block" />
                   <BreadcrumbItem>
-                    <BreadcrumbPage>{selectedItemTitle}</BreadcrumbPage>
+                    <BreadcrumbPage>{title}</BreadcrumbPage>
                   </BreadcrumbItem>
-                </>
-              )}
+                </Fragment>
+              ))}
             </BreadcrumbList>
           </Breadcrumb>
         </header>
