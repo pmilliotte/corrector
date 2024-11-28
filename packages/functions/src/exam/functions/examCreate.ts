@@ -36,6 +36,7 @@ export const examCreate = authedProcedure
           subject,
           userId,
           division,
+          status: 'subject',
         })
         .options({
           condition: {
