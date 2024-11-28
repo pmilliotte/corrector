@@ -38,5 +38,12 @@ export const examsMessages = {
       description: 'Valider les questions et le barême.',
       analyze: 'Analyser le sujet',
     },
+    exam: { title: '{subject} - {name}' },
+    status: {
+      subject: 'Sujet',
+      marks: 'Notation',
+      responses: 'Réponses',
+      correction: 'Correction',
+    },
   },
 };

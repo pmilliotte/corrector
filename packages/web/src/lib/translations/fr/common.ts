@@ -30,9 +30,9 @@ export const commonMessages = {
     upload: 'Télécharger',
     sidebar: {
       organization: "Organisation de l'espace",
-      products: 'Mes documents',
-      exam: 'Examens',
-      exams: 'Mes devoirs',
+      documents: 'Mes documents',
+      exam: 'Examen',
+      exams: { title: 'Examens', list: 'Liste', edit: 'Modifier' },
       space: 'Espace',
       people: 'Personnes',
       divisions: 'Classes',
