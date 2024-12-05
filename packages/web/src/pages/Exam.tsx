@@ -1,12 +1,11 @@
 import { ReactElement } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
-import { trpc, useIntl, useUserOrganizations } from '~/lib';
+import { ExamMarks, ExamTitle, Subject } from '~/components';
+import { trpc, useUserOrganizations } from '~/lib';
 
 export const Exam = (): ReactElement => {
   const { examId } = useParams() as { examId: string };
-  const t = useIntl();
   const { selectedOrganization } = useUserOrganizations();
 
   const { data: exam } = trpc.examGet.useQuery({
@@ -14,31 +13,22 @@ export const Exam = (): ReactElement => {
     organizationId: selectedOrganization.id,
   });
 
-  return exam === undefined ? (
-    <></>
-  ) : (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-baseline justify-between">
-        <div className="font-semibold text-xl">
-          <FormattedMessage
-            id="exams.exam.title"
-            values={{
-              subject: t.formatMessage({
-                id: `common.subjects.${exam.exam.subject}`,
-              }),
-              name: exam.exam.name,
-            }}
+  return (
+    <div className="p-4 h-full flex flex-col gap-2">
+      {exam === undefined ? (
+        <></>
+      ) : (
+        <>
+          <ExamTitle
+            name={exam.exam.name}
+            subject={exam.exam.subject}
+            created={exam.exam.created}
           />
-        </div>
-        <div className="text-muted-foreground text-sm">
-          <FormattedMessage
-            id="exams.createdOn"
-            values={{
-              date: new Date(exam.exam.created).toLocaleString().slice(0, 10),
-            }}
-          />
-        </div>
-      </div>
+
+          {exam.exam.status === 'subject' && <Subject examId={examId} />}
+          {exam.exam.status === 'marks' && <ExamMarks examId={examId} />}
+        </>
+      )}
     </div>
   );
 };

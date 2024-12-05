@@ -1,4 +1,4 @@
-import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { GetObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
 import {
   createPresignedPost,
   type PresignedPostOptions,
@@ -45,7 +45,19 @@ export const requestSignedUrlGet = async ({
 }: {
   fileKey: string;
   bucketName: string;
-}): Promise<string> => {
+}): Promise<string | undefined> => {
+  try {
+    // Ensures that object exists
+    await s3Client.send(
+      new HeadObjectCommand({
+        Bucket: bucketName,
+        Key: fileKey,
+      }),
+    );
+  } catch {
+    return;
+  }
+
   const url = await getSignedUrl(
     s3Client,
     new GetObjectCommand({

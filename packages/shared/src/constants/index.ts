@@ -4,3 +4,4 @@ export * from './payload';
 export * from './divisions';
 export * from './subjects';
 export * from './examStatuses';
+export * from './examOutput';

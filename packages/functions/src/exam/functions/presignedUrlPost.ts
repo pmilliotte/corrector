@@ -43,7 +43,7 @@ export const presignedUrlPost = authedProcedure
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
 
-      const fileKey = `${getFileKeyPrefix({ organizationId, userId, examId })}/${fileType}.${fileExtension}`;
+      const fileKey = `${getFileKeyPrefix({ organizationId, userId, examId })}/${fileType}/file.${fileExtension}`;
       // Metadata arguments must start with x-amz-meta and be written in kebab case
       const metadata = {
         'x-amz-meta-original-file-name': fileName,

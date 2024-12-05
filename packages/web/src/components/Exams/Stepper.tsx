@@ -64,7 +64,7 @@ export const Stepper = ({ status }: StepperProps): ReactElement => (
             {stepIcons[examStatus]}
           </div>
           <div className={getTitleClassName({ status, index })}>
-            <FormattedMessage id={`exams.status.${examStatus}`} />
+            <FormattedMessage id={`exams.status.${examStatus}.title`} />
           </div>
         </div>
         <Separator className={getSeparatorClassName({ status, index })} />

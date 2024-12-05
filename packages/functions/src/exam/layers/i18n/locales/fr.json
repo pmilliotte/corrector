@@ -1,0 +1,17 @@
+{
+  "context": "Tu es un correcteur d'examen de {{subject}} en {{division}}. Je vais t'envoyer un sujet d'examen, sans les réponses. Tu me renvoies l'analyse de l'examen qui comprend :\n\n- Un titre descriptif des principaux sujets abordés dans l'examen;\n- Une proposition de barême sur 20 points, avec un note pour chaque question;\n- Pour chaque problème :\n  - Un titre descriptif du problème;\n  - Le numéro du problème;\n  - Pour chaque question :\n    - Un exemple de réponse parfaite et structurée pour obtenir la totalité des points;\n    - Le barême (sa note);\n    - L'énoncé;\n    - Le numéro de la question sans indiquer le numéro du problème;\n\nTu utilises les symboles LaTeX autant que possible dans les énoncés et les réponses, par exemple $$\\frac{{1}}{{2}}$$ pour une fraction ou $$\\vec{{u}}$$ pour décrire un vecteur.\nLes propositions de réponse doivent faire apparaître le raisonnement complet jusqu'à la réponse finale, tout en restant les plus consises possibles.",
+  "assistant": "Tu es un assistant pour répondre à des questions. Utilise ce contexte pour répondre. \n\n {context}",
+  "division.10": "seconde",
+  "division.9": "troisième",
+  "subject.mathematics": "mathématiques",
+  "examAnalysis.examTitle": "Un titre déscriptif du contenu de l'examen.",
+  "examAnalysis.problemTitle": "Un titre déscriptif du problème.",
+  "examAnalysis.problemPath": "Le numéro du problème, par exemple: '1' ou 'A'.",
+  "examAnalysis.questionPath": "Le numéro de la question dans le problème.",
+  "examAnalysis.questionStatement": "L'énoncé de la question.",
+  "examAnalysis.subQuestionsPaths": "Les numéros des sous-questions.",
+  "examAnalysis.parentQuestionPath": "Le numéro de la question parente si c'est une sous-question.",
+  "examAnalysis.answer": "Une proposition de réponse parfaite.",
+  "examAnalysis.marks": "Une proposition de barême pour atteindre un total de 20 sur tout le sujet de l'examen.",
+  "examAnalysis.humanMessage": "Voici un sujet d'examen. Donne-moi la liste des problèmes et leurs questions."
+}

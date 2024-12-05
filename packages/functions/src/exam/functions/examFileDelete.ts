@@ -2,7 +2,7 @@ import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { Bucket } from 'sst/node/bucket';
 import { z } from 'zod';
 
-import { FILE_TYPES } from '@corrector/shared';
+import { FILE_TYPES, PDF_FILE_NAME } from '@corrector/shared';
 
 import { s3Client } from '~/clients';
 import { validateOrganizationAccess } from '~/libs';
@@ -37,7 +37,7 @@ export const examFileDelete = authedProcedure
       await s3Client.send(
         new DeleteObjectCommand({
           Bucket: Bucket['exam-bucket'].bucketName,
-          Key: `${filePrefix}/${fileType}.pdf`,
+          Key: `${filePrefix}/${fileType}/${PDF_FILE_NAME}.pdf`,
         }),
       );
 

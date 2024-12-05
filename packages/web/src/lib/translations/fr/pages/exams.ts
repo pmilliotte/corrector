@@ -40,10 +40,14 @@ export const examsMessages = {
     },
     exam: { title: '{subject} - {name}' },
     status: {
-      subject: 'Sujet',
-      marks: 'Notation',
-      responses: 'Réponses',
-      correction: 'Correction',
+      subject: {
+        title: 'Sujet',
+        description: "Télécharger le sujet de l'examen",
+        next: 'Étape suivante',
+      },
+      marks: { title: 'Notation' },
+      responses: { title: 'Réponses' },
+      correction: { title: 'Correction' },
     },
   },
 };

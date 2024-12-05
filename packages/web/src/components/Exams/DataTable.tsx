@@ -60,8 +60,7 @@ export const DataTable = ({ exams }: { exams: Exam[] }): ReactElement => {
           <ArrowUpDown size={16} />
         </Button>
       ),
-      cell: (exam: Exam) =>
-        new Date(exam.created).toLocaleString().slice(0, 10),
+      cell: (exam: Exam) => new Date(exam.created).toISOString().slice(0, 10),
     },
     {
       id: 'subject',

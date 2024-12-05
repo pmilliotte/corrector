@@ -12,31 +12,30 @@ import {
   validateExamOwnership,
 } from '../libs';
 
-export const presignedUrlGet = authedProcedure
+export const examFileGet = authedProcedure
   .input(
     z.object({
+      id: z.string(),
       organizationId: z.string(),
       fileType: z.enum(FILE_TYPES),
-      examId: z.string(),
     }),
   )
   .query(
-    async ({
-      ctx: { session },
-      input: { organizationId, fileType, examId },
-    }) => {
+    async ({ ctx: { session }, input: { id, organizationId, fileType } }) => {
       validateOrganizationAccess(organizationId, session);
-      await validateExamOwnership({ examId, organizationId }, session);
+      await validateExamOwnership({ examId: id, organizationId }, session);
 
-      const { id: userId } = session;
-
-      const fileKey = `${getFileKeyPrefix({ organizationId, userId, examId })}/${fileType}/${PDF_FILE_NAME}.pdf`;
-
-      const url = await requestSignedUrlGet({
-        bucketName: Bucket['exam-bucket'].bucketName,
-        fileKey,
+      const filePrefix = getFileKeyPrefix({
+        organizationId,
+        userId: session.id,
+        examId: id,
       });
 
-      return url;
+      const url = await requestSignedUrlGet({
+        fileKey: `${filePrefix}/${fileType}/${PDF_FILE_NAME}.pdf`,
+        bucketName: Bucket['exam-bucket'].bucketName,
+      });
+
+      return { url };
     },
   );

@@ -14,7 +14,6 @@ export const useOnDrop = (callback?: () => PromiseLike<void>) => {
   const onDrop = useCallback(
     ({ fileType, examId }: { fileType: FileType; examId: string }) =>
       (acceptedFiles: File[]) => {
-        console.log('in drop');
         setIsLoading(true);
         const file = acceptedFiles[0];
         mutate(

@@ -1,11 +1,13 @@
 import { BaseMessage } from '@langchain/core/messages';
-import { StringOutputParser } from '@langchain/core/output_parsers';
-import { ChatPromptTemplate } from '@langchain/core/prompts';
+import {
+  ChatPromptTemplate,
+  MessagesPlaceholder,
+} from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { ChatOpenAI } from '@langchain/openai';
 import { Config } from 'sst/node/config';
 
-import { Subject } from '@corrector/shared';
+import { getExamOutputSchema, Subject } from '@corrector/shared';
 
 import { i18n } from './i18n';
 
@@ -15,7 +17,18 @@ export const getChain = ({
 }: {
   subject: Subject;
   division: string;
-}): RunnableSequence => {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+}) => {
+  const examTitle = i18n.__('examAnalysis.examTitle');
+  const problemTitle = i18n.__('examAnalysis.problemTitle');
+  const problemPath = i18n.__('examAnalysis.problemPath');
+  const questionPath = i18n.__('examAnalysis.questionPath');
+  const questionStatement = i18n.__('examAnalysis.questionStatement');
+  const subQuestionsPaths = i18n.__('examAnalysis.subQuestionsPaths');
+  const parentQuestionPath = i18n.__('examAnalysis.parentQuestionPath');
+  const answer = i18n.__('examAnalysis.answer');
+  const marks = i18n.__('examAnalysis.marks');
+
   const chat = new ChatOpenAI({
     apiKey: Config.OPENAI_API_KEY,
     temperature: 0,
@@ -24,27 +37,28 @@ export const getChain = ({
       project: Config.OPENAI_PROJECT_ID,
     },
     verbose: process.env.STAGE === 'local',
+  }).withStructuredOutput(
+    getExamOutputSchema({
+      examTitle,
+      problemTitle,
+      problemPath,
+      questionPath,
+      questionStatement,
+      subQuestionsPaths,
+      parentQuestionPath,
+      answer,
+      marks,
+    }),
+  );
+
+  const context = i18n.__('context', {
+    division: i18n.__(`division.${division}`),
+    subject: i18n.__(`subject.${subject}`),
   });
 
-  console.log(i18n.getLocales());
-  console.log(i18n.getLocale());
-  const context = i18n.__('context');
-
-  console.log('subject', subject);
-  console.log('division', division);
-  console.log('context', context);
-
   const prompt = ChatPromptTemplate.fromMessages<{
-    problem: string;
-    questionPath: string;
-    logicsAnswersAsString: string;
-    chatHistory: BaseMessage[];
-    input: string;
-    nextSentence: string;
-    nextLabel: string;
-    logicsAsString: string;
-    instructionsAsString?: string;
-  }>([['system', context]]);
+    blankExam: BaseMessage[];
+  }>([['system', context], new MessagesPlaceholder('blankExam')]);
 
-  return RunnableSequence.from([prompt, chat, new StringOutputParser()]);
+  return RunnableSequence.from([prompt, chat]);
 };

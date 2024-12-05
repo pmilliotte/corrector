@@ -43,46 +43,50 @@ export const ExamFiles = ({
       </div>
       <div className="flex flex-col gap-2 rounded-lg border p-4">
         <Accordion type="single" collapsible className="w-full">
-          {FILE_TYPES.map(fileType => (
-            <AccordionItem value={fileType} key={fileType}>
-              {fileNames?.[fileType] !== undefined ? (
-                <>
-                  <AccordionTrigger>
-                    <div className="flex items-center gap-2">
-                      <FileCheck size={16} />
-                      <FormattedMessage id={`exams.files.${fileType}`} />
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <ExamFile
-                      url={fileNames[fileType].url}
-                      fileType={fileType}
-                      examId={examId}
-                    />
-                  </AccordionContent>
-                </>
-              ) : (
-                <>
-                  <AccordionTrigger>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      {fileNames === undefined ? (
-                        <Loader2 size={16} className="animate-spin" />
-                      ) : (
-                        <Ban size={16} />
-                      )}
-                      <FormattedMessage id={`exams.files.${fileType}`} />
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <Upload
-                      onDrop={onDrop({ fileType, examId })}
-                      loading={isLoading}
-                    />
-                  </AccordionContent>
-                </>
-              )}
-            </AccordionItem>
-          ))}
+          {FILE_TYPES.map(fileType => {
+            const fileInfo = fileNames?.[fileType];
+
+            return (
+              <AccordionItem value={fileType} key={fileType}>
+                {fileInfo !== undefined ? (
+                  <>
+                    <AccordionTrigger>
+                      <div className="flex items-center gap-2">
+                        <FileCheck size={16} />
+                        <FormattedMessage id={`exams.files.${fileType}`} />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <ExamFile
+                        url={fileInfo.url}
+                        fileType={fileType}
+                        examId={examId}
+                      />
+                    </AccordionContent>
+                  </>
+                ) : (
+                  <>
+                    <AccordionTrigger>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        {fileNames === undefined ? (
+                          <Loader2 size={16} className="animate-spin" />
+                        ) : (
+                          <Ban size={16} />
+                        )}
+                        <FormattedMessage id={`exams.files.${fileType}`} />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <Upload
+                        onDrop={onDrop({ fileType, examId })}
+                        loading={isLoading}
+                      />
+                    </AccordionContent>
+                  </>
+                )}
+              </AccordionItem>
+            );
+          })}
         </Accordion>
       </div>
     </>

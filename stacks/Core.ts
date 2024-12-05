@@ -7,15 +7,12 @@ import {
   SORT_KEY,
 } from '@corrector/backend-shared';
 
-import { getDomain } from './utils/constants';
-
 enum Route {
   OrganizationsGet = 'GET /organizationsGet',
 }
 
 export const Core = ({
   stack,
-  app,
 }: StackContext): {
   api: Api<{
     jwt: {
@@ -56,7 +53,6 @@ export const Core = ({
           givenName: { required: true, mutable: true },
           email: { required: true, mutable: false },
         },
-        selfSignUpEnabled: app.stage !== 'staging',
         userInvitation: {
           emailSubject: 'Bienvenue sur corrector !',
           emailBody: `Hello {username},<br/><br/>
@@ -83,19 +79,19 @@ export const Core = ({
   // };
 
   const api = new Api(stack, 'api', {
-    customDomain:
-      app.stage === 'local' ? undefined : `api.${getDomain(app.stage)}`,
+    // customDomain:
+    //   app.stage === 'local' ? undefined : `api.${getDomain(app.stage)}`,
     accessLog: {
       retention: 'one_week',
     },
     cors: {
       allowHeaders: ['content-type', 'authorization'],
       allowMethods: ['POST', 'GET', 'OPTIONS'],
-      allowOrigins: [
-        app.stage === 'local'
-          ? 'http://localhost:5173'
-          : `https://${getDomain(app.stage)}`,
-      ],
+      // allowOrigins: [
+      //   app.stage === 'local'
+      //     ? 'http://localhost:5173'
+      //     : `https://${getDomain(app.stage)}`,
+      // ],
     },
     authorizers: {
       jwt: {

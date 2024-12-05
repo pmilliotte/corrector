@@ -28,7 +28,7 @@ export const DeleteFileDialog = ({
   const { selectedOrganization } = useUserOrganizations();
   const { mutate, isPending } = trpc.examFileDelete.useMutation({
     onSuccess: async () => {
-      await utils.examFilesGet.invalidate();
+      await utils.examFileGet.invalidate();
       setOpen(false);
     },
   });
