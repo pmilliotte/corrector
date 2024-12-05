@@ -79,7 +79,7 @@ export const Exam = ({ stack, app }: StackContext): void => {
     },
   });
 
-  examBucket.bind([examBucket]);
+  examBucket.bind([examBucket, examTable]);
 
   const openAiApiKey = new Config.Secret(stack, 'OPENAI_API_KEY');
   const openAiProjectId = new Config.Secret(stack, 'OPENAI_PROJECT_ID');

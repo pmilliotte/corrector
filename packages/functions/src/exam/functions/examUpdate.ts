@@ -2,15 +2,16 @@ import { TRPCError } from '@trpc/server';
 import { UpdateItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
-import { EXAM_STATUSES } from '@corrector/shared';
+import { EXAM_STATUSES, ExamStatus } from '@corrector/shared';
 
 import { validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
 import { ExamEntity, validateExamOwnership } from '../libs';
 
-const NEXT_STATUSES = {
-  subject: 'marks',
+const NEXT_STATUSES: Record<ExamStatus, ExamStatus | undefined> = {
+  subject: undefined,
+  imagesUploaded: 'marks',
   marks: 'responses',
   responses: 'correction',
   correction: undefined,
