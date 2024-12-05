@@ -1,3 +1,4 @@
+import { TRPCError } from '@trpc/server';
 import { UpdateItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
@@ -7,6 +8,13 @@ import { validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
 import { ExamEntity, validateExamOwnership } from '../libs';
+
+const NEXT_STATUSES = {
+  subject: 'marks',
+  marks: 'responses',
+  responses: 'correction',
+  correction: undefined,
+};
 
 export const examUpdate = authedProcedure
   .input(
@@ -22,7 +30,14 @@ export const examUpdate = authedProcedure
       input: { id: examId, organizationId, status },
     }) => {
       validateOrganizationAccess(organizationId, session);
-      await validateExamOwnership({ examId, organizationId }, session);
+      const { status: currentStatus } = await validateExamOwnership(
+        { examId, organizationId },
+        session,
+      );
+
+      if (NEXT_STATUSES[currentStatus] !== status) {
+        throw new TRPCError({ code: 'BAD_REQUEST' });
+      }
 
       await ExamEntity.build(UpdateItemCommand)
         .item({ id: examId, organizationId, status })
