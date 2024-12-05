@@ -24,10 +24,7 @@ export const getChain = ({
   const problemPath = i18n.__('examAnalysis.problemPath');
   const questionPath = i18n.__('examAnalysis.questionPath');
   const questionStatement = i18n.__('examAnalysis.questionStatement');
-  const subQuestionsPaths = i18n.__('examAnalysis.subQuestionsPaths');
-  const parentQuestionPath = i18n.__('examAnalysis.parentQuestionPath');
   const answer = i18n.__('examAnalysis.answer');
-  const marks = i18n.__('examAnalysis.marks');
 
   const chat = new ChatOpenAI({
     apiKey: Config.OPENAI_API_KEY,
@@ -44,10 +41,7 @@ export const getChain = ({
       problemPath,
       questionPath,
       questionStatement,
-      subQuestionsPaths,
-      parentQuestionPath,
       answer,
-      marks,
     }),
   );
 

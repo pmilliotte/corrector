@@ -10,10 +10,7 @@ export const getExamOutputSchema = ({
   problemPath,
   questionPath,
   questionStatement,
-  subQuestionsPaths,
-  parentQuestionPath,
   answer,
-  marks,
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 }: Partial<ExamOutputStructureDescription>) =>
   z
@@ -25,10 +22,7 @@ export const getExamOutputSchema = ({
         problemPath,
         questionPath,
         questionStatement,
-        subQuestionsPaths,
-        parentQuestionPath,
         answer,
-        marks,
       }).array(),
     })
     .strict();
@@ -45,10 +39,7 @@ export const getProblemSchema = ({
   problemPath,
   questionPath,
   questionStatement,
-  subQuestionsPaths,
-  parentQuestionPath,
   answer,
-  marks,
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 }: Partial<ProblemStructureDescription>) =>
   z
@@ -58,10 +49,7 @@ export const getProblemSchema = ({
       questions: getQuestionSchema({
         questionPath,
         questionStatement,
-        subQuestionsPaths,
-        parentQuestionPath,
         answer,
-        marks,
       }).array(),
     })
     .strict();
@@ -71,35 +59,19 @@ export type Problem = z.infer<ReturnType<typeof getProblemSchema>>;
 type QuestionStructureDescription = {
   questionStatement: string;
   questionPath: string;
-  subQuestionsPaths: string;
-  parentQuestionPath: string;
   answer: string;
-  marks: string;
 };
 
 export const getQuestionSchema = ({
   questionStatement,
   questionPath,
-  subQuestionsPaths,
-  parentQuestionPath,
   answer,
-  marks,
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 }: Partial<QuestionStructureDescription>) =>
   z
     .object({
       questionStatement: z.string().describe(questionStatement ?? ''),
       questionPath: z.string().describe(questionPath ?? ''),
-      subQuestionsPaths: z
-        .string()
-        .describe(subQuestionsPaths ?? '')
-        .array()
-        .optional(),
-      parentQuestionPath: z
-        .string()
-        .describe(parentQuestionPath ?? '')
-        .optional(),
       answer: z.string().describe(answer ?? ''),
-      marks: z.number().describe(marks ?? ''),
     })
     .strict();
