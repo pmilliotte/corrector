@@ -4,6 +4,8 @@ import { ExamsTable, Layout } from '~/components';
 
 export const Exams = (): ReactElement => (
   <Layout>
-    <ExamsTable />
+    <div className="p-4">
+      <ExamsTable />
+    </div>
   </Layout>
 );

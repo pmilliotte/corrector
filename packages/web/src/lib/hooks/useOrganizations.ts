@@ -1,6 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { SELECTED_ORGANIZATION_ID, USER_ID_PLACEHOLDER } from '../constants';
+import {
+  AppRoute,
+  SELECTED_ORGANIZATION_ID,
+  USER_ID_PLACEHOLDER,
+} from '../constants';
 import { useSession } from '../contexts';
 import { UserOrganizations } from '../types';
 import { trpc, useIntl } from '../utils';
@@ -10,11 +15,16 @@ export const useOrganizations = (): {
   setSelectedOrganizationId: (id: string) => void;
 } => {
   const t = useIntl();
+  const navigate = useNavigate();
   const { id: userId } = useSession();
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<string>(
     localStorage.getItem(SELECTED_ORGANIZATION_ID) ?? userId,
   );
-  const { data } = trpc.organizationsGet.useQuery();
+  const { data, error } = trpc.organizationsGet.useQuery();
+
+  if (error !== null) {
+    navigate(AppRoute.Login);
+  }
 
   const personalOrganization = {
     id: userId,
