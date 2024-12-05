@@ -2,6 +2,7 @@ import {
   PreTokenGenerationTriggerEvent,
   PreTokenGenerationTriggerHandler,
 } from 'aws-lambda';
+import crypto from 'crypto';
 import { PutItemCommand, Query, QueryCommand } from 'dynamodb-toolbox';
 
 import { LSI1 } from '@corrector/backend-shared';

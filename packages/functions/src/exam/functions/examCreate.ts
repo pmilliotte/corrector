@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { PutItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
