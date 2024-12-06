@@ -1,5 +1,5 @@
 import { MathJax } from 'better-react-mathjax';
-import { ReactElement } from 'react';
+import { Fragment, ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { Problem as ProblemType } from '@corrector/shared';
@@ -20,7 +20,7 @@ export const Problem = ({ problem }: ProblemProps): ReactElement => {
         />
       </div>
       {questions.map(({ questionPath, questionStatement, answer }) => (
-        <>
+        <Fragment key={questionPath}>
           <div className="font-semibold text-muted-foreground">
             <FormattedMessage
               id="exams.problem.question.title"
@@ -31,7 +31,7 @@ export const Problem = ({ problem }: ProblemProps): ReactElement => {
           <div className="border border-solid border-primary p-2">
             <MathJax dynamic>{answer}</MathJax>
           </div>
-        </>
+        </Fragment>
       ))}
     </div>
   );

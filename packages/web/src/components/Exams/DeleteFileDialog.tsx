@@ -36,7 +36,7 @@ export const DeleteFileDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm" className="text-destructive">
+        <Button variant="secondary" className="text-destructive">
           <Trash2 size={16} />
         </Button>
       </DialogTrigger>

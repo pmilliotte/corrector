@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { Fragment, ReactElement } from 'react';
 
 import { ExamOutput } from '@corrector/shared';
 
@@ -19,10 +19,10 @@ export const ExamAnalysis = ({
   return (
     <div className="flex flex-col gap-2">
       {analysis.problems.map(problem => (
-        <>
+        <Fragment key={problem.problemPath}>
           <Problem problem={problem} />
           <Separator />
-        </>
+        </Fragment>
       ))}
     </div>
   );
