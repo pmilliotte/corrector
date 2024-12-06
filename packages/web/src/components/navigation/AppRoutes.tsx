@@ -5,8 +5,8 @@ import { AppRoute } from '~/lib';
 import {
   Divisions,
   Error,
-  Exam,
   Exams,
+  ExamWrapper,
   Home,
   Login,
   NotFound,
@@ -30,7 +30,7 @@ export const AppRoutes = (): ReactElement => (
             path={`${AppRoute.Exams}/:examId`}
             element={
               <Layout>
-                <Exam />
+                <ExamWrapper />
               </Layout>
             }
           />

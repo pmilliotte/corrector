@@ -26,8 +26,6 @@ export const parseKeyPrefix = (
 ): { organizationId: string; userId: string; examId: string } => {
   const match = KEY_PREFIX_REGEXP.exec(keyPrefix);
 
-  console.log('keyPrefix', keyPrefix);
-
   if (match === null) {
     throw new Error();
   }

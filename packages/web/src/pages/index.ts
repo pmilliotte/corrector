@@ -6,4 +6,4 @@ export * from './People';
 export * from './Divisions';
 export * from './Settings';
 export * from './Exams';
-export * from './Exam';
+export * from './ExamWrapper';

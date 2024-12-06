@@ -8,7 +8,8 @@ import { examFileGet } from './examFileGet';
 import { examFilesGet } from './examFilesGet';
 import { examGet } from './examGet';
 import { examList } from './examList';
-import { examMarksGet } from './examMarksGet';
+import { examSubjectAnalysisGet } from './examSubjectAnalysisGet';
+import { examSubjectAnalyze } from './examSubjectAnalyze';
 import { examUpdate } from './examUpdate';
 import { presignedUrlGet } from './presignedUrlGet';
 import { presignedUrlPost } from './presignedUrlPost';
@@ -23,7 +24,8 @@ export const examRouter = router({
   examFileDelete,
   examFileGet,
   examUpdate,
-  examMarksGet,
+  examSubjectAnalyze,
+  examSubjectAnalysisGet,
 });
 
 export const handler = awsLambdaRequestHandler({

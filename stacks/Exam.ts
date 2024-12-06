@@ -24,8 +24,8 @@ enum Route {
   ExamFilesGet = 'GET /examFilesGet',
   ExamFileGet = 'GET /examFileGet',
   ExamFileDelete = 'POST /examFileDelete',
-  ExamUpdate = 'POST /examUpdate',
-  ExamMarksGet = 'GET /examMarksGet',
+  ExamSubjectAnalyze = 'POST /examSubjectAnalyze',
+  ExamSubjectAnalysisGet = 'GET /examSubjectAnalysisGet',
 }
 
 export const Exam = ({ stack, app }: StackContext): void => {
@@ -130,8 +130,8 @@ export const Exam = ({ stack, app }: StackContext): void => {
     [Route.ExamFilesGet]: apiEndpoint,
     [Route.ExamFileGet]: apiEndpoint,
     [Route.ExamFileDelete]: apiEndpoint,
-    [Route.ExamUpdate]: apiEndpoint,
-    [Route.ExamMarksGet]: examMarksGetEndpoint,
+    [Route.ExamSubjectAnalyze]: examMarksGetEndpoint,
+    [Route.ExamSubjectAnalysisGet]: apiEndpoint,
   });
 
   api.bindToRoute(Route.PresignedUrlGet, [examBucket, examTable]);
@@ -142,11 +142,11 @@ export const Exam = ({ stack, app }: StackContext): void => {
   api.bindToRoute(Route.ExamFilesGet, [examTable, examBucket]);
   api.bindToRoute(Route.ExamFileGet, [examTable, examBucket]);
   api.bindToRoute(Route.ExamFileDelete, [examTable, examBucket]);
-  api.bindToRoute(Route.ExamUpdate, [examTable, examBucket]);
-  api.bindToRoute(Route.ExamMarksGet, [
+  api.bindToRoute(Route.ExamSubjectAnalyze, [
     examTable,
     examBucket,
     openAiApiKey,
     openAiProjectId,
   ]);
+  api.bindToRoute(Route.ExamSubjectAnalysisGet, [examTable, examBucket]);
 };

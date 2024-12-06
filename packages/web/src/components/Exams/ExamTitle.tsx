@@ -33,7 +33,7 @@ export const ExamTitle = ({
         <FormattedMessage
           id="exams.createdOn"
           values={{
-            date: new Date(created).toLocaleString().slice(0, 10),
+            date: new Date(created).toISOString().slice(0, 10),
           }}
         />
       </div>

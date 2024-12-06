@@ -6,3 +6,4 @@ export * from './Stepper';
 export * from './ExamTitle';
 export * from './Subject';
 export * from './ExamMarks';
+export * from './ExamTabsContent';

@@ -1,39 +1,56 @@
-import { GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import {
+  GetObjectCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+} from '@aws-sdk/client-s3';
 import { HumanMessage } from '@langchain/core/messages';
 import { TRPCError } from '@trpc/server';
+import { UpdateItemCommand } from 'dynamodb-toolbox';
 import { Bucket } from 'sst/node/bucket';
 import { z } from 'zod';
 
-import { EXAM_BLANK } from '@corrector/shared';
+import { EXAM_BLANK, getExamOutputSchema } from '@corrector/shared';
 
 import { s3Client } from '~/clients';
 import { validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
 import {
+  ExamEntity,
   getChain,
   getFileKeyPrefix,
   i18n,
   validateExamOwnership,
 } from '../libs';
 
-export const examMarksGet = authedProcedure
+export const examSubjectAnalyze = authedProcedure
   .input(
     z.object({
       id: z.string(),
       organizationId: z.string(),
     }),
   )
-  .query(
+  .mutation(
     async ({ ctx: { session }, input: { id: examId, organizationId } }) => {
       validateOrganizationAccess(organizationId, session);
-      const { subject, division } = await validateExamOwnership(
+      const { subject, division, status } = await validateExamOwnership(
         { examId, organizationId },
         session,
       );
+
+      if (status !== 'imagesUploaded') {
+        throw new TRPCError({ code: 'BAD_REQUEST' });
+      }
+
       const { id: userId } = session;
 
-      const imagesPrefix = `${getFileKeyPrefix({ organizationId, userId, examId })}/${EXAM_BLANK}/images/`;
+      const fileKeyPrefix = getFileKeyPrefix({
+        organizationId,
+        userId,
+        examId,
+      });
+
+      const imagesPrefix = `${fileKeyPrefix}/${EXAM_BLANK}/images/`;
 
       const listCommand = new ListObjectsV2Command({
         Bucket: Bucket['exam-bucket'].bucketName,
@@ -104,6 +121,16 @@ export const examMarksGet = authedProcedure
 
       const response = await chain.invoke({ blankExam: [humanMessage] });
 
-      return { response };
+      await s3Client.send(
+        new PutObjectCommand({
+          Bucket: Bucket['exam-bucket'].bucketName,
+          Key: `${fileKeyPrefix}/${EXAM_BLANK}/analysis.json`,
+          Body: JSON.stringify(getExamOutputSchema({}).parse(response)),
+        }),
+      );
+
+      await ExamEntity.build(UpdateItemCommand)
+        .item({ id: examId, organizationId, status: 'marks' })
+        .send();
     },
   );

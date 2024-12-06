@@ -18,8 +18,9 @@ export const examsMessages = {
     createdOn: 'Créé le {date}',
     correct: 'Corriger',
     tabs: {
-      files: 'Fichiers',
-      marks: 'Notation',
+      subject: 'Sujet',
+      marks: 'Barême',
+      responses: 'Copies',
       correction: 'Correction',
     },
     files: {
@@ -37,6 +38,8 @@ export const examsMessages = {
       title: 'Notation',
       description: 'Valider les questions et le barême.',
       analyze: 'Analyser le sujet',
+      upload: "Télécharger le sujet de l'examen",
+      noData: 'Aucune analyse trouvée',
     },
     exam: { title: '{subject} - {name}' },
     status: {
