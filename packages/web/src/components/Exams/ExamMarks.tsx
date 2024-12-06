@@ -74,7 +74,7 @@ export const ExamMarks = ({ examId, status }: ExamMarksProps): ReactElement => {
   }
 
   return (
-    <div className="h-full flex items-center justify-around">
+    <div className="flex mt-2">
       <ExamAnalysis analysis={data} examId={examId} />
     </div>
   );

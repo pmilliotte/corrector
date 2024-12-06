@@ -18,7 +18,7 @@ export const ExamFile = ({
   fileType,
   examId,
 }: ExamFilesProps): ReactElement => (
-  <div className="flex items-center justify-around">
+  <div className="h-full flex items-center justify-around">
     <div className="flex items-center gap-2">
       <Document
         file={url}

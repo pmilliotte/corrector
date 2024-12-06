@@ -52,5 +52,9 @@ export const examsMessages = {
       responses: { title: 'Réponses' },
       correction: { title: 'Correction' },
     },
+    problem: {
+      title: 'Problème {path} : {title}',
+      question: { title: 'Question {path} :' },
+    },
   },
 };
