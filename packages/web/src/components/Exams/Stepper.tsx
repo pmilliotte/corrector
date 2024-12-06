@@ -12,13 +12,15 @@ type StepperProps = {
 
 const stepOrder: Record<ExamStatus, number> = {
   subject: 0,
-  marks: 1,
-  responses: 2,
-  correction: 3,
+  imagesUploaded: 1,
+  marks: 2,
+  responses: 3,
+  correction: 4,
 };
 
 const stepIcons: Record<ExamStatus, ReactElement> = {
   subject: <File />,
+  imagesUploaded: <FileCheck />,
   marks: <Tag />,
   responses: <FileText />,
   correction: <FileCheck />,
