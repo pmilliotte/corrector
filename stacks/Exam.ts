@@ -42,6 +42,29 @@ export const Exam = ({ stack, app }: StackContext): void => {
   const ON_OBJECT_CREATED_NOTIFICATION = 'onObjectCreated';
   const ON_OBJECT_DELETED_NOTIFICATION = 'onObjectDeleted';
 
+  const graphicsmagickLayer = LayerVersion.fromLayerVersionArn(
+    stack,
+    'graphicsmagick-layer',
+    'arn:aws:lambda:eu-west-1:175033217214:layer:graphicsmagick:2',
+  );
+  const ghostscriptLayer = LayerVersion.fromLayerVersionArn(
+    stack,
+    'ghostscript-layer',
+    'arn:aws:lambda:eu-west-1:764866452798:layer:ghostscript:15',
+  );
+  const onObjectCreatedFunction = new Function(stack, 'exam-object-created', {
+    handler: 'packages/functions/src/exam/functions/onObjectCreated.handler',
+    timeout: '3 minutes',
+    architecture: 'x86_64',
+    layers: [graphicsmagickLayer, ghostscriptLayer],
+    environment: {
+      GM_PATH: process.env.GM_PATH ?? '',
+    },
+  });
+  const onObjectDeletedFunction = new Function(stack, 'exam-object-deleted', {
+    handler: 'packages/functions/src/exam/functions/onObjectDeleted.handler',
+  });
+
   const examBucket = new Bucket(stack, 'exam-bucket', {
     name: `${stack.stage}-${app.name}-exam`,
     blockPublicACLs: true,
@@ -61,18 +84,12 @@ export const Exam = ({ stack, app }: StackContext): void => {
     },
     notifications: {
       [ON_OBJECT_CREATED_NOTIFICATION]: {
-        function: {
-          handler:
-            'packages/functions/src/exam/functions/onObjectCreated.handler',
-        },
+        function: onObjectCreatedFunction,
         events: ['object_created'],
         filters: [{ suffix: EXAM_BLANK_PATH_SUFFIX }],
       },
       [ON_OBJECT_DELETED_NOTIFICATION]: {
-        function: {
-          handler:
-            'packages/functions/src/exam/functions/onObjectDeleted.handler',
-        },
+        function: onObjectDeletedFunction,
         events: ['object_removed'],
         filters: [{ suffix: EXAM_BLANK_PATH_SUFFIX }],
       },
@@ -86,40 +103,16 @@ export const Exam = ({ stack, app }: StackContext): void => {
 
   const apiEndpoint = new Function(stack, 'exam-function', {
     handler: 'packages/functions/src/exam/functions/index.handler',
-  });
-  const examMarksGetEndpoint = new Function(stack, 'exam-marks-get-function', {
-    handler: 'packages/functions/src/exam/functions/index.handler',
-    timeout: '3 minutes',
     environment: {
-      LOCALES_PATH:
-        stack.stage === 'local'
-          ? 'packages/functions/src/exam/layers/i18n'
-          : '/opt',
+      LOCALES_PATH: process.env.LOCALES_PATH ?? '',
     },
-    architecture: 'x86_64',
   });
-
   const i18nLayer = new LayerVersion(stack, 'i18n', {
     description: 'Locales for i18n',
     code: Code.fromAsset('packages/functions/src/exam/layers/i18n'),
     compatibleRuntimes: [Runtime.NODEJS_18_X],
   });
-  const graphicsmagickLayer = LayerVersion.fromLayerVersionArn(
-    stack,
-    'imagemagick-layer',
-    'arn:aws:lambda:eu-west-1:175033217214:layer:graphicsmagick:2',
-  );
-  const ghostscriptLayer = LayerVersion.fromLayerVersionArn(
-    stack,
-    'ghostscript-layer',
-    'arn:aws:lambda:eu-west-1:764866452798:layer:ghostscript:15',
-  );
-
-  examMarksGetEndpoint.addLayers(
-    i18nLayer,
-    graphicsmagickLayer,
-    ghostscriptLayer,
-  );
+  apiEndpoint.addLayers(i18nLayer);
 
   api.addRoutes(stack, {
     [Route.PresignedUrlGet]: apiEndpoint,
@@ -130,7 +123,7 @@ export const Exam = ({ stack, app }: StackContext): void => {
     [Route.ExamFilesGet]: apiEndpoint,
     [Route.ExamFileGet]: apiEndpoint,
     [Route.ExamFileDelete]: apiEndpoint,
-    [Route.ExamSubjectAnalyze]: examMarksGetEndpoint,
+    [Route.ExamSubjectAnalyze]: apiEndpoint,
     [Route.ExamSubjectAnalysisGet]: apiEndpoint,
   });
 

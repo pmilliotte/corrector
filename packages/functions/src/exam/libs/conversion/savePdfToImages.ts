@@ -39,6 +39,8 @@ export const savePdfToImages = async ({
     quality: 100,
   });
 
+  convert.setGMClass(process.env.GM_PATH ?? '');
+
   const response = await convert.bulk(-1, {
     responseType: 'buffer',
   });
