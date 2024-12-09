@@ -1,10 +1,10 @@
-import { FileWarning, MoveLeft, MoveRight } from 'lucide-react';
+import { FileWarning, Loader2, MoveLeft, MoveRight } from 'lucide-react';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import { Document, Page } from 'react-pdf';
 
 import { FileType } from '@corrector/shared';
 
-import { Button, Skeleton } from '../ui';
+import { Button } from '../ui';
 import { DeleteFileDialog } from './DeleteFileDialog';
 
 type ExamFilesProps = {
@@ -27,12 +27,26 @@ export const ExamFile = ({
     setWidth(Math.min(ref.current?.offsetWidth ?? 0, 700));
   }, [ref]);
 
-  console.log('pageNumber', pageNumber);
-  console.log('numberOfPages', numberOfPages);
-
   return (
-    <div className="w-full flex items-center justify-around p-8">
-      <div className="w-full flex flex-col items-center gap-2" ref={ref}>
+    <div className="w-full h-full" ref={ref}>
+      <Document
+        className="w-full h-full flex flex-col items-center justify-around gap-2"
+        file={url}
+        onLoadSuccess={({ numPages }) => {
+          setNumberOfPages(numPages);
+        }}
+        loading={() => <Loader2 />}
+        noData={() => (
+          <div className="h-full flex items-center justify-around">
+            <FileWarning />
+          </div>
+        )}
+        error={() => (
+          <div className="h-full flex items-center justify-around">
+            <FileWarning />
+          </div>
+        )}
+      >
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -56,28 +70,14 @@ export const ExamFile = ({
             <MoveRight size={16} />
           </Button>
         </div>
-        <Document
-          className="border border-solid border-primary"
-          file={url}
-          onLoadSuccess={({ numPages }) => {
-            setNumberOfPages(numPages);
-          }}
-          loading={() => <Skeleton className="w-[142px] h-[200px]" />}
-          noData={() => <Skeleton className="w-[142px] h-[200px]" />}
-          error={() => (
-            <div className="w-[142px] h-[200px] flex items-center justify-around border border-solid rounded-sm bg-muted">
-              <FileWarning />
-            </div>
-          )}
-        >
-          <Page
-            pageNumber={pageNumber}
-            width={width}
-            renderAnnotationLayer={false}
-            renderTextLayer={false}
-          />
-        </Document>
-      </div>
+        <Page
+          pageNumber={pageNumber}
+          width={width}
+          renderAnnotationLayer={false}
+          renderTextLayer={false}
+          className="border border-solid border-primary "
+        />
+      </Document>
     </div>
   );
 };

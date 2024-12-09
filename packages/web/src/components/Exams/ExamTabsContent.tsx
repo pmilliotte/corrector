@@ -24,7 +24,10 @@ export const ExamTabsContent = ({
   status,
   id,
 }: ExamTabsContentProps): ReactElement => (
-  <Tabs defaultValue={DEFAULT_TAB[status]} className="h-full flex flex-col">
+  <Tabs
+    defaultValue={DEFAULT_TAB[status]}
+    className="h-full flex flex-col gap-2"
+  >
     <div className="flex items-center">
       <TabsList className="grid w-full grid-cols-4">
         {TABS.map(tab => (
