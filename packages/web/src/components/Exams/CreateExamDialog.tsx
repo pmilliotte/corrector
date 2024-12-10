@@ -57,6 +57,7 @@ export const CreateExamDialog = (): ReactElement => {
     defaultValues: {
       name: undefined,
       subject: undefined,
+      division: undefined,
     },
   });
 

@@ -10,5 +10,5 @@
   "examAnalysis.questionPath": "Le numéro de la question dans le problème.",
   "examAnalysis.questionStatement": "L'énoncé de la question.",
   "examAnalysis.answer": "Une proposition de réponse parfaite.",
-  "examAnalysis.humanMessage": "Voici un sujet d'examen. Donne-moi la liste des problèmes et leurs questions."
+  "examAnalysis.humanMessage": "Voici les images des différentes pages d'un sujet d'examen. Donne-moi la liste des problèmes de toutes les pages et leurs questions."
 }

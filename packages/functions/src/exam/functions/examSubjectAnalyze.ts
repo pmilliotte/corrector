@@ -9,7 +9,11 @@ import { UpdateItemCommand } from 'dynamodb-toolbox';
 import { Bucket } from 'sst/node/bucket';
 import { z } from 'zod';
 
-import { EXAM_BLANK, getExamOutputSchema } from '@corrector/shared';
+import {
+  EXAM_BLANK,
+  examOutputToAnalysis,
+  getExamOutputSchema,
+} from '@corrector/shared';
 
 import { s3Client } from '~/clients';
 import { validateOrganizationAccess } from '~/libs';
@@ -121,11 +125,13 @@ export const examSubjectAnalyze = authedProcedure
 
       const response = await chain.invoke({ blankExam: [humanMessage] });
 
+      const examOutput = getExamOutputSchema({}).parse(response);
+
       await s3Client.send(
         new PutObjectCommand({
           Bucket: Bucket['exam-bucket'].bucketName,
           Key: `${fileKeyPrefix}/${EXAM_BLANK}/analysis.json`,
-          Body: JSON.stringify(getExamOutputSchema({}).parse(response)),
+          Body: JSON.stringify(examOutputToAnalysis(examOutput)),
         }),
       );
 

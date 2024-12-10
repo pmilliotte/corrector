@@ -1,38 +1,44 @@
-import { MathJax } from 'better-react-mathjax';
-import { Fragment, ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { Problem as ProblemType } from '@corrector/shared';
+import { ProblemAnalysis, QuestionAnalysis } from '@corrector/shared';
+
+import { UpdateExamQuestionsTools } from '~/lib';
+
+import { Question } from './Question';
 
 type ProblemProps = {
-  problem: ProblemType;
+  problem: ProblemAnalysis;
+  problemId: string;
+  updateExamQuestionsTools: UpdateExamQuestionsTools;
 };
 
-export const Problem = ({ problem }: ProblemProps): ReactElement => {
+export const Problem = ({
+  problemId,
+  problem,
+  updateExamQuestionsTools,
+}: ProblemProps): ReactElement => {
   const { problemPath, problemTitle, questions } = problem;
 
   return (
     <div className="flex flex-col gap-1">
-      <div className="font-bold">
+      <div className="font-bold flex items-center justify-around text-muted-foreground">
         <FormattedMessage
           id="exams.problem.title"
           values={{ title: problemTitle, path: problemPath }}
         />
       </div>
-      {questions.map(({ questionPath, questionStatement, answer }) => (
-        <Fragment key={questionPath}>
-          <div className="font-semibold text-muted-foreground">
-            <FormattedMessage
-              id="exams.problem.question.title"
-              values={{ path: questionPath }}
-            />
-          </div>
-          <MathJax dynamic>{questionStatement}</MathJax>
-          <div className="border border-solid border-primary p-2">
-            <MathJax dynamic>{answer}</MathJax>
-          </div>
-        </Fragment>
-      ))}
+      {Object.entries(questions as Record<string, QuestionAnalysis>).map(
+        ([questionId, question]) => (
+          <Question
+            key={questionId}
+            question={question}
+            questionId={questionId}
+            problemId={problemId}
+            updateExamQuestionsTools={updateExamQuestionsTools}
+          />
+        ),
+      )}
     </div>
   );
 };

@@ -26,6 +26,7 @@ enum Route {
   ExamFileDelete = 'POST /examFileDelete',
   ExamSubjectAnalyze = 'POST /examSubjectAnalyze',
   ExamSubjectAnalysisGet = 'GET /examSubjectAnalysisGet',
+  ExamSubjectAnalysisUpdate = 'POST /examSubjectAnalysisUpdate',
 }
 
 export const Exam = ({ stack, app }: StackContext): void => {
@@ -105,6 +106,7 @@ export const Exam = ({ stack, app }: StackContext): void => {
     handler: 'packages/functions/src/exam/functions/index.handler',
     environment: {
       LOCALES_PATH: process.env.LOCALES_PATH ?? '',
+      STAGE: stack.stage,
     },
   });
   const i18nLayer = new LayerVersion(stack, 'i18n', {
@@ -125,6 +127,7 @@ export const Exam = ({ stack, app }: StackContext): void => {
     [Route.ExamFileDelete]: apiEndpoint,
     [Route.ExamSubjectAnalyze]: apiEndpoint,
     [Route.ExamSubjectAnalysisGet]: apiEndpoint,
+    [Route.ExamSubjectAnalysisUpdate]: apiEndpoint,
   });
 
   api.bindToRoute(Route.PresignedUrlGet, [examBucket, examTable]);
@@ -142,4 +145,5 @@ export const Exam = ({ stack, app }: StackContext): void => {
     openAiProjectId,
   ]);
   api.bindToRoute(Route.ExamSubjectAnalysisGet, [examTable, examBucket]);
+  api.bindToRoute(Route.ExamSubjectAnalysisUpdate, [examTable, examBucket]);
 };

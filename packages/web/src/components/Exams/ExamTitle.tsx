@@ -17,8 +17,8 @@ export const ExamTitle = ({
   const t = useIntl();
 
   return (
-    <div className="flex items-baseline justify-between">
-      <div className="font-semibold text-xl">
+    <div className="flex items-baseline justify-between gap-2">
+      <span className="font-semibold text-xl whitespace-nowrap overflow-hidden text-ellipsis">
         <FormattedMessage
           id="exams.exam.title"
           values={{
@@ -28,8 +28,8 @@ export const ExamTitle = ({
             name,
           }}
         />
-      </div>
-      <div className="text-muted-foreground text-sm">
+      </span>
+      <div className="text-muted-foreground text-sm whitespace-nowrap shrink-0">
         <FormattedMessage
           id="exams.createdOn"
           values={{

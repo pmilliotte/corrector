@@ -54,7 +54,11 @@ export const examsMessages = {
     },
     problem: {
       title: 'Problème {path} : {title}',
-      question: { title: 'Question {path} :' },
+      question: {
+        title: 'Question {path}',
+        marks: '{mark, plural, =1 {# point} other {# points}}',
+        points: 'point(s)',
+      },
     },
   },
 };

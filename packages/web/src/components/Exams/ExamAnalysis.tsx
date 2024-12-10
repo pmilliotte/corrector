@@ -1,29 +1,40 @@
-import { Fragment, ReactElement } from 'react';
+import { ReactElement } from 'react';
 
-import { ExamOutput } from '@corrector/shared';
+import {
+  ExamAnalysis as ExamAnalysisType,
+  ProblemAnalysis,
+} from '@corrector/shared';
 
-import { Separator } from '../ui';
+import { useUpdateExamQuestionsTools } from '~/lib';
+
 import { Problem } from './Problem';
 
 type ExamAnalysisProps = {
   examId: string;
-  analysis: ExamOutput;
+  analysis: ExamAnalysisType;
 };
 
 export const ExamAnalysis = ({
   examId,
   analysis,
 }: ExamAnalysisProps): ReactElement => {
-  console.log(examId);
+  const updateExamQuestionsTools = useUpdateExamQuestionsTools({
+    analysis,
+    examId,
+  });
 
   return (
     <div className="flex flex-col gap-2">
-      {analysis.problems.map(problem => (
-        <Fragment key={problem.problemPath}>
-          <Problem problem={problem} />
-          <Separator />
-        </Fragment>
-      ))}
+      {Object.entries(analysis.problems as Record<string, ProblemAnalysis>).map(
+        ([problemId, problem]) => (
+          <Problem
+            problem={problem}
+            problemId={problemId}
+            key={problemId}
+            updateExamQuestionsTools={updateExamQuestionsTools}
+          />
+        ),
+      )}
     </div>
   );
 };

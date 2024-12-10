@@ -75,3 +75,55 @@ export const getQuestionSchema = ({
       answer: z.string().describe(answer ?? ''),
     })
     .strict();
+
+export type Question = z.infer<ReturnType<typeof getQuestionSchema>>;
+
+export const questionAnalysisSchema = z
+  .object({
+    questionStatement: z.string(),
+    questionPath: z.string(),
+    answer: z.string(),
+    mark: z.number().min(0).optional(),
+  })
+  .strict();
+
+export type QuestionAnalysis = z.infer<typeof questionAnalysisSchema>;
+
+export const problemAnalysisSchema = z
+  .object({
+    problemTitle: z.string(),
+    problemPath: z.string(),
+    questions: z.record(z.string(), questionAnalysisSchema.optional()),
+  })
+  .strict();
+
+export type ProblemAnalysis = z.infer<typeof problemAnalysisSchema>;
+
+export const examAnalysisSchema = z
+  .object({
+    examTitle: z.string(),
+    problems: z.record(z.string(), problemAnalysisSchema.optional()),
+  })
+  .strict();
+
+export type ExamAnalysis = z.infer<typeof examAnalysisSchema>;
+
+const questionIdSchema = z
+  .object({
+    problemId: z.string(),
+    questionId: z.string(),
+  })
+  .strict();
+
+export const updateQuestionSchema = questionIdSchema
+  .merge(z.object({ propertyName: z.enum(['mark']), value: z.number().min(0) }))
+  .or(
+    questionIdSchema.merge(
+      z.object({
+        propertyName: z.enum(['questionStatement', 'answer']),
+        value: z.string(),
+      }),
+    ),
+  );
+
+export type UpdateQuestionInput = z.infer<typeof updateQuestionSchema>;

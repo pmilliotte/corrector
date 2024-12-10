@@ -29,7 +29,7 @@ export const ExamWrapper = (): ReactElement => {
   const { exam } = data;
 
   return (
-    <div className="p-4 h-full flex flex-col gap-2">
+    <div className="p-4 h-full max-w-full w-full flex flex-col gap-2">
       <>
         <ExamTitle
           name={exam.name}
