@@ -1,4 +1,4 @@
-import tailwindcssAnimate from 'tailwindcss-animate'
+import tailwindcssAnimate from 'tailwindcss-animate';
 
 /** @type {import('tailwindcss').Config} */
 const tailwindConfig = {
@@ -97,6 +97,7 @@ const tailwindConfig = {
   			'95/100': '95%'
   		},
   		width: {
+  			'1/4': '25%',
   			'1/2': '50%',
   			'3/4': '75%',
   			'9/10': '90%',
@@ -104,6 +105,14 @@ const tailwindConfig = {
   		}
   	},
   	maxWidth: {
+  		'1/4': '25%',
+  		'1/2': '50%',
+  		'3/4': '75%',
+  		'9/10': '90%',
+  		'95/100': '95%'
+  	},
+  	minWidth: {
+		0: '0',
   		'1/4': '25%',
   		'1/2': '50%',
   		'3/4': '75%',

@@ -44,7 +44,7 @@ export const examSubjectAnalysisUpdate = authedProcedure
         session,
       );
 
-      if (status !== 'marks') {
+      if (status !== 'analyzed') {
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
 
@@ -53,6 +53,7 @@ export const examSubjectAnalysisUpdate = authedProcedure
         organizationId,
         userId,
         examId,
+        fileType: EXAM_BLANK,
       });
       const analysis = await getAnalysis(fileKeyPrefix);
 
@@ -71,7 +72,7 @@ export const examSubjectAnalysisUpdate = authedProcedure
       await s3Client.send(
         new PutObjectCommand({
           Bucket: Bucket['exam-bucket'].bucketName,
-          Key: `${fileKeyPrefix}/${EXAM_BLANK}/analysis.json`,
+          Key: `${fileKeyPrefix}/analysis.json`,
           Body: JSON.stringify(newAnalysis),
         }),
       );

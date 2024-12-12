@@ -18,13 +18,12 @@ export const examsMessages = {
     createdOn: 'Créé le {date}',
     correct: 'Corriger',
     tabs: {
-      subject: 'Sujet',
-      marks: 'Barême',
-      responses: 'Copies',
+      analysis: 'Analyse',
       correction: 'Correction',
+      marks: 'Barême',
     },
     files: {
-      confirmDeletion: 'Supprimer définitivement le fichier ?',
+      confirmDeletion: 'Supprimer définitivement le fichier et ses données ?',
       upload: 'Télécharger le fichier.',
       empty: 'Aucun fichier chargé',
       title: 'Fichiers',
@@ -32,7 +31,8 @@ export const examsMessages = {
         "Télécharger les fichiers de l'examen nécessaires à sa correction.",
       'exam-blank': 'Énoncé',
       'exam-solutions': 'Solutions',
-      'exam-responses': 'Réponses',
+      'exam-response': 'Réponses',
+      open: 'Ouvrir dans un nouvel onglet',
     },
     marks: {
       title: 'Notation',
@@ -41,11 +41,19 @@ export const examsMessages = {
       upload: "Télécharger le sujet de l'examen",
       noData: 'Aucune analyse trouvée',
     },
+    responses: {
+      addResponse: 'Ajouter une copie',
+      files: 'Copies',
+      description: 'Télécharger les réponses',
+    },
     exam: { title: '{subject} - {name}' },
+    upload: {
+      'exam-blank': 'Télécharger le sujet',
+      'exam-response': 'Télécharger la copie à corriger',
+    },
     status: {
       subject: {
         title: 'Sujet',
-        description: "Télécharger le sujet de l'examen",
         next: 'Étape suivante',
       },
       marks: { title: 'Notation' },

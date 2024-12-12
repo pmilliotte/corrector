@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { EXAM_BLANK } from '@corrector/shared';
+
 import { validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
@@ -30,6 +32,7 @@ export const examSubjectAnalysisGet = authedProcedure
         organizationId,
         userId,
         examId,
+        fileType: EXAM_BLANK,
       });
 
       const analysis = await getAnalysis(fileKeyPrefix);

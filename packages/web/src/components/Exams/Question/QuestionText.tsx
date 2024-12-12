@@ -40,6 +40,7 @@ export const QuestionText = ({
         <div className="flex items-center gap-1 text-primary">
           <Button
             variant="outline"
+            size="icon"
             onClick={() => {
               newText !== text &&
                 updateQuestion({
@@ -54,7 +55,9 @@ export const QuestionText = ({
             <Eye size={16} />
           </Button>
           <Button
-            variant="destructive"
+            size="icon"
+            variant="outline"
+            className="text-destructive hover:text-destructive"
             onClick={() => {
               cancelUpdate();
               setNewText(text);
@@ -67,7 +70,6 @@ export const QuestionText = ({
       </>
     );
   }
-
   const question = getQuestion({ questionId, problemId });
   const isPropertyDrafting = isDrafting({
     problemId,
@@ -84,6 +86,7 @@ export const QuestionText = ({
       <div className="flex items-center gap-1 text-primary">
         <Button
           variant="outline"
+          size="icon"
           onClick={() => setUpdating(true)}
           disabled={
             (examAnalysis.updatingQuestion !== undefined &&
@@ -93,7 +96,11 @@ export const QuestionText = ({
         >
           <SquarePen size={16} />
         </Button>
-        <Button onClick={validateUpdate} disabled={!isPropertyDrafting}>
+        <Button
+          onClick={validateUpdate}
+          disabled={!isPropertyDrafting}
+          size="icon"
+        >
           {isPropertyLoading ? (
             <Loader2 size={16} className="animate-spin" />
           ) : (

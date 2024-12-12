@@ -1,72 +1,105 @@
 import { HeadObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { TRPCError } from '@trpc/server';
 import { Bucket } from 'sst/node/bucket';
 import { z } from 'zod';
 
-import { FILE_TYPES, FileType } from '@corrector/shared';
+import { EXAM_RESPONSE } from '@corrector/shared';
 
 import { s3Client } from '~/clients';
 import { validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
 import {
+  getExamBlankFileName,
   getFileKeyPrefix,
-  requestSignedUrlGet,
   validateExamOwnership,
 } from '../libs';
 
 export const examFilesGet = authedProcedure
   .input(
     z.object({
-      id: z.string(),
+      examId: z.string(),
       organizationId: z.string(),
     }),
   )
-  .query(async ({ ctx: { session }, input: { id, organizationId } }) => {
-    validateOrganizationAccess(organizationId, session);
-    await validateExamOwnership({ examId: id, organizationId }, session);
+  .query(
+    async ({ ctx: { session }, input: { examId: examId, organizationId } }) => {
+      validateOrganizationAccess(organizationId, session);
+      await validateExamOwnership({ examId: examId, organizationId }, session);
 
-    const filePrefix = getFileKeyPrefix({
-      organizationId,
-      userId: session.id,
-      examId: id,
-    });
+      const filePrefix = getFileKeyPrefix({
+        organizationId,
+        userId: session.id,
+        examId: examId,
+        fileType: EXAM_RESPONSE,
+      });
 
-    const { Contents: files = [] } = await s3Client.send(
-      new ListObjectsV2Command({
-        Bucket: Bucket['exam-bucket'].bucketName,
-        Prefix: filePrefix,
-      }),
-    );
+      const { Contents: responses = [] } = await s3Client.send(
+        new ListObjectsV2Command({
+          Bucket: Bucket['exam-bucket'].bucketName,
+          Prefix: `${filePrefix}/`,
+        }),
+      );
 
-    const fileNames = await FILE_TYPES.reduce<
-      Promise<
-        Partial<Record<FileType, { originalFileName: string; url: string }>>
-      >
-    >(async (accP, fileType) => {
-      const acc = await accP;
-      const key = `${filePrefix}/${fileType}.pdf`;
-      if (!files.map(({ Key }) => Key).includes(key)) {
-        return acc;
-      }
+      const files = await Promise.all([
+        s3Client
+          .send(
+            new HeadObjectCommand({
+              Bucket: Bucket['exam-bucket'].bucketName,
+              Key: getExamBlankFileName({
+                organizationId,
+                userId: session.id,
+                examId: examId,
+              }),
+            }),
+          )
+          .then(({ Metadata, LastModified }) => ({
+            id: 'subject' as const,
+            originalFileName:
+              Metadata?.['original-file-name'] !== undefined
+                ? decodeURIComponent(Metadata['original-file-name'])
+                : undefined,
+            lastModified: LastModified,
+          })),
+        ...responses.map(({ Key }) => {
+          if (Key === undefined) {
+            throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+          }
 
-      const [{ Metadata: metadata }, url] = await Promise.all([
-        s3Client.send(
-          new HeadObjectCommand({
-            Bucket: Bucket['exam-bucket'].bucketName,
-            Key: key,
-          }),
-        ),
-        requestSignedUrlGet({
-          fileKey: key,
-          bucketName: Bucket['exam-bucket'].bucketName,
+          return s3Client
+            .send(
+              new HeadObjectCommand({
+                Bucket: Bucket['exam-bucket'].bucketName,
+                Key,
+              }),
+            )
+            .then(({ Metadata, LastModified }) => ({
+              id: getResponseIdFromKey(Key),
+              originalFileName:
+                Metadata?.['original-file-name'] !== undefined
+                  ? decodeURIComponent(Metadata['original-file-name'])
+                  : undefined,
+              lastModified: LastModified,
+            }));
         }),
       ]);
 
-      return {
-        ...acc,
-        [fileType]: { originalFileName: metadata?.['original-file-name'], url },
-      };
-    }, Promise.resolve({}));
+      return files;
+    },
+  );
 
-    return fileNames;
-  });
+const EXAM_RESPONSE_KEY_REGEXP = new RegExp(
+  `^organizations/[0-9a-fA-F-]{36}/users/[0-9a-fA-F-]{36}/exams/[0-9a-fA-F-]{36}/${EXAM_RESPONSE}/([0-9a-fA-F-]{36})/file.pdf$`,
+);
+
+const getResponseIdFromKey = (key: string): string => {
+  const match = EXAM_RESPONSE_KEY_REGEXP.exec(key);
+
+  if (match === null) {
+    throw new Error();
+  }
+
+  const [_, responseId] = match;
+
+  return responseId;
+};

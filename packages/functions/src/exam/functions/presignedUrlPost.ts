@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { Bucket } from 'sst/node/bucket';
 import { z } from 'zod';
 
-import { FILE_TYPES } from '@corrector/shared';
+import { EXAM_BLANK, EXAM_RESPONSE } from '@corrector/shared';
 
 import { validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
@@ -17,17 +17,30 @@ import {
 
 export const presignedUrlPost = authedProcedure
   .input(
-    z.object({
-      fileName: z.string(),
-      organizationId: z.string(),
-      fileType: z.enum(FILE_TYPES),
-      examId: z.string(),
-    }),
+    z
+      .object({
+        fileName: z.string(),
+        organizationId: z.string(),
+        examId: z.string(),
+      })
+      .and(
+        z
+          .object({
+            fileType: z.literal(EXAM_BLANK),
+            fileId: z.string().optional(),
+          })
+          .or(
+            z.object({
+              fileType: z.literal(EXAM_RESPONSE),
+              fileId: z.string(),
+            }),
+          ),
+      ),
   )
   .mutation(
     async ({
       ctx: { session },
-      input: { fileName, organizationId, fileType, examId },
+      input: { fileName, organizationId, examId, ...file },
     }) => {
       validateOrganizationAccess(organizationId, session);
       await validateExamOwnership({ examId, organizationId }, session);
@@ -43,11 +56,14 @@ export const presignedUrlPost = authedProcedure
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
 
-      const fileKey = `${getFileKeyPrefix({ organizationId, userId, examId })}/${fileType}/file.${fileExtension}`;
+      const fileKey = `${getFileKeyPrefix({ organizationId, userId, examId, ...file })}/file.${fileExtension}`;
       // Metadata arguments must start with x-amz-meta and be written in kebab case
       const metadata = {
-        'x-amz-meta-original-file-name': fileName,
+        'x-amz-meta-original-file-name': encodeURIComponent(fileName),
         'x-amz-meta-uploaded-by': userId,
+        ...(file.fileType === EXAM_RESPONSE
+          ? { 'x-amz-meta-created-uuid': file.fileId }
+          : {}),
       };
 
       const { url, fields } = await requestSignedUrlPost({
@@ -57,6 +73,10 @@ export const presignedUrlPost = authedProcedure
         bucketName: Bucket['exam-bucket'].bucketName,
       });
 
-      return { url, fields };
+      return {
+        url,
+        fields,
+        id: file.fileType === EXAM_RESPONSE ? file.fileId : 'subject',
+      };
     },
   );

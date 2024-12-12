@@ -11,7 +11,7 @@ import {
 } from 'sst/constructs';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
-import { EXAM_BLANK_PATH_SUFFIX } from '@corrector/shared';
+import { PDF_FILE_NAME } from '@corrector/shared';
 
 import { Core } from './Core';
 
@@ -23,10 +23,14 @@ enum Route {
   ExamGet = 'GET /examGet',
   ExamFilesGet = 'GET /examFilesGet',
   ExamFileGet = 'GET /examFileGet',
-  ExamFileDelete = 'POST /examFileDelete',
+  ExamSubjectDelete = 'POST /examSubjectDelete',
   ExamSubjectAnalyze = 'POST /examSubjectAnalyze',
   ExamSubjectAnalysisGet = 'GET /examSubjectAnalysisGet',
   ExamSubjectAnalysisUpdate = 'POST /examSubjectAnalysisUpdate',
+  ExamResponseList = 'GET /examResponseList',
+  ResponseCreate = 'POST /responseCreate',
+  ResponseList = 'GET /responseList',
+  ResponseDelete = 'POST /responseDelete',
 }
 
 export const Exam = ({ stack, app }: StackContext): void => {
@@ -40,8 +44,7 @@ export const Exam = ({ stack, app }: StackContext): void => {
     primaryIndex: { partitionKey: PARTITION_KEY, sortKey: SORT_KEY },
   });
 
-  const ON_OBJECT_CREATED_NOTIFICATION = 'onObjectCreated';
-  const ON_OBJECT_DELETED_NOTIFICATION = 'onObjectDeleted';
+  const ON_FILE_UPLOADED_NOTIFICATION = 'onFileUploaded';
 
   const graphicsmagickLayer = LayerVersion.fromLayerVersionArn(
     stack,
@@ -53,17 +56,14 @@ export const Exam = ({ stack, app }: StackContext): void => {
     'ghostscript-layer',
     'arn:aws:lambda:eu-west-1:764866452798:layer:ghostscript:15',
   );
-  const onObjectCreatedFunction = new Function(stack, 'exam-object-created', {
-    handler: 'packages/functions/src/exam/functions/onObjectCreated.handler',
+  const onFileUploadedFunction = new Function(stack, 'exam-file-uploaded', {
+    handler: 'packages/functions/src/exam/functions/onFileUploaded.handler',
     timeout: '3 minutes',
     architecture: 'x86_64',
     layers: [graphicsmagickLayer, ghostscriptLayer],
     environment: {
       GM_PATH: process.env.GM_PATH ?? '',
     },
-  });
-  const onObjectDeletedFunction = new Function(stack, 'exam-object-deleted', {
-    handler: 'packages/functions/src/exam/functions/onObjectDeleted.handler',
   });
 
   const examBucket = new Bucket(stack, 'exam-bucket', {
@@ -84,15 +84,10 @@ export const Exam = ({ stack, app }: StackContext): void => {
       },
     },
     notifications: {
-      [ON_OBJECT_CREATED_NOTIFICATION]: {
-        function: onObjectCreatedFunction,
+      [ON_FILE_UPLOADED_NOTIFICATION]: {
+        function: onFileUploadedFunction,
         events: ['object_created'],
-        filters: [{ suffix: EXAM_BLANK_PATH_SUFFIX }],
-      },
-      [ON_OBJECT_DELETED_NOTIFICATION]: {
-        function: onObjectDeletedFunction,
-        events: ['object_removed'],
-        filters: [{ suffix: EXAM_BLANK_PATH_SUFFIX }],
+        filters: [{ suffix: `/${PDF_FILE_NAME}.pdf` }],
       },
     },
   });
@@ -124,10 +119,23 @@ export const Exam = ({ stack, app }: StackContext): void => {
     [Route.ExamGet]: apiEndpoint,
     [Route.ExamFilesGet]: apiEndpoint,
     [Route.ExamFileGet]: apiEndpoint,
-    [Route.ExamFileDelete]: apiEndpoint,
-    [Route.ExamSubjectAnalyze]: apiEndpoint,
+    [Route.ExamSubjectDelete]: apiEndpoint,
+    [Route.ExamSubjectAnalyze]: {
+      function: {
+        handler: 'packages/functions/src/exam/functions/index.handler',
+        environment: {
+          LOCALES_PATH: process.env.LOCALES_PATH ?? '',
+          STAGE: stack.stage,
+        },
+        timeout: 29,
+      },
+    },
     [Route.ExamSubjectAnalysisGet]: apiEndpoint,
     [Route.ExamSubjectAnalysisUpdate]: apiEndpoint,
+    [Route.ExamResponseList]: apiEndpoint,
+    [Route.ResponseCreate]: apiEndpoint,
+    [Route.ResponseList]: apiEndpoint,
+    [Route.ResponseDelete]: apiEndpoint,
   });
 
   api.bindToRoute(Route.PresignedUrlGet, [examBucket, examTable]);
@@ -137,7 +145,7 @@ export const Exam = ({ stack, app }: StackContext): void => {
   api.bindToRoute(Route.ExamGet, [examTable]);
   api.bindToRoute(Route.ExamFilesGet, [examTable, examBucket]);
   api.bindToRoute(Route.ExamFileGet, [examTable, examBucket]);
-  api.bindToRoute(Route.ExamFileDelete, [examTable, examBucket]);
+  api.bindToRoute(Route.ExamSubjectDelete, [examTable, examBucket]);
   api.bindToRoute(Route.ExamSubjectAnalyze, [
     examTable,
     examBucket,
@@ -146,4 +154,8 @@ export const Exam = ({ stack, app }: StackContext): void => {
   ]);
   api.bindToRoute(Route.ExamSubjectAnalysisGet, [examTable, examBucket]);
   api.bindToRoute(Route.ExamSubjectAnalysisUpdate, [examTable, examBucket]);
+  api.bindToRoute(Route.ExamResponseList, [examTable, examBucket]);
+  api.bindToRoute(Route.ResponseCreate, [examTable]);
+  api.bindToRoute(Route.ResponseList, [examTable]);
+  api.bindToRoute(Route.ResponseDelete, [examTable]);
 };

@@ -2,22 +2,28 @@ import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { fromBuffer } from 'pdf2pic';
 import { Readable } from 'stream';
 
-import { FileType, PDF_FILE_NAME } from '@corrector/shared';
+import { PDF_FILE_NAME } from '@corrector/shared';
 
 import { s3Client } from '~/clients/s3';
 
 export const savePdfToImages = async ({
   bucketName,
-  fileType,
   prefix,
 }: {
   bucketName: string;
-  fileType: FileType;
   prefix: string;
-}): Promise<void> => {
-  const { Body: rawData } = await s3Client.send(
+}): Promise<{
+  id?: string;
+  originalFileName?: string;
+  uploadedAt?: string;
+}> => {
+  const {
+    Body: rawData,
+    Metadata,
+    LastModified,
+  } = await s3Client.send(
     new GetObjectCommand({
-      Key: `${prefix}/${fileType}/${PDF_FILE_NAME}.pdf`,
+      Key: `${prefix}/${PDF_FILE_NAME}.pdf`,
       Bucket: bucketName,
     }),
   );
@@ -49,7 +55,7 @@ export const savePdfToImages = async ({
     response.map(({ buffer }, index) =>
       s3Client.send(
         new PutObjectCommand({
-          Key: `${prefix}/${fileType}/images/page-${index}.jpeg`,
+          Key: `${prefix}/images/page-${index}.jpeg`,
           Bucket: bucketName,
           ContentType: 'image/jpeg',
           Body: buffer,
@@ -57,4 +63,15 @@ export const savePdfToImages = async ({
       ),
     ),
   );
+
+  console.log(Metadata);
+
+  return {
+    id: Metadata?.['created-uuid'],
+    originalFileName:
+      Metadata?.['original-file-name'] !== undefined
+        ? decodeURIComponent(Metadata['original-file-name'])
+        : undefined,
+    uploadedAt: LastModified?.toISOString(),
+  };
 };

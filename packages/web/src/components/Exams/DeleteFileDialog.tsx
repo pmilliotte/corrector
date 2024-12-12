@@ -2,9 +2,9 @@ import { Loader2, Trash2 } from 'lucide-react';
 import { ReactElement, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { FileType } from '@corrector/shared';
+import { EXAM_BLANK, EXAM_RESPONSE, FileType } from '@corrector/shared';
 
-import { trpc, useUserOrganizations } from '~/lib';
+import { SelectedFile, trpc, useUserOrganizations } from '~/lib';
 
 import {
   Button,
@@ -15,31 +15,80 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from '../ui';
 
-type DeleteFileDialogProps = { fileType: FileType; examId: string };
+type DeleteFileDialogProps = {
+  fileType: FileType;
+  examId: string;
+  fileId: string;
+  setSelectedFile?: (value: SelectedFile) => void;
+};
 
 export const DeleteFileDialog = ({
   fileType,
+  fileId,
   examId,
+  setSelectedFile,
 }: DeleteFileDialogProps): ReactElement => {
   const [open, setOpen] = useState(false);
   const utils = trpc.useUtils();
   const { selectedOrganization } = useUserOrganizations();
-  const { mutate, isPending } = trpc.examFileDelete.useMutation({
-    onSuccess: async () => {
-      await utils.examFileGet.invalidate();
-      setOpen(false);
-    },
-  });
+  const { mutate: deleteExamBlank, isPending: deleteExamBlankPending } =
+    trpc.examSubjectDelete.useMutation({
+      onSuccess: async () => {
+        await utils.examGet.invalidate();
+        setSelectedFile?.({ id: 'subject', status: 'toBeUploaded' });
+        setOpen(false);
+      },
+    });
+  const { mutate: deleteResponse, isPending: deleteResponsePending } =
+    trpc.responseDelete.useMutation({
+      onSuccess: async () => {
+        await utils.responseList.invalidate();
+        setSelectedFile?.({ id: 'subject', status: 'toBeUploaded' });
+        setOpen(false);
+      },
+    });
+
+  const onClick = () => {
+    switch (fileType) {
+      case EXAM_BLANK:
+        deleteExamBlank({
+          organizationId: selectedOrganization.id,
+          examId,
+        });
+        break;
+      case EXAM_RESPONSE:
+        deleteResponse({
+          organizationId: selectedOrganization.id,
+          examId,
+          responseId: fileId,
+        });
+        break;
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="secondary" className="text-destructive">
-          <Trash2 size={16} />
-        </Button>
-      </DialogTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-destructive hover:text-destructive"
+            >
+              <Trash2 />
+            </Button>
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>
+          <FormattedMessage id="common.delete" />
+        </TooltipContent>
+      </Tooltip>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
@@ -50,18 +99,8 @@ export const DeleteFileDialog = ({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button
-            variant="destructive"
-            className="gap-2"
-            onClick={() =>
-              mutate({
-                fileType,
-                organizationId: selectedOrganization.id,
-                examId,
-              })
-            }
-          >
-            {isPending ? (
+          <Button variant="destructive" className="gap-2" onClick={onClick}>
+            {deleteExamBlankPending || deleteResponsePending ? (
               <Loader2 size={16} className="animate-spin" />
             ) : (
               <Trash2 size={16} />

@@ -22,7 +22,7 @@ export const Problem = ({
 
   return (
     <div className="flex flex-col gap-1">
-      <div className="font-bold flex items-center justify-around text-muted-foreground">
+      <div className="font-bold text-muted-foreground">
         <FormattedMessage
           id="exams.problem.title"
           values={{ title: problemTitle, path: problemPath }}

@@ -1,32 +1,40 @@
 import { useCallback, useState } from 'react';
 
-import { FileType } from '@corrector/shared';
+import { EXAM_BLANK, EXAM_RESPONSE } from '@corrector/shared';
 
 import { useUserOrganizations } from '../contexts';
 import { trpc, uploadFileOnS3 } from '../utils';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const useOnDrop = (callback?: () => PromiseLike<void>) => {
+export const useOnDrop = (callback?: (fileId: string) => PromiseLike<void>) => {
   const [isLoading, setIsLoading] = useState(false);
   const { mutate } = trpc.presignedUrlPost.useMutation();
   const { selectedOrganization } = useUserOrganizations();
 
   const onDrop = useCallback(
-    ({ fileType, examId }: { fileType: FileType; examId: string }) =>
+    ({
+      examId,
+      ...file
+    }: {
+      examId: string;
+    } & (
+      | { fileType: typeof EXAM_BLANK; fileId?: string }
+      | { fileType: typeof EXAM_RESPONSE; fileId: string }
+    )) =>
       (acceptedFiles: File[]) => {
         setIsLoading(true);
-        const file = acceptedFiles[0];
+        const uploadedFile = acceptedFiles[0];
         mutate(
           {
-            fileName: file.name,
-            fileType,
+            fileName: uploadedFile.name,
             organizationId: selectedOrganization.id,
             examId,
+            ...file,
           },
           {
-            onSuccess: ({ url, fields }) => {
-              void uploadFileOnS3({ file, url, fields })
-                .then(callback)
+            onSuccess: ({ url, fields, id }) => {
+              void uploadFileOnS3({ file: uploadedFile, url, fields })
+                .then(() => callback?.(id))
                 .then(() => setIsLoading(false));
             },
             onError: () => {

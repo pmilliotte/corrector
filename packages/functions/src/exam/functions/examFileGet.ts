@@ -1,38 +1,55 @@
 import { Bucket } from 'sst/node/bucket';
 import { z } from 'zod';
 
-import { FILE_TYPES, PDF_FILE_NAME } from '@corrector/shared';
+import { EXAM_BLANK, EXAM_RESPONSE } from '@corrector/shared';
 
 import { validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
 import {
-  getFileKeyPrefix,
+  getFileName,
   requestSignedUrlGet,
   validateExamOwnership,
 } from '../libs';
 
 export const examFileGet = authedProcedure
   .input(
-    z.object({
-      id: z.string(),
-      organizationId: z.string(),
-      fileType: z.enum(FILE_TYPES),
-    }),
+    z
+      .object({
+        examId: z.string(),
+        organizationId: z.string(),
+      })
+      .and(
+        z
+          .object({
+            fileType: z.literal(EXAM_BLANK),
+            fileId: z.string().optional(),
+          })
+          .or(
+            z.object({
+              fileType: z.literal(EXAM_RESPONSE),
+              fileId: z.string(),
+            }),
+          ),
+      ),
   )
   .query(
-    async ({ ctx: { session }, input: { id, organizationId, fileType } }) => {
+    async ({
+      ctx: { session },
+      input: { examId, organizationId, ...file },
+    }) => {
       validateOrganizationAccess(organizationId, session);
-      await validateExamOwnership({ examId: id, organizationId }, session);
+      await validateExamOwnership({ examId: examId, organizationId }, session);
 
-      const filePrefix = getFileKeyPrefix({
+      const fileName = getFileName({
         organizationId,
         userId: session.id,
-        examId: id,
+        examId,
+        ...file,
       });
 
       const url = await requestSignedUrlGet({
-        fileKey: `${filePrefix}/${fileType}/${PDF_FILE_NAME}.pdf`,
+        fileKey: fileName,
         bucketName: Bucket['exam-bucket'].bucketName,
       });
 

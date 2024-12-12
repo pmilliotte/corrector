@@ -1,83 +1,47 @@
-import { FileWarning, Loader2, MoveLeft, MoveRight } from 'lucide-react';
-import { ReactElement, useEffect, useRef, useState } from 'react';
-import { Document, Page } from 'react-pdf';
+import { ReactElement } from 'react';
 
 import { FileType } from '@corrector/shared';
 
-import { Button } from '../ui';
-import { DeleteFileDialog } from './DeleteFileDialog';
+import { cn, SelectedFile } from '~/lib';
 
-type ExamFilesProps = {
+type ExamFileProps = {
   examId: string;
+  fileName: string;
+  file: SelectedFile;
+  uploadedAt?: string;
   fileType: FileType;
-  url: string;
+  selectedFile: SelectedFile;
+  setSelectedFile: (value: SelectedFile) => void;
 };
 
 export const ExamFile = ({
-  url,
-  fileType,
-  examId,
-}: ExamFilesProps): ReactElement => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(ref.current?.offsetWidth);
-  const [numberOfPages, setNumberOfPages] = useState<number>(1);
-  const [pageNumber, setPageNumber] = useState<number>(1);
-
-  useEffect(() => {
-    setWidth(Math.min(ref.current?.offsetWidth ?? 0, 700));
-  }, [ref]);
+  file,
+  selectedFile,
+  fileName,
+  uploadedAt,
+  setSelectedFile,
+}: ExamFileProps): ReactElement => {
+  const isUploadingFile = selectedFile.status === 'toBeUploaded';
 
   return (
-    <div className="w-full h-full" ref={ref}>
-      <Document
-        className="w-full h-full flex flex-col items-center justify-around gap-2"
-        file={url}
-        onLoadSuccess={({ numPages }) => {
-          setNumberOfPages(numPages);
-        }}
-        loading={() => <Loader2 />}
-        noData={() => (
-          <div className="h-full flex items-center justify-around">
-            <FileWarning />
-          </div>
-        )}
-        error={() => (
-          <div className="h-full flex items-center justify-around">
-            <FileWarning />
-          </div>
-        )}
-      >
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={() =>
-              setPageNumber(prevPageNumber =>
-                prevPageNumber === 1 ? numberOfPages : prevPageNumber - 1,
-              )
-            }
-          >
-            <MoveLeft size={16} />
-          </Button>
-          <DeleteFileDialog fileType={fileType} examId={examId} />
-          <Button
-            variant="outline"
-            onClick={() =>
-              setPageNumber(prevPageNumber =>
-                prevPageNumber === numberOfPages ? 1 : prevPageNumber + 1,
-              )
-            }
-          >
-            <MoveRight size={16} />
-          </Button>
+    <button
+      className={cn(
+        `grow min-w-0 flex items-center justify-between gap-2 rounded-lg border p-3 text-left text-sm transition-all ${!isUploadingFile && 'hover:bg-accent'}`,
+        selectedFile.id === file.id && 'bg-muted',
+      )}
+      disabled={isUploadingFile}
+      onClick={() => setSelectedFile(file)}
+    >
+      <div className="grow min-w-0 flex flex-col items-start gap-2">
+        <div className="font-semibold w-full whitespace-nowrap overflow-hidden text-ellipsis">
+          {fileName}
         </div>
-        <Page
-          pageNumber={pageNumber}
-          width={width}
-          renderAnnotationLayer={false}
-          renderTextLayer={false}
-          className="border border-solid border-primary "
-        />
-      </Document>
-    </div>
+        {uploadedAt !== undefined && (
+          <div className="text-sm text-muted-foreground w-full whitespace-nowrap overflow-hidden text-ellipsis">
+            {new Date(uploadedAt).toLocaleDateString('fr')}
+          </div>
+        )}
+      </div>
+    </button>
   );
 };

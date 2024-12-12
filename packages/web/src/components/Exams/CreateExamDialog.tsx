@@ -55,7 +55,7 @@ export const CreateExamDialog = (): ReactElement => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: undefined,
+      name: '',
       subject: undefined,
       division: undefined,
     },

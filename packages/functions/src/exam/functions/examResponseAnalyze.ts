@@ -27,7 +27,7 @@ import {
   validateExamOwnership,
 } from '../libs';
 
-export const examSubjectAnalyze = authedProcedure
+export const examResponseAnalyze = authedProcedure
   .input(
     z.object({
       id: z.string(),
@@ -37,14 +37,10 @@ export const examSubjectAnalyze = authedProcedure
   .mutation(
     async ({ ctx: { session }, input: { id: examId, organizationId } }) => {
       validateOrganizationAccess(organizationId, session);
-      const { subject, division, status } = await validateExamOwnership(
+      const { subject, division } = await validateExamOwnership(
         { examId, organizationId },
         session,
       );
-
-      if (status !== 'imagesUploaded') {
-        throw new TRPCError({ code: 'BAD_REQUEST' });
-      }
 
       const { id: userId } = session;
 
@@ -52,10 +48,9 @@ export const examSubjectAnalyze = authedProcedure
         organizationId,
         userId,
         examId,
-        fileType: EXAM_BLANK,
       });
 
-      const imagesPrefix = `${fileKeyPrefix}/images/`;
+      const imagesPrefix = `${fileKeyPrefix}/${EXAM_BLANK}/images/`;
 
       const listCommand = new ListObjectsV2Command({
         Bucket: Bucket['exam-bucket'].bucketName,
@@ -69,20 +64,14 @@ export const examSubjectAnalyze = authedProcedure
 
       const examImageContent = await Contents.reduce<
         Promise<
-          (
-            | {
-                type: 'image_url';
-                image_url: {
-                  url: string;
-                };
-              }
-            | {
-                type: 'text';
-                text: string;
-              }
-          )[]
+          {
+            type: 'image_url';
+            image_url: {
+              url: string;
+            };
+          }[]
         >
-      >(async (accP, item, index) => {
+      >(async (accP, item) => {
         const acc = await accP;
 
         if (item.Key === undefined) {
@@ -105,13 +94,7 @@ export const examSubjectAnalyze = authedProcedure
         return [
           ...acc,
           {
-            type: 'text' as const,
-            text: i18n.__('examAnalysis.humanMessage.page', {
-              page: (index + 1).toString(),
-            }),
-          },
-          {
-            type: 'image_url' as const,
+            type: 'image_url',
             image_url: {
               url: `data:image/jpeg;base64,${base64}`,
             },
@@ -124,9 +107,7 @@ export const examSubjectAnalyze = authedProcedure
         division,
       });
 
-      const examAnalysisHumanMessage = i18n.__(
-        'examAnalysis.humanMessage.introduction',
-      );
+      const examAnalysisHumanMessage = i18n.__('examAnalysis.humanMessage');
 
       const humanMessage = new HumanMessage({
         content: [
@@ -145,7 +126,7 @@ export const examSubjectAnalyze = authedProcedure
       await s3Client.send(
         new PutObjectCommand({
           Bucket: Bucket['exam-bucket'].bucketName,
-          Key: `${fileKeyPrefix}/analysis.json`,
+          Key: `${fileKeyPrefix}/${EXAM_BLANK}/analysis.json`,
           Body: JSON.stringify(examOutputToAnalysis(examOutput)),
         }),
       );

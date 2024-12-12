@@ -2,7 +2,7 @@ import { DeleteObjectsCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 
 import { s3Client } from '~/clients/s3';
 
-export const deleteOjects = async ({
+export const deleteObjects = async ({
   bucketName,
   prefix,
 }: {

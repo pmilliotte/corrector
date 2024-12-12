@@ -24,7 +24,7 @@ export const ExamAnalysis = ({
   });
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-8">
       {Object.entries(analysis.problems as Record<string, ProblemAnalysis>).map(
         ([problemId, problem]) => (
           <Problem

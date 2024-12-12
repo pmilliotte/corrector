@@ -3,11 +3,7 @@ import { Bucket } from 'sst/node/bucket';
 import { Readable } from 'stream';
 
 import { streamToString } from '@corrector/backend-shared';
-import {
-  EXAM_BLANK,
-  ExamAnalysis,
-  examAnalysisSchema,
-} from '@corrector/shared';
+import { ExamAnalysis, examAnalysisSchema } from '@corrector/shared';
 
 import { s3Client } from '~/clients';
 
@@ -17,7 +13,7 @@ export const getAnalysis = async (
   const { Body: analysis } = await s3Client.send(
     new GetObjectCommand({
       Bucket: Bucket['exam-bucket'].bucketName,
-      Key: `${fileKeyPrefix}/${EXAM_BLANK}/analysis.json`,
+      Key: `${fileKeyPrefix}/analysis.json`,
     }),
   );
 

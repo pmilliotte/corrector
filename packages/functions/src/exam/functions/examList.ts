@@ -33,6 +33,8 @@ export const examList = authedProcedure
       .entities(ExamEntity)
       .send();
 
+    console.log('exams', exams);
+
     if (exams === undefined) {
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
     }
