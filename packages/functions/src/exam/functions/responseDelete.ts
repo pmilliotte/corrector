@@ -32,12 +32,6 @@ export const responseDelete = authedProcedure
 
       const { id: userId } = session;
 
-      console.log({
-        id: responseId,
-        organizationId,
-        examId,
-      });
-
       await ResponseEntity.build(DeleteItemCommand)
         .key({
           id: responseId,

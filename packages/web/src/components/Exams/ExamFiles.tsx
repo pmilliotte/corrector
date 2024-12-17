@@ -44,8 +44,6 @@ export const ExamFiles = ({
       },
     });
 
-  console.log(selectedFile);
-
   return (
     <ScrollArea className="max-h-screen h-full">
       <div className="flex flex-col gap-1">

@@ -28,24 +28,23 @@ const DEFAULT_TAB = {
 export const Subject = ({ examId, status }: SubjectProps): ReactElement => {
   const utils = trpc.useUtils();
   const { selectedOrganization } = useUserOrganizations();
-  const { data, isLoading, isRefetching } =
-    trpc.examSubjectAnalysisGet.useQuery(
-      { id: examId, organizationId: selectedOrganization.id },
-      {
-        enabled: !['subject', 'imagesUploaded'].includes(status),
-        refetchOnMount: false,
-      },
-    );
+  const { data, isLoading } = trpc.examSubjectAnalysisGet.useQuery(
+    { id: examId, organizationId: selectedOrganization.id },
+    {
+      enabled: !['subject', 'imagesUploaded'].includes(status),
+      refetchOnMount: false,
+    },
+  );
   const { mutate, isPending } = trpc.examSubjectAnalyze.useMutation({
     onSuccess: async () => {
-      await utils.examSubjectAnalysisGet.refetch();
+      await utils.examSubjectAnalysisGet.invalidate();
       await utils.examGet.invalidate();
     },
   });
 
   const SubjectContent = () => {
     switch (true) {
-      case isLoading || isRefetching:
+      case isLoading:
         return (
           <div className="h-full flex items-center justify-around">
             <Loader2 className="animate-spin" />

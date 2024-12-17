@@ -1,22 +1,30 @@
 import crypto from 'crypto';
 
-import { ExamAnalysis, ExamOutput, Problem, Question } from '~/constants';
+import {
+  ExamAnalysis,
+  ExamOutput,
+  ProblemAnalysis,
+  QuestionAnalysis,
+} from '~/constants';
 
 export const examOutputToAnalysis = (examOutput: ExamOutput): ExamAnalysis => ({
   ...examOutput,
   problems: examOutput.problems.reduce<{
-    [key: string]: Omit<Problem, 'questions'> & {
-      questions: { [key: string]: Question };
-    };
+    [key: string]: ProblemAnalysis;
   }>(
     (accProblem, problem) => ({
       ...accProblem,
       [crypto.randomUUID()]: {
         ...problem,
-        questions: problem.questions.reduce<{ [key: string]: Question }>(
+        questions: problem.questions.reduce<{
+          [key: string]: QuestionAnalysis;
+        }>(
           (accQuestion, question) => ({
             ...accQuestion,
-            [crypto.randomUUID()]: question,
+            [crypto.randomUUID()]: {
+              ...question,
+              answer: question.answer.join('\n\n'),
+            },
           }),
           {},
         ),

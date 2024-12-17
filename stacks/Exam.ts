@@ -31,6 +31,7 @@ enum Route {
   ResponseCreate = 'POST /responseCreate',
   ResponseList = 'GET /responseList',
   ResponseDelete = 'POST /responseDelete',
+  ExamResponseAnalyze = 'POST /examResponseAnalyze',
 }
 
 export const Exam = ({ stack, app }: StackContext): void => {
@@ -97,6 +98,11 @@ export const Exam = ({ stack, app }: StackContext): void => {
   const openAiApiKey = new Config.Secret(stack, 'OPENAI_API_KEY');
   const openAiProjectId = new Config.Secret(stack, 'OPENAI_PROJECT_ID');
 
+  const i18nLayer = new LayerVersion(stack, 'i18n', {
+    description: 'Locales for i18n',
+    code: Code.fromAsset('packages/functions/src/exam/layers/i18n'),
+    compatibleRuntimes: [Runtime.NODEJS_18_X],
+  });
   const apiEndpoint = new Function(stack, 'exam-function', {
     handler: 'packages/functions/src/exam/functions/index.handler',
     environment: {
@@ -104,12 +110,16 @@ export const Exam = ({ stack, app }: StackContext): void => {
       STAGE: stack.stage,
     },
   });
-  const i18nLayer = new LayerVersion(stack, 'i18n', {
-    description: 'Locales for i18n',
-    code: Code.fromAsset('packages/functions/src/exam/layers/i18n'),
-    compatibleRuntimes: [Runtime.NODEJS_18_X],
-  });
   apiEndpoint.addLayers(i18nLayer);
+  const timeoutApiEndpoint = new Function(stack, 'exam-function-timeout', {
+    handler: 'packages/functions/src/exam/functions/index.handler',
+    environment: {
+      LOCALES_PATH: process.env.LOCALES_PATH ?? '',
+      STAGE: stack.stage,
+    },
+    timeout: 29,
+  });
+  timeoutApiEndpoint.addLayers(i18nLayer);
 
   api.addRoutes(stack, {
     [Route.PresignedUrlGet]: apiEndpoint,
@@ -120,16 +130,8 @@ export const Exam = ({ stack, app }: StackContext): void => {
     [Route.ExamFilesGet]: apiEndpoint,
     [Route.ExamFileGet]: apiEndpoint,
     [Route.ExamSubjectDelete]: apiEndpoint,
-    [Route.ExamSubjectAnalyze]: {
-      function: {
-        handler: 'packages/functions/src/exam/functions/index.handler',
-        environment: {
-          LOCALES_PATH: process.env.LOCALES_PATH ?? '',
-          STAGE: stack.stage,
-        },
-        timeout: 29,
-      },
-    },
+    [Route.ExamSubjectAnalyze]: timeoutApiEndpoint,
+    [Route.ExamResponseAnalyze]: timeoutApiEndpoint,
     [Route.ExamSubjectAnalysisGet]: apiEndpoint,
     [Route.ExamSubjectAnalysisUpdate]: apiEndpoint,
     [Route.ExamResponseList]: apiEndpoint,
@@ -147,6 +149,12 @@ export const Exam = ({ stack, app }: StackContext): void => {
   api.bindToRoute(Route.ExamFileGet, [examTable, examBucket]);
   api.bindToRoute(Route.ExamSubjectDelete, [examTable, examBucket]);
   api.bindToRoute(Route.ExamSubjectAnalyze, [
+    examTable,
+    examBucket,
+    openAiApiKey,
+    openAiProjectId,
+  ]);
+  api.bindToRoute(Route.ExamResponseAnalyze, [
     examTable,
     examBucket,
     openAiApiKey,

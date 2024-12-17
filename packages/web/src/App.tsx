@@ -59,10 +59,13 @@ export const App = (): ReactElement => {
     tex: {
       packages: { '[+]': ['html', 'color'] },
       inlineMath: [
-        ['$$', '$$'],
+        ['$', '$'],
         ['\\(', '\\)'],
       ],
-      displayMath: [['\\[', '\\]']],
+      displayMath: [
+        ['$$', '$$'],
+        ['\\[', '\\]'],
+      ],
     },
   };
 

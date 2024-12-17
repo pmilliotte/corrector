@@ -7,6 +7,7 @@ import { examFileGet } from './examFileGet';
 import { examFilesGet } from './examFilesGet';
 import { examGet } from './examGet';
 import { examList } from './examList';
+import { examResponseAnalyze } from './examResponseAnalyze';
 import { examResponseList } from './examResponseList';
 import { examSubjectAnalysisGet } from './examSubjectAnalysisGet';
 import { examSubjectAnalysisUpdate } from './examSubjectAnalysisUpdate';
@@ -30,6 +31,7 @@ export const examRouter = router({
   examSubjectAnalyze,
   examSubjectAnalysisGet,
   examSubjectAnalysisUpdate,
+  examResponseAnalyze,
   examResponseList,
   responseCreate,
   responseList,

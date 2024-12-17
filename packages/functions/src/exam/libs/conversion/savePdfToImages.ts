@@ -64,8 +64,6 @@ export const savePdfToImages = async ({
     ),
   );
 
-  console.log(Metadata);
-
   return {
     id: Metadata?.['created-uuid'],
     originalFileName:

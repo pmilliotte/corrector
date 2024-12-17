@@ -11,7 +11,7 @@ type QuestionTextProps = {
   problemId: string;
   text: string;
   updateExamQuestionsTools: UpdateExamQuestionsTools;
-  propertyName: 'questionStatement' | 'answer';
+  propertyName: 'statement' | 'answer';
 };
 
 export const QuestionText = ({

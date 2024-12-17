@@ -21,14 +21,14 @@ export const Question = ({
   problemId,
   updateExamQuestionsTools,
 }: QuestionProps): ReactElement => {
-  const { questionPath, questionStatement, answer, mark } = question;
+  const { path, statement, answer, mark } = question;
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <QuestionTitle
-            questionPath={questionPath}
+            questionPath={path}
             mark={mark}
             updateExamQuestionsTools={updateExamQuestionsTools}
             questionId={questionId}
@@ -42,8 +42,8 @@ export const Question = ({
             updateExamQuestionsTools={updateExamQuestionsTools}
             questionId={questionId}
             problemId={problemId}
-            text={questionStatement}
-            propertyName="questionStatement"
+            text={statement}
+            propertyName="statement"
           />
         </div>
         <Separator />

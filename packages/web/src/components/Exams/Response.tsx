@@ -1,3 +1,4 @@
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -5,7 +6,7 @@ import { EXAM_RESPONSE } from '@corrector/shared';
 
 import { SelectedFile, trpc, useUserOrganizations } from '~/lib';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui';
+import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from '../ui';
 import { FileActions } from './FileActions';
 import { UploadFile } from './UploadFile';
 
@@ -32,11 +33,18 @@ export const Response = ({
 }: ResponseProps): ReactElement => {
   const utils = trpc.useUtils();
   const { selectedOrganization } = useUserOrganizations();
-  const { mutate, isPending } = trpc.responseDelete.useMutation({
-    onSuccess: async () => {
-      await utils.responseList.invalidate();
-    },
-  });
+  const { mutate: deleteResponse, isPending: deleteResponsePending } =
+    trpc.responseDelete.useMutation({
+      onSuccess: async () => {
+        await utils.responseList.invalidate();
+      },
+    });
+  const { mutate: analyzeResponse, isPending: analyzeResponsePending } =
+    trpc.examResponseAnalyze.useMutation({
+      onSuccess: async () => {
+        await utils.responseList.invalidate();
+      },
+    });
 
   if (file.status === 'toBeUploaded') {
     return (
@@ -47,9 +55,9 @@ export const Response = ({
           callback={() => utils.responseList.refetch()}
           file={file}
           cancel={{
-            loading: isPending,
+            loading: deleteResponsePending,
             function: () =>
-              mutate({
+              deleteResponse({
                 responseId: file.id,
                 examId,
                 organizationId: selectedOrganization.id,
@@ -60,10 +68,39 @@ export const Response = ({
     );
   }
 
+  const ResponseAnalysis = () => {
+    switch (file.status) {
+      case 'imagesUploaded':
+        return (
+          <div className="h-full flex items-center justify-around">
+            <Button
+              className="flex gap-2"
+              onClick={() =>
+                analyzeResponse({
+                  organizationId: selectedOrganization.id,
+                  examId,
+                  responseId: file.id,
+                })
+              }
+            >
+              <FormattedMessage id="exams.responses.analyze" />
+              {analyzeResponsePending ? (
+                <Loader2 className="animate-spin" size={16} />
+              ) : (
+                <ArrowRight size={16} />
+              )}
+            </Button>
+          </div>
+        );
+      default:
+        return <></>;
+    }
+  };
+
   return (
     <Tabs
       defaultValue={DEFAULT_TAB[file.status]}
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-4 h-full"
     >
       <div className="flex items-center justify-between">
         <TabsList className="grid grid-cols-2">
@@ -82,7 +119,9 @@ export const Response = ({
           />
         </div>
       </div>
-      <TabsContent value="analysis" />
+      <TabsContent value="analysis" className="grow">
+        <ResponseAnalysis />
+      </TabsContent>
     </Tabs>
   );
 };

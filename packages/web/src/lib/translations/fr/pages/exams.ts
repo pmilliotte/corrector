@@ -45,6 +45,8 @@ export const examsMessages = {
       addResponse: 'Ajouter une copie',
       files: 'Copies',
       description: 'Télécharger les réponses',
+      correct: 'Corriger la copie',
+      analyze: 'Analyser la copie',
     },
     exam: { title: '{subject} - {name}' },
     upload: {

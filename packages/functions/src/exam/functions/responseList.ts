@@ -22,7 +22,6 @@ export const responseList = authedProcedure
   .query(async ({ ctx: { session }, input: { organizationId, examId } }) => {
     validateOrganizationAccess(organizationId, session);
     await validateExamOwnership({ examId: examId, organizationId }, session);
-    console.log('responsesList');
 
     const query: Query<typeof ExamTable> = {
       partition: ResponseEntity.name,
@@ -34,18 +33,14 @@ export const responseList = authedProcedure
       },
     };
 
-    console.log('query');
     const { Items: responses } = await ExamTable.build(QueryCommand)
       .query(query)
       .entities(ResponseEntity)
       .send();
 
-    console.log('responses', responses);
     if (responses === undefined) {
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
     }
-
-    console.log('responses', responses);
 
     return {
       responses: responses.map(

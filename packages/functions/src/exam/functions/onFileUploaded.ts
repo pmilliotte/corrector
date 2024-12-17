@@ -22,8 +22,6 @@ export const handler = async (event: S3Event): Promise<void> => {
         prefix,
       });
 
-      console.log({ id, originalFileName, uploadedAt });
-
       if (originalFileName === undefined || uploadedAt === undefined) {
         throw new Error();
       }
