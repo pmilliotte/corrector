@@ -36,6 +36,7 @@ const getQuestionWithUuid = (
   [crypto.randomUUID()]: {
     ...question,
     mark: 0,
+    instructions: '',
     method: question.method.map(methodStep => ({
       ...methodStep,
       id: crypto.randomUUID(),

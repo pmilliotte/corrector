@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import set from 'lodash/set';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -12,7 +13,7 @@ import {
 type DraftingPropertyInput = {
   questionId: string;
   problemId: string;
-  propertyName: 'mark' | 'statement';
+  propertyName: 'mark' | 'statement' | 'instructions';
 };
 type DraftingMethodStepInput = {
   questionId: string;
@@ -138,6 +139,7 @@ export const useUpdateExamQuestionTools = ({
     switch (input.propertyName) {
       case 'mark':
       case 'statement':
+      case 'instructions':
         return (
           updatingMethodStep !== undefined ||
           (updatingproperty !== undefined && !isDraftingProperty(input))

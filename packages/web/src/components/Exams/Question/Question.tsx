@@ -13,6 +13,7 @@ import {
   CardTitle,
   Separator,
 } from '../../ui';
+import { QuestionInstructions } from './QuestionInstructions';
 import { QuestionMethodStep } from './QuestionMethodStep';
 import { QuestionStatement } from './QuestionStatement';
 import { QuestionTitle } from './QuestionTitle';
@@ -53,6 +54,14 @@ export const Question = ({
       <CardContent className="flex flex-col gap-2">
         <div className="text-sm text-muted-foreground flex items-center gap-2">
           <QuestionStatement
+            updateExamQuestionTools={updateExamQuestionTools}
+            questionId={questionId}
+            problemId={problemId}
+          />
+        </div>
+        <Separator />
+        <div className="text-sm text-muted-foreground flex items-center gap-2">
+          <QuestionInstructions
             updateExamQuestionTools={updateExamQuestionTools}
             questionId={questionId}
             problemId={problemId}

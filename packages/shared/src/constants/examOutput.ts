@@ -105,6 +105,7 @@ export const questionAnalysisSchema = z
     path: z.string(),
     mark: z.number().min(0),
     method: methodAnalysisSchema.array(),
+    instructions: z.string().optional(),
   })
   .strict();
 
@@ -142,7 +143,7 @@ export const updateQuestionSchema = questionIdSchema
   .or(
     questionIdSchema.merge(
       z.object({
-        propertyName: z.literal('statement'),
+        propertyName: z.enum(['statement', 'instructions']),
         value: z.string(),
       }),
     ),
