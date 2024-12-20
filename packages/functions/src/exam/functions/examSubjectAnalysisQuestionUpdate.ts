@@ -16,7 +16,7 @@ import { authedProcedure } from '~/trpc';
 
 import { getAnalysis, getFileKeyPrefix, validateExamOwnership } from '../libs';
 
-export const examSubjectAnalysisUpdate = authedProcedure
+export const examSubjectAnalysisQuestionUpdate = authedProcedure
   .input(
     z.intersection(
       updateQuestionSchema,

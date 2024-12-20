@@ -1,6 +1,7 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { TRPCError } from '@trpc/server';
 import { UpdateItemCommand } from 'dynamodb-toolbox';
+import { writeFileSync } from 'fs';
 import { Bucket } from 'sst/node/bucket';
 import { z } from 'zod';
 
@@ -54,6 +55,11 @@ export const examSubjectAnalyze = authedProcedure
       });
 
       const examOutput = await chain.invoke({});
+
+      writeFileSync(
+        '/Users/pierremilliotte/Projects/corrector/examOutput.json',
+        JSON.stringify(examOutput),
+      );
 
       await s3Client.send(
         new PutObjectCommand({

@@ -1,23 +1,23 @@
+import { MathJax } from 'better-react-mathjax';
 import { Ban, Check, Eye, Loader2, SquarePen } from 'lucide-react';
 import { ReactElement, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
 
 import { trpc, useUserOrganizations } from '~/lib';
 import { UpdateExamQuestionTools } from '~/lib/hooks/useUpdateExamQuestion';
 
-import { Button, Input } from '../../ui';
+import { Button, Textarea } from '../../ui';
 
-type QuestionTitleProps = {
+type QuestionTextProps = {
   questionId: string;
   problemId: string;
   updateExamQuestionTools: UpdateExamQuestionTools;
 };
 
-export const QuestionTitle = ({
+export const QuestionStatement = ({
   updateExamQuestionTools,
   questionId,
   problemId,
-}: QuestionTitleProps): ReactElement => {
+}: QuestionTextProps): ReactElement => {
   const [updating, setUpdating] = useState(false);
   const { selectedOrganization } = useUserOrganizations();
   const {
@@ -29,7 +29,7 @@ export const QuestionTitle = ({
     examId,
   } = updateExamQuestionTools;
   const question = getCurrentQuestion({ problemId, questionId });
-  const [newMark, setNewMark] = useState<number>(question.mark);
+  const [newText, setNewText] = useState<string>(question.statement);
   const utils = trpc.useUtils();
   const { mutate: updateQuestion, isPending: updateQuestionPending } =
     trpc.examSubjectAnalysisQuestionUpdate.useMutation({
@@ -41,40 +41,21 @@ export const QuestionTitle = ({
   if (updating) {
     return (
       <>
-        <div className="grow flex items-center justify-between gap-2">
-          <span className="whitespace-nowrap">
-            <FormattedMessage
-              id="exams.problem.question.title"
-              values={{ path: question.path }}
-            />
-          </span>
-          <div className="flex items-center gap-2">
-            <Input
-              type="number"
-              min={0}
-              max={99}
-              step={0.5}
-              className="w-auto"
-              value={newMark}
-              onChange={e => setNewMark(Number(e.target.value))}
-            />
-            <FormattedMessage id="exams.problem.question.points" />
-          </div>
-        </div>
+        <Textarea value={newText} onChange={e => setNewText(e.target.value)} />
         <div className="flex items-center gap-1 text-primary">
           <Button
             variant="outline"
             size="icon"
             onClick={() => {
-              newMark === question.mark
+              setUpdating(false);
+              newText === question.statement
                 ? cancelDraft()
                 : setUpdatingProperty({
                     questionId,
                     problemId,
-                    propertyName: 'mark',
-                    value: newMark,
+                    propertyName: 'statement',
+                    value: newText,
                   });
-              setUpdating(false);
             }}
           >
             <Eye size={16} />
@@ -84,9 +65,9 @@ export const QuestionTitle = ({
             variant="outline"
             className="text-destructive hover:text-destructive"
             onClick={() => {
-              cancelDraft();
-              setNewMark(question.mark);
               setUpdating(false);
+              cancelDraft();
+              setNewText(question.statement);
             }}
           >
             <Ban size={16} />
@@ -98,18 +79,9 @@ export const QuestionTitle = ({
 
   return (
     <>
-      <div className="grow flex items-center justify-between">
-        <div>
-          <FormattedMessage
-            id="exams.problem.question.title"
-            values={{ path: question.path }}
-          />
-        </div>
-        <FormattedMessage
-          id="exams.problem.question.marks"
-          values={{ mark: newMark }}
-        />
-      </div>
+      <MathJax dynamic className="grow whitespace-pre-wrap">
+        {newText}
+      </MathJax>
       <div className="flex items-center gap-1 text-primary">
         <Button
           variant="outline"
@@ -118,8 +90,8 @@ export const QuestionTitle = ({
             setUpdatingProperty({
               questionId,
               problemId,
-              propertyName: 'mark',
-              value: newMark,
+              propertyName: 'statement',
+              value: newText,
             });
             setUpdating(true);
           }}
@@ -127,7 +99,7 @@ export const QuestionTitle = ({
             isDraftingOther({
               problemId,
               questionId,
-              propertyName: 'mark',
+              propertyName: 'statement',
             }) || updateQuestionPending
           }
         >
@@ -138,14 +110,18 @@ export const QuestionTitle = ({
             updateQuestion({
               questionId,
               problemId,
-              propertyName: 'mark',
-              value: newMark,
+              propertyName: 'statement',
+              value: newText,
               organizationId: selectedOrganization.id,
               examId,
             })
           }
           disabled={
-            !isDraftingProperty({ problemId, questionId, propertyName: 'mark' })
+            !isDraftingProperty({
+              problemId,
+              questionId,
+              propertyName: 'statement',
+            })
           }
           size="icon"
         >

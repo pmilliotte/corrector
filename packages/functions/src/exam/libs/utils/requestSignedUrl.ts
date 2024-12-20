@@ -24,7 +24,7 @@ export const requestSignedUrlPost = async ({
   const Fields = { key: fileKey, ...metadata };
   const Key = fileKey;
   const Conditions: PresignedPostOptions['Conditions'] = [
-    ['content-length-range', 10, 10e6],
+    ['content-length-range', 10, 10e7],
     { 'Content-Type': contentType },
   ];
 

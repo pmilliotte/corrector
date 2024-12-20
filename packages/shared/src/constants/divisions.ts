@@ -1,1 +1,1 @@
-export const DIVISIONS = ['10', '9'] as const;
+export const DIVISIONS = ['10', '9', '8'] as const;

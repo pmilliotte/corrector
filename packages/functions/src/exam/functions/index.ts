@@ -10,7 +10,10 @@ import { examList } from './examList';
 import { examResponseAnalyze } from './examResponseAnalyze';
 import { examResponseList } from './examResponseList';
 import { examSubjectAnalysisGet } from './examSubjectAnalysisGet';
-import { examSubjectAnalysisUpdate } from './examSubjectAnalysisUpdate';
+import { examSubjectAnalysisQuestionMethodAdd } from './examSubjectAnalysisQuestionMethodAdd';
+import { examSubjectAnalysisQuestionMethodDelete } from './examSubjectAnalysisQuestionMethodDelete';
+import { examSubjectAnalysisQuestionMethodUpdate } from './examSubjectAnalysisQuestionMethodUpdate';
+import { examSubjectAnalysisQuestionUpdate } from './examSubjectAnalysisQuestionUpdate';
 import { examSubjectAnalyze } from './examSubjectAnalyze';
 import { examSubjectDelete } from './examSubjectDelete';
 import { presignedUrlGet } from './presignedUrlGet';
@@ -30,12 +33,15 @@ export const examRouter = router({
   examFileGet,
   examSubjectAnalyze,
   examSubjectAnalysisGet,
-  examSubjectAnalysisUpdate,
   examResponseAnalyze,
   examResponseList,
   responseCreate,
   responseList,
   responseDelete,
+  examSubjectAnalysisQuestionMethodAdd,
+  examSubjectAnalysisQuestionMethodDelete,
+  examSubjectAnalysisQuestionUpdate,
+  examSubjectAnalysisQuestionMethodUpdate,
 });
 
 export const handler = awsLambdaRequestHandler({

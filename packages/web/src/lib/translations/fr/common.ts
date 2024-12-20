@@ -27,6 +27,8 @@ export const commonMessages = {
     female: 'Féminin',
     products: 'Abonnement',
     delete: 'Supprimer',
+    update: 'Modifier',
+    validateUpdates: 'Valider les modifications',
     upload: 'Télécharger',
     sidebar: {
       organization: "Organisation de l'espace",
@@ -41,6 +43,7 @@ export const commonMessages = {
       mathematics: 'Mathématiques',
     },
     divisions: {
+      '8': 'Quatrième',
       '9': 'Troisième',
       '10': 'Seconde',
     },

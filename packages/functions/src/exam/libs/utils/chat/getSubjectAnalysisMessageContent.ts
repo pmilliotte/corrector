@@ -3,11 +3,7 @@ import { Bucket } from 'sst/node/bucket';
 import { Readable } from 'stream';
 
 import { streamToString } from '@corrector/backend-shared';
-import {
-  EXAM_BLANK,
-  ExamAnalysis,
-  examAnalysisSchema,
-} from '@corrector/shared';
+import { EXAM_BLANK, examAnalysisSchema } from '@corrector/shared';
 
 import { s3Client } from '~/clients';
 
@@ -52,10 +48,6 @@ export const getSubjectAnalysisMessageContent = async ({
     JSON.parse(examBlankAnalysAsString),
   );
 
-  // console.log('examAnalysis', examAnalysis);
-  // const problemStatements = getProblemsStatement(examAnalysis);
-  // console.log(problemStatements);
-
   const analysisIntro: ChatMessageContent[] = [
     {
       type: 'text' as const,
@@ -65,40 +57,40 @@ export const getSubjectAnalysisMessageContent = async ({
     },
     {
       type: 'text' as const,
-      text: JSON.stringify(getProblemsStatement(examAnalysis)),
+      text: JSON.stringify(examAnalysis),
     },
   ];
 
   return analysisIntro;
 };
 
-const getProblemsStatement = (examAnalysis: ExamAnalysis) =>
-  Object.entries(examAnalysis.problems).reduce(
-    (accProblem, [problemId, problem]) => {
-      // console.log('problem', problem);
-      const questionStatements = Object.entries(
-        problem?.questions ?? {},
-      ).reduce(
-        (accQuestion, [questionId, question]) =>
-          // console.log('question', question);
+// const getProblemsStatement = (examAnalysis: ExamAnalysis) =>
+//   Object.entries(examAnalysis.problems).reduce(
+//     (accProblem, [problemId, problem]) => {
+//       // console.log('problem', problem);
+//       const questionStatements = Object.entries(
+//         problem?.questions ?? {},
+//       ).reduce(
+//         (accQuestion, [questionId, question]) =>
+//           // console.log('question', question);
 
-          ({
-            ...accQuestion,
-            [questionId]: {
-              statement: question?.statement,
-              path: question?.path,
-              mark: question?.mark,
-            },
-          }),
-        {},
-      );
+//           ({
+//             ...accQuestion,
+//             [questionId]: {
+//               statement: question?.statement,
+//               path: question?.path,
+//               mark: question?.mark,
+//             },
+//           }),
+//         {},
+//       );
 
-      // console.log(accProblem);
+//       // console.log(accProblem);
 
-      return {
-        ...accProblem,
-        [problemId]: { ...problem, questions: questionStatements },
-      };
-    },
-    {},
-  );
+//       return {
+//         ...accProblem,
+//         [problemId]: { ...problem, questions: questionStatements },
+//       };
+//     },
+//     {},
+//   );

@@ -66,7 +66,6 @@ export const getExamAnalysisChain = async ({
       questionStatementDescription: translations.__(
         'examAnalysis.outputSchema.questionStatement',
       ),
-      answerDescription: translations.__('examAnalysis.outputSchema.answer'),
       answerParagraphDescription: translations.__(
         'examAnalysis.outputSchema.answer.paragraph',
       ),

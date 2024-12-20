@@ -5,6 +5,7 @@ import {
   ExamOutput,
   ProblemAnalysis,
   QuestionAnalysis,
+  QuestionOutput,
 } from '~/constants';
 
 export const examOutputToAnalysis = (examOutput: ExamOutput): ExamAnalysis => ({
@@ -16,15 +17,10 @@ export const examOutputToAnalysis = (examOutput: ExamOutput): ExamAnalysis => ({
       ...accProblem,
       [crypto.randomUUID()]: {
         ...problem,
-        questions: problem.questions.reduce<{
-          [key: string]: QuestionAnalysis;
-        }>(
-          (accQuestion, question) => ({
-            ...accQuestion,
-            [crypto.randomUUID()]: {
-              ...question,
-              answer: question.answer.join('\n\n'),
-            },
+        questions: problem.questions.reduce(
+          (accQuestions, question) => ({
+            ...accQuestions,
+            ...getQuestionWithUuid(question),
           }),
           {},
         ),
@@ -32,4 +28,18 @@ export const examOutputToAnalysis = (examOutput: ExamOutput): ExamAnalysis => ({
     }),
     {},
   ),
+});
+
+const getQuestionWithUuid = (
+  question: QuestionOutput,
+): Record<string, QuestionAnalysis> => ({
+  [crypto.randomUUID()]: {
+    ...question,
+    mark: 0,
+    method: question.method.map(methodStep => ({
+      ...methodStep,
+      id: crypto.randomUUID(),
+      mark: 0,
+    })),
+  },
 });

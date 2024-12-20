@@ -3,20 +3,20 @@ import { FormattedMessage } from 'react-intl';
 
 import { ProblemAnalysis, QuestionAnalysis } from '@corrector/shared';
 
-import { UpdateExamQuestionsTools } from '~/lib';
+import { UpdateExamQuestionTools } from '~/lib/hooks/useUpdateExamQuestion';
 
 import { Question } from './Question';
 
 type ProblemProps = {
   problem: ProblemAnalysis;
   problemId: string;
-  updateExamQuestionsTools: UpdateExamQuestionsTools;
+  updateExamQuestionTools: UpdateExamQuestionTools;
 };
 
 export const Problem = ({
   problemId,
   problem,
-  updateExamQuestionsTools,
+  updateExamQuestionTools,
 }: ProblemProps): ReactElement => {
   const { problemPath, problemTitle, questions } = problem;
 
@@ -29,13 +29,12 @@ export const Problem = ({
         />
       </div>
       {Object.entries(questions as Record<string, QuestionAnalysis>).map(
-        ([questionId, question]) => (
+        ([questionId]) => (
           <Question
             key={questionId}
-            question={question}
             questionId={questionId}
             problemId={problemId}
-            updateExamQuestionsTools={updateExamQuestionsTools}
+            updateExamQuestionTools={updateExamQuestionTools}
           />
         ),
       )}

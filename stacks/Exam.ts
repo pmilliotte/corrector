@@ -26,7 +26,10 @@ enum Route {
   ExamSubjectDelete = 'POST /examSubjectDelete',
   ExamSubjectAnalyze = 'POST /examSubjectAnalyze',
   ExamSubjectAnalysisGet = 'GET /examSubjectAnalysisGet',
-  ExamSubjectAnalysisUpdate = 'POST /examSubjectAnalysisUpdate',
+  ExamSubjectAnalysisQuestionUpdate = 'POST /examSubjectAnalysisQuestionUpdate',
+  ExamSubjectAnalysisQuestionMethodUpdate = 'POST /examSubjectAnalysisQuestionMethodUpdate',
+  ExamSubjectAnalysisQuestionMethodAdd = 'POST /examSubjectAnalysisQuestionMethodAdd',
+  ExamSubjectAnalysisQuestionMethodDelete = 'POST /examSubjectAnalysisQuestionMethodDelete',
   ExamResponseList = 'GET /examResponseList',
   ResponseCreate = 'POST /responseCreate',
   ResponseList = 'GET /responseList',
@@ -133,7 +136,10 @@ export const Exam = ({ stack, app }: StackContext): void => {
     [Route.ExamSubjectAnalyze]: timeoutApiEndpoint,
     [Route.ExamResponseAnalyze]: timeoutApiEndpoint,
     [Route.ExamSubjectAnalysisGet]: apiEndpoint,
-    [Route.ExamSubjectAnalysisUpdate]: apiEndpoint,
+    [Route.ExamSubjectAnalysisQuestionUpdate]: apiEndpoint,
+    [Route.ExamSubjectAnalysisQuestionMethodAdd]: apiEndpoint,
+    [Route.ExamSubjectAnalysisQuestionMethodUpdate]: apiEndpoint,
+    [Route.ExamSubjectAnalysisQuestionMethodDelete]: apiEndpoint,
     [Route.ExamResponseList]: apiEndpoint,
     [Route.ResponseCreate]: apiEndpoint,
     [Route.ResponseList]: apiEndpoint,
@@ -161,7 +167,22 @@ export const Exam = ({ stack, app }: StackContext): void => {
     openAiProjectId,
   ]);
   api.bindToRoute(Route.ExamSubjectAnalysisGet, [examTable, examBucket]);
-  api.bindToRoute(Route.ExamSubjectAnalysisUpdate, [examTable, examBucket]);
+  api.bindToRoute(Route.ExamSubjectAnalysisQuestionUpdate, [
+    examTable,
+    examBucket,
+  ]);
+  api.bindToRoute(Route.ExamSubjectAnalysisQuestionMethodAdd, [
+    examTable,
+    examBucket,
+  ]);
+  api.bindToRoute(Route.ExamSubjectAnalysisQuestionMethodDelete, [
+    examTable,
+    examBucket,
+  ]);
+  api.bindToRoute(Route.ExamSubjectAnalysisQuestionMethodUpdate, [
+    examTable,
+    examBucket,
+  ]);
   api.bindToRoute(Route.ExamResponseList, [examTable, examBucket]);
   api.bindToRoute(Route.ResponseCreate, [examTable]);
   api.bindToRoute(Route.ResponseList, [examTable]);

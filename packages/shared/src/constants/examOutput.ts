@@ -5,7 +5,6 @@ export const getExamOutputSchema = ({
   problemPathDescription,
   questionPathDescription,
   questionStatementDescription,
-  answerDescription,
   answerParagraphDescription,
   methodDescription,
   methodParagraphDescription,
@@ -18,7 +17,6 @@ export const getExamOutputSchema = ({
         problemPathDescription,
         questionPathDescription,
         questionStatementDescription,
-        answerDescription,
         answerParagraphDescription,
         methodDescription,
         methodParagraphDescription,
@@ -38,7 +36,6 @@ export const getProblemSchema = ({
   problemPathDescription,
   questionPathDescription,
   questionStatementDescription,
-  answerDescription,
   answerParagraphDescription,
   methodDescription,
   methodParagraphDescription,
@@ -51,7 +48,6 @@ export const getProblemSchema = ({
       questions: getQuestionSchema({
         questionPathDescription,
         questionStatementDescription,
-        answerDescription,
         answerParagraphDescription,
         methodDescription,
         methodParagraphDescription,
@@ -59,12 +55,11 @@ export const getProblemSchema = ({
     })
     .strict();
 
-export type Problem = z.infer<ReturnType<typeof getProblemSchema>>;
+export type ProblemOutput = z.infer<ReturnType<typeof getProblemSchema>>;
 
 type QuestionStructureDescription = {
   questionStatementDescription: string;
   questionPathDescription: string;
-  answerDescription: string;
   answerParagraphDescription: string;
   methodDescription: string;
   methodParagraphDescription: string;
@@ -73,7 +68,6 @@ type QuestionStructureDescription = {
 export const getQuestionSchema = ({
   questionStatementDescription,
   questionPathDescription,
-  answerDescription,
   answerParagraphDescription,
   methodDescription,
   methodParagraphDescription,
@@ -82,23 +76,35 @@ export const getQuestionSchema = ({
   z.object({
     path: z.string().describe(questionPathDescription ?? ''),
     statement: z.string().describe(questionStatementDescription ?? ''),
-    answer: z
-      .array(z.string().describe(answerParagraphDescription ?? ''))
-      .describe(answerDescription ?? ''),
     method: z
-      .array(z.string().describe(methodParagraphDescription ?? ''))
+      .object({
+        step: z.string().describe(methodParagraphDescription ?? ''),
+        answer: z.string().describe(answerParagraphDescription ?? ''),
+      })
+      .strict()
+      .array()
       .describe(methodDescription ?? ''),
   });
 
-export type Question = z.infer<ReturnType<typeof getQuestionSchema>>;
+const methodAnalysisSchema = z
+  .object({
+    step: z.string(),
+    answer: z.string(),
+    mark: z.number().min(0),
+    id: z.string(),
+  })
+  .strict();
+
+export type Method = z.infer<typeof methodAnalysisSchema>;
+
+export type QuestionOutput = z.infer<ReturnType<typeof getQuestionSchema>>;
 
 export const questionAnalysisSchema = z
   .object({
     statement: z.string(),
     path: z.string(),
-    answer: z.string(),
-    mark: z.number().min(0).optional(),
-    method: z.array(z.string()),
+    mark: z.number().min(0),
+    method: methodAnalysisSchema.array(),
   })
   .strict();
 
@@ -130,14 +136,31 @@ const questionIdSchema = z
   .strict();
 
 export const updateQuestionSchema = questionIdSchema
-  .merge(z.object({ propertyName: z.enum(['mark']), value: z.number().min(0) }))
+  .merge(
+    z.object({ propertyName: z.literal('mark'), value: z.number().min(0) }),
+  )
   .or(
     questionIdSchema.merge(
       z.object({
-        propertyName: z.enum(['statement', 'answer']),
+        propertyName: z.literal('statement'),
         value: z.string(),
       }),
     ),
   );
 
 export type UpdateQuestionInput = z.infer<typeof updateQuestionSchema>;
+
+export const updateQuestionMethodSchema = questionIdSchema.merge(
+  z.object({
+    value: z.object({
+      mark: z.number().min(0),
+      step: z.string(),
+      answer: z.string(),
+      id: z.string(),
+    }),
+  }),
+);
+
+export type UpdateQuestionMethodInput = z.infer<
+  typeof updateQuestionMethodSchema
+>;

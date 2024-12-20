@@ -54,9 +54,13 @@ Tu dois renvoyer, pour chaque exercice et question de l'examen :
 - Pour chaque question de l'exercice :
   - Le chemin de la question dans l'exercice ;
   - L'énoncé de la question (tu utilises le langage LaTeX uniquement pour les formules mathématiques) ;
-  - L'intégralité de la réponse de l'élève à la question  (tu utilises le langage LaTeX uniquement pour les formules mathématiques) ;
+  - L'intégralité de la réponse de l'élève à la question  (tu utilises le langage LaTeX uniquement pour les formules mathématiques), pas seulement la réponse finale ;
+  - Les étapes du raisonnement attendu que lélève n'a pas trouvées ;
   - Les axes d'amélioration de l'élève ; 
   - La note de l'élève à la question ;
+  - L'indice de confiance de la retranscription de l'élève : si tu es certain de reconnaître ce que l'élève a écrit, renvoie 100, si l'élève a écrit des ratures illisibles, renvoie 0 ;
+
+Pour calculer la note de l'élève à chaque question, tu te fies au barême que l'élève va te fournir. Si l'élève a respecté toutes les étapes du raisonnement, alors tu lui donnes les points de l'exercice. Sinon, tu lui donnes la somme des points des étapes du raisonnement qu'il a respectées.
 
 À chaque fois que tu utilises le langage LaTeX, tu utilises les délimiteurs suivants :
 - Un seul symbole dollar '$' pour du rendu inline ;
@@ -118,9 +122,19 @@ Tu dois renvoyer, pour chaque exercice et question de l'examen :
               .describe("Le nom de l'élève qui a rendu la copie"),
             answers: z.array(
               z.object({
-                id: z
+                problemId: z
+                  .string()
+                  .describe("L'id de l'exercice, sous forme d'uuid"),
+                questionId: z
                   .string()
                   .describe("L'id de la question, sous forme d'uuid"),
+                answerConfidence: z
+                  .number()
+                  .min(0)
+                  .max(100)
+                  .describe(
+                    "L'indice de confiance de la retranscription de l'élève : si tu es certain de reconnaître ce que l'élève a écrit, renvoie 100, si l'élève a écrit des ratures illisibles, renvoie 0",
+                  ),
                 answer: z
                   .string()
                   .describe("La réponse de l'élève à la question"),
@@ -128,9 +142,16 @@ Tu dois renvoyer, pour chaque exercice et question de l'examen :
                   .number()
                   .min(0)
                   .describe("La note obtenue par l'élève à la question"),
-                correction: z
+                wrongMethodSteps: z
                   .string()
-                  .describe("La correction de la réponse de l'élève"),
+                  .describe(
+                    "Une étape du raisonnement que l'élève n'a pas trouvées.",
+                  )
+                  .array()
+                  .optional()
+                  .describe(
+                    "Si l'élève n'a pas répondu parfaitement à la question, les étapes du raisonnement que l'élève n'a pas trouvées.",
+                  ),
               }),
             ),
           })
@@ -148,7 +169,10 @@ Tu dois renvoyer, pour chaque exercice et question de l'examen :
 
       writeFileSync(
         '/Users/pierremilliotte/Projects/corrector/response.json',
-        JSON.stringify(response),
+        JSON.stringify({
+          ...response,
+          mark: response.answers.reduce((a, b) => a + b.mark, 0),
+        }),
       );
     },
   );

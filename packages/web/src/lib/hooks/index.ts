@@ -4,5 +4,3 @@ export * from './useOnDrop';
 export * from './useOrganizations';
 export * from './useSelectedFile';
 export * from './useSidebarItems';
-export * from './useUpdateExamQuestions';
-export * from './useSelectedFile';

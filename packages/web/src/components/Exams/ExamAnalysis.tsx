@@ -5,7 +5,7 @@ import {
   ProblemAnalysis,
 } from '@corrector/shared';
 
-import { useUpdateExamQuestionsTools } from '~/lib';
+import { useUpdateExamQuestionTools } from '~/lib/hooks/useUpdateExamQuestion';
 
 import { Problem } from './Problem';
 
@@ -18,7 +18,7 @@ export const ExamAnalysis = ({
   examId,
   analysis,
 }: ExamAnalysisProps): ReactElement => {
-  const updateExamQuestionsTools = useUpdateExamQuestionsTools({
+  const updateExamQuestionTools = useUpdateExamQuestionTools({
     analysis,
     examId,
   });
@@ -31,7 +31,7 @@ export const ExamAnalysis = ({
             problem={problem}
             problemId={problemId}
             key={problemId}
-            updateExamQuestionsTools={updateExamQuestionsTools}
+            updateExamQuestionTools={updateExamQuestionTools}
           />
         ),
       )}
