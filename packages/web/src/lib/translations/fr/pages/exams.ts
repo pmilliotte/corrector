@@ -20,7 +20,7 @@ export const examsMessages = {
     tabs: {
       analysis: 'Analyse',
       correction: 'Correction',
-      marks: 'Barême',
+      marks: 'barème',
     },
     files: {
       confirmDeletion: 'Supprimer définitivement le fichier et ses données ?',
@@ -36,7 +36,7 @@ export const examsMessages = {
     },
     marks: {
       title: 'Notation',
-      description: 'Valider les questions et le barême.',
+      description: 'Valider les questions et le barème.',
       analyze: 'Analyser le sujet',
       upload: "Télécharger le sujet de l'examen",
       noData: 'Aucune analyse trouvée',
@@ -76,7 +76,7 @@ export const examsMessages = {
           emptyStep: 'Étape du raisonnement',
           emptyAnswer: 'Réponse attendue',
           title: {
-            mark: 'Barême :',
+            mark: 'barème :',
             step: 'Étape du raisonnement :',
             answer: 'Réponse attendue :',
           },

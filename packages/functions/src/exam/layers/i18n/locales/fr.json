@@ -28,5 +28,5 @@
   "responseAnalysis.humanMessage.page": "Voici la page numéro {{page}} :",
   "responseAnalysis.humanMessage.pages": "La copie de l'examen que j'ai rendue sous la forme de plusieurs pages est la suivante :",
   "responseAnalysis.humanMessage.task": "Donne-moi mes prénoms et noms tel que je les ai écrits dans la copie que j'ai rendue, et pour chacune des questions de l'examen :\n- L'uuid de la question ;\n- Ma réponse à la question, en utilisant le langage LaTeX si besoin ;\n- Ma note obtenue ;\n- Une correction personalisée ;",
-  "responseAnalysis.humanMessage.examAnalysis.introduction": "Voici, pour toutes les questions de l'examen, les uuids et leur barême :"
+  "responseAnalysis.humanMessage.examAnalysis.introduction": "Voici, pour toutes les questions de l'examen, les uuids et leur barème :"
 }
