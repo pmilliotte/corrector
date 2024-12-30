@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { HumanMessage } from '@langchain/core/messages';
+import { AIMessage, HumanMessage } from '@langchain/core/messages';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { ChatOpenAI } from '@langchain/openai';
@@ -10,9 +10,8 @@ import { z } from 'zod';
 import { validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
-import { ChatMessageContent, validateExamOwnership } from '../libs';
+import { validateExamOwnership } from '../libs';
 import { getResponseImagesMessageContent } from '../libs/utils/chat/getResponseImagesMessageContent';
-import { getSubjectAnalysisMessageContent } from '../libs/utils/chat/getSubjectAnalysisMessageContent';
 import { getSubjectImagesMessageContent } from '../libs/utils/chat/getSubjectImagesMessageContent';
 
 export const examResponseAnalyze = authedProcedure
@@ -33,44 +32,17 @@ export const examResponseAnalyze = authedProcedure
 
       const { id: userId } = session;
 
-      // const context = `Ton objectif est de corriger la copie de mathématiques d'un élève en seconde.
-      // Tu dois renvoyer les noms et prénoms de l'élève si tu les trouves dans la copie, et pour toutes les questions de l'examen :
-      // - La note de l'élève pour chaque question en fonction du barême fourni ;
-      // - La correction ;
-      // - La réponse de l'élève à la question ;
-      // - L'uuid de la question ;
+      const context = `Tu joues le rôle d'OCR. Tu dois retranscrire de manière fidèle et exacte l'intégralité des réponses manuscrites d'un élève de quatrième à un examen de mathématiques.
+      
+Pour ça, je vais te fournir :
+- le sujet de l'examen tel qu'il a été distribué, cela t'aidera à déterminer ce qui a été ajouté par l'élève dans sa copie ;
+- la copie d'un élève avec ses réponses manuscrites ;
 
-      // Tu dois transformer la réponse de l'élève pour que l'utilisation de LaTeX soit systématiquement délimitée par un seul symbole '$'.
+Pour chaque question de l'examen, tu dois me retourner l'intégralité de ce que l'élève a répondu, le plus fidèlement possible. Chaque caractère manuscrit doit figurer dans ta réponse.
 
-      // Par exemple, si l'élève a écrit "I=]−∞;5]", alors tu dois renvoyer "$I = ] -\\infty ; 5 ]$"`;
-      const context = `Tu es un professeur de mathématiques en seconde qui corrige la copie d'un élève. 
-
-L'élève va te fournir le sujet de l'examen sous la forme d'images ou chaque image correspond à une page de l'examen, puis il va te fournir la copie qu'il a rendue aussi sous la forme d'images ou chaque image correspond à une page de sa copie. Enfin, il va te fournir une version de l'énoncé au format JSON dans laquelle tu trouveras les uuids qui te permettront d'identifier les questions de chaque exercice et leur note sur 20 points.
-
-Tu dois renvoyer, pour chaque exercice et question de l'examen :
-- Les noms et prénoms de l'élève qui a rendu la copie ;
-- Un titre descriptif des notions abordées dans l'exercice ;
-- L'index de l'exercice dans l'examen ;
-- Pour chaque question de l'exercice :
-  - Le chemin de la question dans l'exercice ;
-  - L'énoncé de la question (tu utilises le langage LaTeX uniquement pour les formules mathématiques) ;
-  - L'intégralité de la réponse de l'élève à la question  (tu utilises le langage LaTeX uniquement pour les formules mathématiques), pas seulement la réponse finale ;
-  - Les étapes du raisonnement attendu que lélève n'a pas trouvées ;
-  - Les axes d'amélioration de l'élève ; 
-  - La note de l'élève à la question ;
-  - L'indice de confiance de la retranscription de l'élève : si tu es certain de reconnaître ce que l'élève a écrit, renvoie 100, si l'élève a écrit des ratures illisibles, renvoie 0 ;
-
-Pour calculer la note de l'élève à chaque question, tu te fies au barême que l'élève va te fournir. Si l'élève a respecté toutes les étapes du raisonnement, alors tu lui donnes les points de l'exercice. Sinon, tu lui donnes la somme des points des étapes du raisonnement qu'il a respectées.
-
-À chaque fois que tu utilises le langage LaTeX, tu utilises les délimiteurs suivants :
+À chaque fois que tu fais apparaître le langage LaTeX, tu utilises les délimiteurs suivants :
 - Un seul symbole dollar '$' pour du rendu inline ;
 - Deux symboles dollar '$$' pour du rendu en bloc.`;
-
-      // Les réponses de l'élèves sont destinées à être rendues de manière digitale. Tu dois donc t'assurer que l'utilisation du LaTeX dans la retranscription des réponses est bien délimitée par un seul symbole '$'.
-
-      // Pour retranscrire les réponses de l'élève, tu utilises le langage LaTeX, que tu délimites par un seul symbole dollar '$'.
-
-      // Par exemple, si dans la copie tu trouves "x + y = 0" alors tu renvoies "$x + y = 0$".`;
 
       const subjectImagesMessages = await getSubjectImagesMessageContent({
         organizationId,
@@ -85,82 +57,73 @@ Pour calculer la note de l'élève à chaque question, tu te fies au barême que
         fileId: responseId,
       });
 
-      const examAnalysisMessages = await getSubjectAnalysisMessageContent({
-        organizationId,
-        userId,
-        examId,
+      const assistantSubjectMessage = new AIMessage({
+        content: "Donne moi le sujet de l'examen.",
       });
 
-      const task: ChatMessageContent = {
-        type: 'text' as const,
-        text: "Corrige ma copie s'il te plaît.",
-      };
+      const subjectHumanMessage = new HumanMessage({
+        content: subjectImagesMessages,
+      });
 
-      const humanMessage = new HumanMessage({
-        content: [
-          ...subjectImagesMessages,
-          ...responseImagesMessages,
-          ...examAnalysisMessages,
-          task,
-        ],
+      const assistantResponsesMessage = new AIMessage({
+        content: "Donne moi la copie qu'a rendue l'élève.",
+      });
+
+      const responsesHumanMessage = new HumanMessage({
+        content: responseImagesMessages,
+      });
+      const task = new AIMessage({
+        content: `Voici, pour toutes les questions de l'examen, les réponses fidèles de l'élève, dans leur intégralité et non modifiées :`,
       });
 
       const chat = new ChatOpenAI({
         apiKey: Config.OPENAI_API_KEY,
         temperature: 0,
-        modelName: 'gpt-4o-mini',
+        modelName: 'gpt-4o',
         configuration: {
           project: Config.OPENAI_PROJECT_ID,
         },
-        // verbose: process.env.STAGE === 'local',
-      }).withStructuredOutput(
-        z
-          .object({
-            name: z
-              .string()
-              .optional()
-              .describe("Le nom de l'élève qui a rendu la copie"),
-            answers: z.array(
-              z.object({
-                problemId: z
-                  .string()
-                  .describe("L'id de l'exercice, sous forme d'uuid"),
-                questionId: z
-                  .string()
-                  .describe("L'id de la question, sous forme d'uuid"),
-                answerConfidence: z
-                  .number()
-                  .min(0)
-                  .max(100)
-                  .describe(
-                    "L'indice de confiance de la retranscription de l'élève : si tu es certain de reconnaître ce que l'élève a écrit, renvoie 100, si l'élève a écrit des ratures illisibles, renvoie 0",
-                  ),
-                answer: z
-                  .string()
-                  .describe("La réponse de l'élève à la question"),
-                mark: z
-                  .number()
-                  .min(0)
-                  .describe("La note obtenue par l'élève à la question"),
-                wrongMethodSteps: z
-                  .string()
-                  .describe(
-                    "Une étape du raisonnement que l'élève n'a pas trouvées.",
-                  )
-                  .array()
-                  .optional()
-                  .describe(
-                    "Si l'élève n'a pas répondu parfaitement à la question, les étapes du raisonnement que l'élève n'a pas trouvées.",
-                  ),
-              }),
-            ),
-          })
-          .strict(),
-      );
+        verbose: process.env.STAGE === 'local',
+      });
+      // .withStructuredOutput(
+      //   z.object({
+      //     problems: z
+      //       .object({
+      //         path: z.number().describe("L'index de l'exercice dans l'examen"),
+      //         answers: z
+      //           .object({
+      //             statement: z
+      //               .string()
+      //               .describe(
+      //                 "L'énoncé de la question, avec les symboles LaTeX",
+      //               ),
+      //             answer: z
+      //               .string()
+      //               .describe(
+      //                 "L'intégralité de ce qu'a écrit l'élève avec des symboles LaTeX",
+      //               )
+      //               .optional(),
+      //             mark: z.string().describe('La note de lisibilité'),
+      //           })
+      //           .strict()
+      //           .array()
+      //           .describe(
+      //             "Les réponses aux questions de l'exercice, ou un élément correspond à une question",
+      //           ),
+      //       })
+      //       .strict()
+      //       .array()
+      //       .describe("Les exercices de l'examen"),
+      //   }),
+      // );
 
       const prompt = ChatPromptTemplate.fromMessages([
         ['system', context],
-        humanMessage,
+        assistantSubjectMessage,
+        subjectHumanMessage,
+        assistantResponsesMessage,
+        responsesHumanMessage,
+        task,
       ]);
 
       const chain = RunnableSequence.from([prompt, chat]);
@@ -169,10 +132,9 @@ Pour calculer la note de l'élève à chaque question, tu te fies au barême que
 
       writeFileSync(
         '/Users/pierremilliotte/Projects/corrector/response.json',
-        JSON.stringify({
-          ...response,
-          mark: response.answers.reduce((a, b) => a + b.mark, 0),
-        }),
+        // JSON.stringify(response),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+        JSON.stringify({ resp: response.lc_kwargs.content }),
       );
     },
   );
