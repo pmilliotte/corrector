@@ -7,6 +7,7 @@ import { examFileGet } from './examFileGet';
 import { examFilesGet } from './examFilesGet';
 import { examGet } from './examGet';
 import { examList } from './examList';
+import { examResponseAnalysisGet } from './examResponseAnalysisGet';
 import { examResponseAnalyze } from './examResponseAnalyze';
 import { examResponseList } from './examResponseList';
 import { examSubjectAnalysisGet } from './examSubjectAnalysisGet';
@@ -42,6 +43,7 @@ export const examRouter = router({
   examSubjectAnalysisQuestionMethodDelete,
   examSubjectAnalysisQuestionUpdate,
   examSubjectAnalysisQuestionMethodUpdate,
+  examResponseAnalysisGet,
 });
 
 export const handler = awsLambdaRequestHandler({

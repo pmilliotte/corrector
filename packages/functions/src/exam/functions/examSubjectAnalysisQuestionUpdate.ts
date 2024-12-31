@@ -14,7 +14,11 @@ import { s3Client } from '~/clients';
 import { validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
-import { getAnalysis, getFileKeyPrefix, validateExamOwnership } from '../libs';
+import {
+  getExamAnalysis,
+  getFileKeyPrefix,
+  validateExamOwnership,
+} from '../libs';
 
 export const examSubjectAnalysisQuestionUpdate = authedProcedure
   .input(
@@ -55,7 +59,7 @@ export const examSubjectAnalysisQuestionUpdate = authedProcedure
         examId,
         fileType: EXAM_BLANK,
       });
-      const analysis = await getAnalysis(fileKeyPrefix);
+      const analysis = await getExamAnalysis(fileKeyPrefix);
 
       if (analysis.problems[problemId]?.questions[questionId] === undefined) {
         throw new TRPCError({ code: 'BAD_REQUEST' });

@@ -1,3 +1,4 @@
+export * from './correctionOutput';
 export * from './divisions';
 export * from './examOutput';
 export * from './fileStatuses';

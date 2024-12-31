@@ -50,6 +50,7 @@ export const getResponseImagesMessageContent = async ({
       type: 'image_url' as const,
       image_url: {
         url: `data:image/jpeg;base64,${rawData}`,
+        detail: 'high' as const,
       },
     },
   ]);

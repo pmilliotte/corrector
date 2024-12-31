@@ -35,6 +35,7 @@ enum Route {
   ResponseList = 'GET /responseList',
   ResponseDelete = 'POST /responseDelete',
   ExamResponseAnalyze = 'POST /examResponseAnalyze',
+  ExamResponseAnalysisGet = 'GET /examResponseAnalysisGet',
 }
 
 export const Exam = ({ stack, app }: StackContext): void => {
@@ -144,6 +145,7 @@ export const Exam = ({ stack, app }: StackContext): void => {
     [Route.ResponseCreate]: apiEndpoint,
     [Route.ResponseList]: apiEndpoint,
     [Route.ResponseDelete]: apiEndpoint,
+    [Route.ExamResponseAnalysisGet]: apiEndpoint,
   });
 
   api.bindToRoute(Route.PresignedUrlGet, [examBucket, examTable]);
@@ -187,4 +189,5 @@ export const Exam = ({ stack, app }: StackContext): void => {
   api.bindToRoute(Route.ResponseCreate, [examTable]);
   api.bindToRoute(Route.ResponseList, [examTable]);
   api.bindToRoute(Route.ResponseDelete, [examTable]);
+  api.bindToRoute(Route.ExamResponseAnalysisGet, [examTable, examBucket]);
 };

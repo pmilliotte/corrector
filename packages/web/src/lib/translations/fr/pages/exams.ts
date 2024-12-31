@@ -67,6 +67,7 @@ export const examsMessages = {
       question: {
         title: 'Question {path}',
         marks: '{mark, plural, =1 {# point} other {# points}}',
+        mark: '{mark} / {total, plural, =1 {# point} other {# points}}',
         points: 'point(s)',
         method: 'Raisonnement attendu :',
         methodStep: {

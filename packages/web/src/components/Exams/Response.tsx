@@ -8,6 +8,7 @@ import { SelectedFile, trpc, useUserOrganizations } from '~/lib';
 
 import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from '../ui';
 import { FileActions } from './FileActions';
+import { ResponseAnalysis } from './ResponseAnalysis';
 import { UploadFile } from './UploadFile';
 
 type ResponseProps = {
@@ -68,35 +69,6 @@ export const Response = ({
     );
   }
 
-  const ResponseAnalysis = () => {
-    switch (file.status) {
-      case 'imagesUploaded':
-        return (
-          <div className="h-full flex items-center justify-around">
-            <Button
-              className="flex gap-2"
-              onClick={() =>
-                analyzeResponse({
-                  organizationId: selectedOrganization.id,
-                  examId,
-                  responseId: file.id,
-                })
-              }
-            >
-              <FormattedMessage id="exams.responses.analyze" />
-              {analyzeResponsePending ? (
-                <Loader2 className="animate-spin" size={16} />
-              ) : (
-                <ArrowRight size={16} />
-              )}
-            </Button>
-          </div>
-        );
-      default:
-        return <></>;
-    }
-  };
-
   return (
     <Tabs
       defaultValue={DEFAULT_TAB[file.status]}
@@ -120,7 +92,28 @@ export const Response = ({
         </div>
       </div>
       <TabsContent value="analysis" className="grow">
-        <ResponseAnalysis />
+        <div className="h-full flex items-center justify-around">
+          <Button
+            className="flex gap-2"
+            onClick={() =>
+              analyzeResponse({
+                organizationId: selectedOrganization.id,
+                examId,
+                responseId: file.id,
+              })
+            }
+          >
+            <FormattedMessage id="exams.responses.analyze" />
+            {analyzeResponsePending ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              <ArrowRight size={16} />
+            )}
+          </Button>
+        </div>
+      </TabsContent>
+      <TabsContent value="correction" className="grow">
+        <ResponseAnalysis examId={examId} responseId={file.id} />
       </TabsContent>
     </Tabs>
   );
