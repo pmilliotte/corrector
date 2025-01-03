@@ -3,7 +3,7 @@ export const loginMessages = {
     continueWith: 'Continuer avec',
     title: 'Nouveau projet full-stack',
     copyright: 'Copyright © corrector',
-    slogan: 'Apprends en pratiquant',
+    slogan: 'Correction automatique de copies',
     login: 'Se connecter',
     linkRequested: 'Demande de connexion',
     checkEmail: "Un lien a été envoyé à l'adresse {email}",

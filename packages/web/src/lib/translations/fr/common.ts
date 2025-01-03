@@ -2,7 +2,7 @@ export const commonMessages = {
   common: {
     logout: 'Se déconnecter',
     loading: 'Chargement...',
-    title: 'corrector',
+    title: 'Corrector',
     notAvailable: "corrector n'est pas encore disponible sur les petits écrans",
     continue: 'Continuer',
     stop: 'Terminer',
