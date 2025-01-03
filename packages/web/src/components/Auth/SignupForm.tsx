@@ -33,42 +33,29 @@ export const SignupForm = ({
   const t = useIntl();
   const [signupError, setSignupError] = useState(false);
 
-  const formSchema = z
-    .object({
-      firstName: z.string().min(2, t.formatMessage({ id: 'login.nameError' })),
-      lastName: z.string().min(2, t.formatMessage({ id: 'login.nameError' })),
-      email: z.string().email(
+  const formSchema = z.object({
+    firstName: z.string().min(1, t.formatMessage({ id: 'login.nameError' })),
+    lastName: z.string().min(1, t.formatMessage({ id: 'login.nameError' })),
+    email: z.string().email(
+      t.formatMessage({
+        id: 'login.emailError',
+      }),
+    ),
+    password: z
+      .string()
+      .regex(
+        PASSWORD_REGEXP,
         t.formatMessage({
-          id: 'login.emailError',
+          id: 'login.passwordRegexError',
+        }),
+      )
+      .min(
+        8,
+        t.formatMessage({
+          id: 'login.passwordMinError',
         }),
       ),
-      password: z
-        .string()
-        .regex(
-          PASSWORD_REGEXP,
-          t.formatMessage({
-            id: 'login.passwordRegexError',
-          }),
-        )
-        .min(
-          8,
-          t.formatMessage({
-            id: 'login.passwordMinError',
-          }),
-        ),
-      confirmPassword: z.string(),
-    })
-    .superRefine(({ password, confirmPassword }, context) => {
-      if (password !== confirmPassword) {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: t.formatMessage({
-            id: 'login.passwordMatchError',
-          }),
-          path: ['password'],
-        });
-      }
-    });
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,7 +64,6 @@ export const SignupForm = ({
       password: '',
       firstName: '',
       lastName: '',
-      confirmPassword: '',
     },
   });
 
@@ -129,8 +115,8 @@ export const SignupForm = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(
-            ({ email, password, confirmPassword, firstName, lastName }) =>
-              submit({ email, password, confirmPassword, firstName, lastName }),
+            ({ email, password, firstName, lastName }) =>
+              submit({ email, password, firstName, lastName }),
           )}
           className="flex flex-col space-y-2"
         >
@@ -191,24 +177,13 @@ export const SignupForm = ({
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem className="flex-grow">
-                <FormControl>
-                  <Input
-                    placeholder={t.formatMessage({
-                      id: 'login.confirmNewPassword',
-                    })}
-                    type="password"
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <Button type="submit" className="p-2 gap-2" disabled={isPending}>
+          <Button
+            type="submit"
+            className="p-2 gap-2"
+            disabled={
+              isPending || Object.keys(form.formState.errors).length > 0
+            }
+          >
             {isPending && <LoadingSpinner />}
             <FormattedMessage id="login.letsGo" />
           </Button>
@@ -227,10 +202,6 @@ export const SignupForm = ({
           ) : form.formState.errors.password !== undefined ? (
             <div className="text-sm text-destructive">
               {form.formState.errors.password.message}
-            </div>
-          ) : form.formState.errors.confirmPassword !== undefined ? (
-            <div className="text-sm text-destructive">
-              {form.formState.errors.confirmPassword.message}
             </div>
           ) : signupError ? (
             <div className="text-sm text-destructive">
