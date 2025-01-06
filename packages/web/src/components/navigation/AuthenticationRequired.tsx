@@ -5,9 +5,10 @@ import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 
 import { getSession } from '@corrector/shared';
 
-import { Layout } from '~/components';
 import { LoadingSpinner } from '~/components/icons/LoadingSpinner';
 import { AppRoute, SessionContext } from '~/lib';
+
+import { Layout } from '../Layout';
 
 export const AuthenticationRequired = (): ReactElement => {
   const navigate = useNavigate();

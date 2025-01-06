@@ -20,7 +20,7 @@ export const useOrganizations = (): {
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<string>(
     localStorage.getItem(SELECTED_ORGANIZATION_ID) ?? userId,
   );
-  const { data, error } = trpc.organizationsGet.useQuery();
+  const { data, error } = trpc.organizationList.useQuery();
 
   if (error !== null) {
     navigate(AppRoute.Login);

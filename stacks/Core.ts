@@ -8,7 +8,9 @@ import {
 } from '@corrector/backend-shared';
 
 enum Route {
-  OrganizationsGet = 'GET /organizationsGet',
+  OrganizationList = 'GET /organizationList',
+  ClassroomList = 'GET /classroomList',
+  ClassroomCreate = 'POST /classroomCreate',
 }
 
 export const Core = ({
@@ -106,7 +108,19 @@ export const Core = ({
       authorizer: 'jwt',
     },
     routes: {
-      [Route.OrganizationsGet]: {
+      [Route.OrganizationList]: {
+        function: {
+          handler: 'packages/functions/src/core/functions/index.handler',
+          bind: [organizationTable],
+        },
+      },
+      [Route.ClassroomList]: {
+        function: {
+          handler: 'packages/functions/src/core/functions/index.handler',
+          bind: [organizationTable],
+        },
+      },
+      [Route.ClassroomCreate]: {
         function: {
           handler: 'packages/functions/src/core/functions/index.handler',
           bind: [organizationTable],

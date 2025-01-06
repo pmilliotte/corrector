@@ -1,4 +1,4 @@
-import { Entity, schema, string } from 'dynamodb-toolbox';
+import { Entity, FormattedItem, schema, string } from 'dynamodb-toolbox';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
 
@@ -22,4 +22,4 @@ export const OrganizationEntity = new Entity({
   }),
 });
 
-export type Organization = typeof organizationSchema;
+export type Organization = FormattedItem<typeof OrganizationEntity>;

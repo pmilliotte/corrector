@@ -23,8 +23,8 @@ export const useSidebarItems = (): {
           icon: Users,
         },
         {
-          title: t.formatMessage({ id: 'common.sidebar.divisions' }),
-          url: { type: 'url', path: AppRoute.Divisions },
+          title: t.formatMessage({ id: 'common.sidebar.classrooms' }),
+          url: { type: 'url', path: AppRoute.Classrooms },
           icon: Network,
         },
       ],

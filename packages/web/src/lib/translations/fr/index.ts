@@ -2,6 +2,7 @@ import { flattenMessages } from '~/lib/utils';
 
 import { commonMessages } from './common';
 import {
+  classroomsMessages,
   errorMessages,
   examsMessages,
   loginMessages,
@@ -14,4 +15,5 @@ export const frenchMessages = flattenMessages({
   ...notFoundMessages,
   ...errorMessages,
   ...examsMessages,
+  ...classroomsMessages,
 });

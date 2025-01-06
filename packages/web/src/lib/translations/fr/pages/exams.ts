@@ -8,7 +8,6 @@ export const examsMessages = {
     answers: 'Réponses',
     created: 'Date',
     title: 'Liste des examens',
-    noResults: 'Aucun résultat',
     create: 'Créer un examen',
     createDescription: 'Créer un examen avant de télécharger les documents.',
     subject: 'Matière',

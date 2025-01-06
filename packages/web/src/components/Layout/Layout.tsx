@@ -1,5 +1,5 @@
 import { Fragment, ReactElement } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 
 import {
   AppRoute,
@@ -70,7 +70,7 @@ export const Layout = ({ children }: LayoutProps): ReactElement => {
           <></>
         ) : (
           <UserOrganizationsContext.Provider value={userOrganizations}>
-            {children}
+            {children ?? <Outlet />}
           </UserOrganizationsContext.Provider>
         )}
       </SidebarInset>

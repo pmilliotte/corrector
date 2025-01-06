@@ -127,7 +127,7 @@ export const CreateExamDialog = (): ReactElement => {
                   <FormItem>
                     <div className="grid grid-cols-4 items-center gap-4">
                       <FormLabel htmlFor="division" className="text-right">
-                        <FormattedMessage id="exams.division" />
+                        <FormattedMessage id="common.level" />
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}

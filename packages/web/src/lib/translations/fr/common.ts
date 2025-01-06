@@ -37,11 +37,12 @@ export const commonMessages = {
       exams: { title: 'Examens', list: 'Liste', edit: 'Modifier' },
       space: 'Espace',
       people: 'Personnes',
-      divisions: 'Classes',
+      classrooms: 'Classes',
     },
     subjects: {
       mathematics: 'Mathématiques',
     },
+    level: 'Niveau',
     divisions: {
       '8': 'Quatrième',
       '9': 'Troisième',
@@ -51,5 +52,8 @@ export const commonMessages = {
     settings: 'Paramètres',
     cancel: 'Annuler',
     ok: 'Ok',
+    name: 'Nom',
+    noResults: 'Aucun résultat',
+    save: 'Enregistrer',
   },
 };

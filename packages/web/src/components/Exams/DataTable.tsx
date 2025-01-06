@@ -102,7 +102,7 @@ export const DataTable = ({ exams }: { exams: Exam[] }): ReactElement => {
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                <FormattedMessage id="exams.noResults" />
+                <FormattedMessage id="common.noResults" />
               </TableCell>
             </TableRow>
           )}

@@ -2,10 +2,14 @@ import { awsLambdaRequestHandler } from '@trpc/server/adapters/aws-lambda';
 
 import { createContext, router } from '~/trpc';
 
-import { organizationsGet } from './organizationsGet';
+import { classroomCreate } from './classroomCreate';
+import { classroomList } from './classroomList';
+import { organizationList } from './organizationList';
 
 export const coreRouter = router({
-  organizationsGet,
+  organizationList,
+  classroomList,
+  classroomCreate,
 });
 
 export const handler = awsLambdaRequestHandler({
