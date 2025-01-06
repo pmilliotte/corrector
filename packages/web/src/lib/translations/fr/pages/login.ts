@@ -27,6 +27,7 @@ export const loginMessages = {
     confirmSignup: "Confirmer l'email",
     confirmSignupCode: 'Code de vérification :',
     confirmSignupCodeError: '6 caractères',
+    accountCreation: 'Création de compte',
     passwordRequirements:
       'Le mot de passe doit contenir au minimum 8 caractères dont :\n\n- 1 majuscule\n- 1 minuscule\n- 1 chiffre\n- 1 caractère special parmi : "!@#%&/\\,><\':;|_~`=+-',
   },

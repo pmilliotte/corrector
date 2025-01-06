@@ -7,9 +7,9 @@ import {
   useMutation,
 } from '@tanstack/react-query';
 import { Info } from 'lucide-react';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { cn, useIntl } from '~/lib';
@@ -42,7 +42,6 @@ export const SignupForm = ({
   ...props
 }: UserSignupFormProps): React.ReactElement => {
   const t = useIntl();
-  const [signupError, setSignupError] = useState(false);
 
   const formSchema = z.object({
     firstName: z.string().min(1, t.formatMessage({ id: 'login.nameError' })),
@@ -85,7 +84,6 @@ export const SignupForm = ({
       firstName,
       lastName,
     }: z.infer<typeof formSchema>) => {
-      setSignupError(false);
       try {
         const signUpResp = await signUp({
           username: email,
@@ -106,7 +104,13 @@ export const SignupForm = ({
           await refetchAuthSession();
         }
       } catch {
-        setSignupError(true);
+        toast(t.formatMessage({ id: 'login.accountCreation' }), {
+          description: t.formatMessage({ id: 'login.signupError' }),
+          action: {
+            label: t.formatMessage({ id: 'common.close' }),
+            onClick: () => {},
+          },
+        });
       }
     },
   });
@@ -222,8 +226,6 @@ export const SignupForm = ({
           form.formState.errors.email.message
         ) : form.formState.errors.password !== undefined ? (
           form.formState.errors.password.message
-        ) : signupError ? (
-          <FormattedMessage id="login.signupError" />
         ) : (
           <></>
         )}

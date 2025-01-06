@@ -50,5 +50,6 @@ export const commonMessages = {
     personalSpace: 'Espace personnel',
     settings: 'Paramètres',
     cancel: 'Annuler',
+    ok: 'Ok',
   },
 };
