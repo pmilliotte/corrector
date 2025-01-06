@@ -106,7 +106,7 @@ export const Login = (): ReactElement => {
               setLoginState(prevState => getOppositeLoginState(prevState))
             }
             className="absolute top-4 right-4"
-            variant="ghost"
+            variant="link"
           >
             <FormattedMessage
               id={`login.${getOppositeLoginState(loginState)}`}

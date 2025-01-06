@@ -18,8 +18,8 @@ export const loginMessages = {
     passwordMinError: '8 caractères minimum',
     passwordRegexError:
       '1 majuscule, 1 minuscule, 1 chiffre, 1 caractère special',
-    emailError: 'Email invalide',
-    nameError: 'Nom obligatoire',
+    emailError: "L'adresse email est invalide",
+    nameError: 'Les noms et prénoms sont requis',
     passwordMatchError: 'Les mots de passe ne correspondent pas',
     signinError: 'Email ou mot de passe incorrect',
     signupError: 'Une erreur est survenue',
@@ -27,5 +27,7 @@ export const loginMessages = {
     confirmSignup: "Confirmer l'email",
     confirmSignupCode: 'Code de vérification :',
     confirmSignupCodeError: '6 caractères',
+    passwordRequirements:
+      'Le mot de passe doit contenir au minimum 8 caractères dont :\n\n- 1 majuscule\n- 1 minuscule\n- 1 chiffre\n- 1 caractère special parmi : "!@#%&/\\,><\':;|_~`=+-',
   },
 };
