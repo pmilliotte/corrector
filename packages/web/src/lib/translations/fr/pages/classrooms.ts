@@ -4,5 +4,13 @@ export const classroomsMessages = {
     school: 'Établissement',
     class: 'Classe',
     create: 'Créer une classe',
+    createdOn: 'Créée le {date}',
+    students: 'Élèves',
+    studentIdentifier: 'Identifiant',
+    studentCreate: 'Ajouter un élève',
+    createStudentError: {
+      title: 'Erreur',
+      description: "Vérifier que l'identifiant n'est pas déjà utilisé.",
+    },
   },
 };

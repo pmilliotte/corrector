@@ -11,6 +11,9 @@ enum Route {
   OrganizationList = 'GET /organizationList',
   ClassroomList = 'GET /classroomList',
   ClassroomCreate = 'POST /classroomCreate',
+  ClassroomStudentList = 'GET /classroomStudentList',
+  ClassroomGet = 'GET /classroomGet',
+  StudentCreate = 'POST /studentCreate',
 }
 
 export const Core = ({
@@ -107,29 +110,29 @@ export const Core = ({
     defaults: {
       authorizer: 'jwt',
     },
-    routes: {
-      [Route.OrganizationList]: {
-        function: {
-          handler: 'packages/functions/src/core/functions/index.handler',
-          bind: [organizationTable],
-        },
-      },
-      [Route.ClassroomList]: {
-        function: {
-          handler: 'packages/functions/src/core/functions/index.handler',
-          bind: [organizationTable],
-        },
-      },
-      [Route.ClassroomCreate]: {
-        function: {
-          handler: 'packages/functions/src/core/functions/index.handler',
-          bind: [organizationTable],
-        },
-      },
-    },
   });
 
   auth.attachPermissionsForAuthUsers(stack, [api]);
+
+  const apiEndpoint = new Function(stack, 'core-function', {
+    handler: 'packages/functions/src/core/functions/index.handler',
+  });
+
+  api.addRoutes(stack, {
+    [Route.OrganizationList]: apiEndpoint,
+    [Route.ClassroomCreate]: apiEndpoint,
+    [Route.ClassroomGet]: apiEndpoint,
+    [Route.ClassroomList]: apiEndpoint,
+    [Route.ClassroomStudentList]: apiEndpoint,
+    [Route.StudentCreate]: apiEndpoint,
+  });
+
+  api.bindToRoute(Route.OrganizationList, [organizationTable]);
+  api.bindToRoute(Route.ClassroomCreate, [organizationTable]);
+  api.bindToRoute(Route.ClassroomGet, [organizationTable]);
+  api.bindToRoute(Route.ClassroomList, [organizationTable]);
+  api.bindToRoute(Route.ClassroomStudentList, [organizationTable]);
+  api.bindToRoute(Route.StudentCreate, [organizationTable]);
 
   stack.addOutputs({
     ApiEndpoint: api.customDomainUrl ?? api.url,

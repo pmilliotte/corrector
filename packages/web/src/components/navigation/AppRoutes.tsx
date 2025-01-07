@@ -3,7 +3,6 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { AppRoute } from '~/lib';
 import {
-  Classroom,
   Classrooms,
   Error,
   Exams,
@@ -14,6 +13,7 @@ import {
   People,
   Settings,
 } from '~/pages';
+import { ClassroomWrapper } from '~/pages/ClassroomWrapper';
 
 import { Layout } from '../Layout';
 import { AuthenticationRequired } from './AuthenticationRequired';
@@ -28,7 +28,7 @@ export const AppRoutes = (): ReactElement => (
             <Route path={AppRoute.People} element={<People />} />
             <Route
               path={`${AppRoute.Classrooms}/:classroomId`}
-              element={<Classroom />}
+              element={<ClassroomWrapper />}
             />
             <Route path={AppRoute.Classrooms} element={<Classrooms />} />
             <Route path={AppRoute.Settings} element={<Settings />} />

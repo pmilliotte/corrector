@@ -7,3 +7,4 @@ export * from './general';
 export * from './payload';
 export * from './responseOutput';
 export * from './subjects';
+export * from './userTypes';

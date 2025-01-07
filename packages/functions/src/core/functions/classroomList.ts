@@ -23,7 +23,7 @@ import { OrganizationTable } from '../libs/table';
 export const classroomList = authedProcedure
   .input(
     z.object({
-      userId: z.string().optional(),
+      userId: z.string(),
       organizationId: z.string(),
     }),
   )
@@ -35,14 +35,12 @@ export const classroomList = authedProcedure
 
     const query: Query<typeof OrganizationTable> = {
       partition: computeUserClassroomEntityPartitionKey({ organizationId }),
-      range:
-        userId === undefined
-          ? undefined
-          : {
-              beginsWith: computeUserClassroomEntitySortKey({
-                userId,
-              }),
-            },
+      range: {
+        beginsWith: computeUserClassroomEntitySortKey({
+          userId,
+          userType: 'teacher',
+        }),
+      },
     };
 
     const { Items: userClassrooms } = await OrganizationTable.build(

@@ -1,4 +1,3 @@
-export * from './Classroom';
 export * from './Classrooms';
 export * from './Error';
 export * from './Exams';

@@ -8,6 +8,7 @@ import {
   QuestionOutput,
 } from '~/constants';
 
+// Types should be in shared but utils should be in function
 export const examOutputToAnalysis = (examOutput: ExamOutput): ExamAnalysis => ({
   ...examOutput,
   problems: examOutput.problems.reduce<{

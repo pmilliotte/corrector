@@ -1,1 +1,1 @@
-export * from './validateClassroomAccess';
+export * from './validateClassroomWriteAccess';

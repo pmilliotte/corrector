@@ -23,7 +23,7 @@ const computeClassroomEntityPartitionKey = ({
   organizationId: string;
 }): string => `${CLASSROOM_ENTITY_NAME}#organizationId=${organizationId}`;
 
-export const computeClassRoomEntitySortKey = ({ id }: { id: string }): string =>
+export const computeClassroomEntitySortKey = ({ id }: { id: string }): string =>
   `classroomId=${id}`;
 
 export const ClassroomEntity = new Entity({
@@ -35,7 +35,7 @@ export const ClassroomEntity = new Entity({
     [PARTITION_KEY]: computeClassroomEntityPartitionKey({
       organizationId,
     }),
-    [SORT_KEY]: computeClassRoomEntitySortKey({
+    [SORT_KEY]: computeClassroomEntitySortKey({
       id,
     }),
   }),

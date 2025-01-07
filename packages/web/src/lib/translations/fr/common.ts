@@ -55,5 +55,7 @@ export const commonMessages = {
     name: 'Nom',
     noResults: 'Aucun résultat',
     save: 'Enregistrer',
+    firstName: 'Prénom',
+    lastName: 'Nom',
   },
 };
