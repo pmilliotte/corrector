@@ -94,6 +94,7 @@ export const SignupForm = ({
               given_name: firstName,
               family_name: lastName,
             },
+            autoSignIn: true,
           },
         });
 
