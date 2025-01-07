@@ -1,26 +1,33 @@
 import { Loader2, TriangleAlert } from 'lucide-react';
-import { ReactElement } from 'react';
+import { ReactElement, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
-import { CreateStudentDialog } from '~/components/Classrooms/CreateStudentDialog';
-import { StudentTable } from '~/components/Classrooms/StudentTable';
-import { Separator } from '~/components/ui';
+import {
+  CREATE_STUDENT_DOM_NODE_ID,
+  Students,
+} from '~/components/Classrooms/Students';
+import {
+  Separator,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '~/components/ui';
 import { trpc, useUserOrganizations } from '~/lib';
+
+const TABS = ['students', 'exams'];
 
 export const ClassroomWrapper = (): ReactElement => {
   const { classroomId } = useParams() as { classroomId: string };
+  const [tabValue, setTabValue] = useState<'students' | 'exams'>('students');
   const { selectedOrganization } = useUserOrganizations();
   const { data: classroomData, isLoading: classroomLoading } =
     trpc.classroomGet.useQuery({
       classroomId,
       organizationId: selectedOrganization.id,
     });
-  const { data: studentsData, isLoading: studentsLoading } =
-    trpc.classroomStudentList.useQuery({
-      classroomId,
-      organizationId: selectedOrganization.id,
-    });
+  const createRef = useRef<HTMLDivElement | null>(null);
 
   if (classroomLoading) {
     return (
@@ -56,36 +63,26 @@ export const ClassroomWrapper = (): ReactElement => {
         </div>
       </div>
       <Separator />
-      <div className="grow flex flex-col gap-2">
+      <Tabs
+        defaultValue={tabValue}
+        // @ts-expect-error tab values are defined
+        onValueChange={setTabValue}
+        className="flex flex-col h-full"
+      >
         <div className="flex items-center justify-between">
-          <div className="font-semibold">
-            <FormattedMessage id="classrooms.students" />
-          </div>
-          {studentsData !== undefined && (
-            <CreateStudentDialog
-              classroomId={classroomId}
-              maxIdentifier={
-                studentsData.students.length === 0
-                  ? 0
-                  : Math.max(
-                      ...studentsData.students.map(
-                        ({ identifier }) => identifier ?? 0,
-                      ),
-                    )
-              }
-            />
-          )}
+          <TabsList className="grid grid-cols-2">
+            {TABS.map(tab => (
+              <TabsTrigger key={tab} value={tab} id={`exam.tabs.${tab}`}>
+                <FormattedMessage id={`classrooms.tabs.${tab}`} />
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          <div id={CREATE_STUDENT_DOM_NODE_ID} ref={createRef} />
         </div>
-        {studentsLoading ? (
-          <div className="h-full flex items-center justify-around">
-            <Loader2 className="animate-spin" />
-          </div>
-        ) : studentsData === undefined ? (
-          <TriangleAlert />
-        ) : (
-          <StudentTable students={studentsData.students} />
-        )}
-      </div>
+        <TabsContent value="students" className="h-full">
+          <Students classroomId={classroomId} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

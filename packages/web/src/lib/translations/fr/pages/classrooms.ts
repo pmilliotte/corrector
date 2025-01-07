@@ -12,5 +12,6 @@ export const classroomsMessages = {
       title: 'Erreur',
       description: "Vérifier que l'identifiant n'est pas déjà utilisé.",
     },
+    tabs: { students: 'Élèves', exams: 'Examens' },
   },
 };
