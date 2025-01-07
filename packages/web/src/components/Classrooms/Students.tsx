@@ -2,7 +2,11 @@ import { Loader2, TriangleAlert } from 'lucide-react';
 import { ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 
-import { trpc, useUserOrganizations } from '~/lib';
+import {
+  CLASSROOM_CREATE_DOM_NODE_ID,
+  trpc,
+  useUserOrganizations,
+} from '~/lib';
 
 import { CreateStudentDialog } from './CreateStudentDialog';
 import { StudentTable } from './StudentTable';
@@ -10,8 +14,6 @@ import { StudentTable } from './StudentTable';
 type StudentsProps = {
   classroomId: string;
 };
-
-export const CREATE_STUDENT_DOM_NODE_ID = 'classrooms.createDomNode';
 
 export const Students = ({ classroomId }: StudentsProps): ReactElement => {
   const { selectedOrganization } = useUserOrganizations();
@@ -37,7 +39,7 @@ export const Students = ({ classroomId }: StudentsProps): ReactElement => {
   }
 
   const createStudentDomNode = document.getElementById(
-    'classrooms.createDomNode',
+    CLASSROOM_CREATE_DOM_NODE_ID,
   );
 
   return (

@@ -3,10 +3,7 @@ import { ReactElement, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
-import {
-  CREATE_STUDENT_DOM_NODE_ID,
-  Students,
-} from '~/components/Classrooms/Students';
+import { Students } from '~/components/Classrooms/Students';
 import {
   Separator,
   Tabs,
@@ -14,7 +11,11 @@ import {
   TabsList,
   TabsTrigger,
 } from '~/components/ui';
-import { trpc, useUserOrganizations } from '~/lib';
+import {
+  CLASSROOM_CREATE_DOM_NODE_ID,
+  trpc,
+  useUserOrganizations,
+} from '~/lib';
 
 const TABS = ['students', 'exams'];
 
@@ -77,9 +78,12 @@ export const ClassroomWrapper = (): ReactElement => {
               </TabsTrigger>
             ))}
           </TabsList>
-          <div id={CREATE_STUDENT_DOM_NODE_ID} ref={createRef} />
+          <div id={CLASSROOM_CREATE_DOM_NODE_ID} ref={createRef} />
         </div>
         <TabsContent value="students" className="h-full">
+          <Students classroomId={classroomId} />
+        </TabsContent>
+        <TabsContent value="exams" className="h-full">
           <Students classroomId={classroomId} />
         </TabsContent>
       </Tabs>
