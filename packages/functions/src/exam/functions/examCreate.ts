@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import { randomUUID } from 'crypto';
 import { PutItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
@@ -27,7 +27,7 @@ export const examCreate = authedProcedure
 
       const { id: userId } = session;
 
-      const id = crypto.randomUUID();
+      const id = randomUUID();
 
       await ExamEntity.build(PutItemCommand)
         .item({

@@ -2,7 +2,7 @@ import {
   PreTokenGenerationTriggerEvent,
   PreTokenGenerationTriggerHandler,
 } from 'aws-lambda';
-import crypto from 'crypto';
+import { randomUUID } from 'crypto';
 import { PutItemCommand, Query, QueryCommand } from 'dynamodb-toolbox';
 
 import { LSI1 } from '@corrector/backend-shared';
@@ -32,7 +32,7 @@ export const handler: PreTokenGenerationTriggerHandler = async (
     throw new Error();
   }
 
-  const userId = crypto.randomUUID();
+  const userId = randomUUID();
 
   if (users.length === 0) {
     await UserEntity.build(PutItemCommand)

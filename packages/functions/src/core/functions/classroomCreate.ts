@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import { randomUUID } from 'crypto';
 import { PutItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
@@ -27,7 +27,7 @@ export const classroomCreate = authedProcedure
 
       const { id: userId } = session;
 
-      const id = crypto.randomUUID();
+      const id = randomUUID();
 
       await ClassroomEntity.build(PutItemCommand)
         .item({
@@ -50,6 +50,7 @@ export const classroomCreate = authedProcedure
           classroomId: id,
           userId,
           organizationId,
+          userType: 'teacher',
         })
         .send();
 

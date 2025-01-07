@@ -1,6 +1,6 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { TRPCError } from '@trpc/server';
-import crypto from 'crypto';
+import { randomUUID } from 'crypto';
 import set from 'lodash/set';
 import { Bucket } from 'sst/node/bucket';
 import { z } from 'zod';
@@ -66,7 +66,7 @@ export const examSubjectAnalysisQuestionMethodAdd = authedProcedure
       set(newAnalysis, `problems.${problemId}.questions.${questionId}.method`, [
         ...method,
         {
-          id: crypto.randomUUID(),
+          id: randomUUID(),
           answer: '',
           step: '',
           mark: 0,
