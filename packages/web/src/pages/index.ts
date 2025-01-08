@@ -2,7 +2,6 @@ export * from './Classrooms';
 export * from './Error';
 export * from './Exams';
 export * from './ExamWrapper';
-export * from './Home';
 export * from './Login';
 export * from './NotFound';
 export * from './People';

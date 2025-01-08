@@ -10,5 +10,5 @@ export enum AppRoute {
   Divisions = '/divisions',
   Settings = '/settings',
   Exams = '/exams',
-  Classrooms = '/class',
+  Classrooms = '/classrooms',
 }
