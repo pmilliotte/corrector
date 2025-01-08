@@ -1,7 +1,7 @@
 import { Entity, FormattedItem, schema, string } from 'dynamodb-toolbox';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
-import { FILE_STATUSES } from '@corrector/shared';
+import { EXAM_STATUSES } from '@corrector/shared';
 
 import { ExamTable } from '../table';
 
@@ -13,7 +13,7 @@ const responseSchema = schema({
   examId: string().key(),
   userId: string(),
   filename: string().optional(),
-  status: string().enum(...FILE_STATUSES),
+  status: string().enum(...EXAM_STATUSES),
   uploadedAt: string().optional(),
 });
 

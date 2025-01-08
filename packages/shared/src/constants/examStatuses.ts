@@ -1,4 +1,4 @@
-export const FILE_STATUSES = [
+export const EXAM_STATUSES = [
   'toBeUploaded',
   'fileUploaded',
   'imagesUploaded',

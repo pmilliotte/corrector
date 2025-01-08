@@ -84,7 +84,7 @@ export const ClassroomWrapper = (): ReactElement => {
           <Students classroomId={classroomId} />
         </TabsContent>
         <TabsContent value="exams" className="h-full">
-          <Students classroomId={classroomId} />
+          <></>
         </TabsContent>
       </Tabs>
     </div>

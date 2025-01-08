@@ -1,8 +1,8 @@
-import { Division, FileStatus, Subject } from '@corrector/shared';
+import { Division, ExamStatus, Subject } from '@corrector/shared';
 
 export type Exam = {
   id: string;
-  status: FileStatus;
+  status: ExamStatus;
   name: string;
   subject: Subject;
   division: Division;

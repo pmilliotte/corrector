@@ -1,9 +1,9 @@
 import { ReactElement } from 'react';
 
-import { FileStatus } from '@corrector/shared';
+import { ExamStatus } from '@corrector/shared';
 
 type StepperProps = {
-  status?: FileStatus;
+  status?: ExamStatus;
 };
 
 // const stepOrder: Record<ExamStatus, number> = {

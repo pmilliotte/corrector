@@ -1,5 +1,5 @@
 export * from './division';
-export * from './fileStatus';
+export * from './examStatus';
 export * from './fileType';
 export * from './removeField';
 export * from './session';

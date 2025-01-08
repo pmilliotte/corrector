@@ -1,7 +1,7 @@
 import { Entity, FormattedItem, schema, string } from 'dynamodb-toolbox';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
-import { DIVISIONS, FILE_STATUSES, Subject, SUBJECTS } from '@corrector/shared';
+import { DIVISIONS, EXAM_STATUSES, Subject, SUBJECTS } from '@corrector/shared';
 
 import { ExamTable } from '../table';
 
@@ -16,7 +16,7 @@ const examSchema = schema({
   name: string(),
   subjectFileName: string().optional(),
   subjectUploadedAt: string().optional(),
-  status: string().enum(...FILE_STATUSES),
+  status: string().enum(...EXAM_STATUSES),
 });
 
 export const computeExamEntityLSI1SortKey = ({

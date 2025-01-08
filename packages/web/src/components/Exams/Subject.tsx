@@ -2,7 +2,7 @@ import { ArrowRight, Loader2 } from 'lucide-react';
 import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { EXAM_BLANK, FileStatus } from '@corrector/shared';
+import { EXAM_BLANK, ExamStatus } from '@corrector/shared';
 
 import { trpc, useUserOrganizations } from '~/lib';
 
@@ -12,7 +12,7 @@ import { FileActions } from './FileActions';
 
 type SubjectProps = {
   examId: string;
-  status: FileStatus;
+  status: ExamStatus;
 };
 
 const TABS = ['marks', 'correction'];
