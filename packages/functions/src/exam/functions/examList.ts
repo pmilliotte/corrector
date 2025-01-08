@@ -26,7 +26,5 @@ export const examList = authedProcedure.query(async ({ ctx: { session } }) => {
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
   }
 
-  return {
-    exams: exams.map(({ [$entity]: _entityName, ...restOfExam }) => restOfExam),
-  };
+  return exams.map(({ [$entity]: _entityName, ...restOfExam }) => restOfExam);
 });

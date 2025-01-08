@@ -1,4 +1,4 @@
 export * from './DeleteFileDialog';
-export * from './ExamsTable';
+export * from './ExamTable';
 export * from './ExamTitle';
 export * from './Subject';
