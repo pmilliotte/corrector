@@ -23,21 +23,20 @@ export const ClassroomWrapper = (): ReactElement => {
   const { classroomId } = useParams() as { classroomId: string };
   const [tabValue, setTabValue] = useState<'students' | 'exams'>('students');
   const { selectedOrganization } = useUserOrganizations();
-  const { data: classroomData, isLoading: classroomLoading } =
-    trpc.classroomGet.useQuery({
-      classroomId,
-      organizationId: selectedOrganization.id,
-    });
+  const { data: classroom, isLoading } = trpc.classroomGet.useQuery({
+    classroomId,
+    organizationId: selectedOrganization.id,
+  });
   const createRef = useRef<HTMLDivElement | null>(null);
 
-  if (classroomLoading) {
+  if (isLoading) {
     return (
       <div className="p-4 h-full flex items-center justify-around">
         <Loader2 className="animate-spin" />
       </div>
     );
   }
-  if (classroomData === undefined) {
+  if (classroom === undefined) {
     return (
       <div className="p-4 h-full flex items-center justify-around">
         <TriangleAlert />
@@ -45,7 +44,7 @@ export const ClassroomWrapper = (): ReactElement => {
     );
   }
 
-  const { classroomName, created, schoolName } = classroomData.classroom;
+  const { classroomName, created, schoolName } = classroom;
 
   return (
     <div className="p-4 w-full h-full flex flex-col gap-2">

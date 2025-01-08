@@ -29,6 +29,6 @@ export const classroomGet = authedProcedure
         throw new TRPCError({ code: 'NOT_FOUND' });
       }
 
-      return { classroom };
+      return classroom;
     },
   );
