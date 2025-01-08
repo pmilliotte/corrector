@@ -1,7 +1,7 @@
 import { Entity, FormattedItem, schema, string } from 'dynamodb-toolbox';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
-import { DIVISIONS, EXAM_STATUSES, Subject, SUBJECTS } from '@corrector/shared';
+import { DIVISIONS, EXAM_STATUSES, SUBJECTS } from '@corrector/shared';
 
 import { ExamTable } from '../table';
 
@@ -11,50 +11,26 @@ const examSchema = schema({
   id: string().key(),
   subject: string().enum(...SUBJECTS),
   division: string().enum(...DIVISIONS),
-  organizationId: string().key(),
-  userId: string(),
+  organizationId: string(),
+  userId: string().key(),
   name: string(),
   subjectFileName: string().optional(),
   subjectUploadedAt: string().optional(),
   status: string().enum(...EXAM_STATUSES),
 });
 
-export const computeExamEntityLSI1SortKey = ({
+export const computeExamEntitySortKey = ({
   examId,
-  organizationId,
-  subject,
   userId,
 }: {
   examId?: string;
-  organizationId: string;
-  subject?: Subject;
-  userId?: string;
-}): string => {
-  if (subject === undefined) {
-    return `organizationId=${organizationId}#`;
-  }
-  if (userId === undefined) {
-    return `organizationId=${organizationId}#subject=${subject}#`;
-  }
-  if (examId === undefined) {
-    return `organizationId=${organizationId}#subject=${subject}#userId=${userId}#`;
-  }
-
-  return `organizationId=${organizationId}#subject=${subject}#userId=${userId}#examId=${examId}`;
-};
-
-export const computeExamEntitySortKey = ({
-  examId,
-  organizationId,
-}: {
-  examId?: string;
-  organizationId: string;
+  userId: string;
 }): string => {
   if (examId === undefined) {
-    return `organizationId=${organizationId}#`;
+    return `userId=${userId}#`;
   }
 
-  return `organizationId=${organizationId}#examId=${examId}`;
+  return `userId=${userId}#examId=${examId}`;
 };
 
 export const ExamEntity = new Entity({
@@ -62,10 +38,10 @@ export const ExamEntity = new Entity({
   schema: examSchema,
   table: ExamTable,
   entityAttributeHidden: true,
-  computeKey: ({ id, organizationId }) => ({
+  computeKey: ({ id, userId }) => ({
     [PARTITION_KEY]: EXAM_ENTITY_NAME,
     [SORT_KEY]: computeExamEntitySortKey({
-      organizationId,
+      userId,
       examId: id,
     }),
   }),

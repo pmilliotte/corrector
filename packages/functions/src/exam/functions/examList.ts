@@ -1,45 +1,32 @@
 import { TRPCError } from '@trpc/server';
 import { $entity, Query, QueryCommand } from 'dynamodb-toolbox';
-import { z } from 'zod';
 
-import { SUBJECTS } from '@corrector/shared';
-
-import { validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
 import { computeExamEntitySortKey, ExamEntity, ExamTable } from '../libs';
 
-export const examList = authedProcedure
-  .input(
-    z.object({
-      organizationId: z.string(),
-      subject: z.enum(SUBJECTS),
-    }),
-  )
-  .query(async ({ ctx: { session }, input: { organizationId } }) => {
-    validateOrganizationAccess(organizationId, session);
+export const examList = authedProcedure.query(async ({ ctx: { session } }) => {
+  const { id: userId } = session;
 
-    const query: Query<typeof ExamTable> = {
-      partition: ExamEntity.name,
-      range: {
-        beginsWith: computeExamEntitySortKey({
-          organizationId,
-        }),
-      },
-    };
+  const query: Query<typeof ExamTable> = {
+    partition: ExamEntity.name,
+    range: {
+      beginsWith: computeExamEntitySortKey({
+        userId,
+      }),
+    },
+  };
 
-    const { Items: exams } = await ExamTable.build(QueryCommand)
-      .query(query)
-      .entities(ExamEntity)
-      .send();
+  const { Items: exams } = await ExamTable.build(QueryCommand)
+    .query(query)
+    .entities(ExamEntity)
+    .send();
 
-    if (exams === undefined) {
-      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
-    }
+  if (exams === undefined) {
+    throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+  }
 
-    return {
-      exams: exams.map(
-        ({ [$entity]: _entityName, ...restOfExam }) => restOfExam,
-      ),
-    };
-  });
+  return {
+    exams: exams.map(({ [$entity]: _entityName, ...restOfExam }) => restOfExam),
+  };
+});

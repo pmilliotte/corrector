@@ -37,7 +37,7 @@ export const examCreate = authedProcedure
           subject,
           userId,
           division,
-          status: 'toBeUploaded',
+          status: 'uploadProblems',
         })
         .options({
           condition: {

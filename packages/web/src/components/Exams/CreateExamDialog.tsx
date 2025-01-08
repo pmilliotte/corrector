@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Plus } from 'lucide-react';
+import { Loader2, Plus, Save } from 'lucide-react';
 import { ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
@@ -219,10 +219,11 @@ export const CreateExamDialog = (): ReactElement => {
                 disabled={isPending || Object.keys(errors).length > 0}
               >
                 {isPending ? (
-                  <Loader2 className="animate-spin" />
+                  <Loader2 className="animate-spin" size={16} />
                 ) : (
-                  <FormattedMessage id="exams.save" />
+                  <Save size={16} />
                 )}
+                <FormattedMessage id="exams.save" />
               </Button>
             </DialogFooter>
           </form>
