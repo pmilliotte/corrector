@@ -2,6 +2,7 @@ export * from './correctionOutput';
 export * from './divisions';
 export * from './examOutput';
 export * from './examStatuses';
+export * from './fileSize';
 export * from './fileTypes';
 export * from './general';
 export * from './payload';

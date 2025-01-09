@@ -5,7 +5,7 @@ import {
   RefetchOptions,
   useMutation,
 } from '@tanstack/react-query';
-import { Loader2 } from 'lucide-react';
+import { KeyRound, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
@@ -124,7 +124,11 @@ export const LoginForm = ({
             )}
           />
           <Button type="submit" className="p-2 gap-2" disabled={isPending}>
-            {isPending && <Loader2 className="animate-spin" size={16} />}
+            {isPending ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              <KeyRound size={16} />
+            )}
             <FormattedMessage id="login.letsGo" />
           </Button>
           {form.formState.errors.email !== undefined ? (

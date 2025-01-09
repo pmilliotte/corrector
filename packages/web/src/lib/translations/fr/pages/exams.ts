@@ -49,6 +49,10 @@ export const examsMessages = {
     },
     exam: { title: '{subject} - {name}' },
     upload: {
+      problem: {
+        label: "Télécharger les exercices sous forme d'images",
+        error: "Le fichier n'a pas été téléchargé",
+      },
       'exam-blank': 'Télécharger le sujet',
       'exam-response': 'Télécharger la copie à corriger',
     },

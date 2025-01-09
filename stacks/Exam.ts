@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Code, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { StorageClass } from 'aws-cdk-lib/aws-s3';
 import { Duration } from 'aws-cdk-lib/core';
@@ -36,6 +37,9 @@ enum Route {
   ResponseDelete = 'POST /responseDelete',
   ExamResponseAnalyze = 'POST /examResponseAnalyze',
   ExamResponseAnalysisGet = 'GET /examResponseAnalysisGet',
+  ExamUploadedFilePresignedUrlPost = 'POST /examUploadedFilePresignedUrlPost',
+  ExamUploadedFileDelete = 'POST /examUploadedFileDelete',
+  ExamUploadedFilePresignedUrlList = 'GET /examUploadedFilePresignedUrlList',
 }
 
 export const Exam = ({ stack, app }: StackContext): void => {
@@ -146,6 +150,9 @@ export const Exam = ({ stack, app }: StackContext): void => {
     [Route.ResponseList]: apiEndpoint,
     [Route.ResponseDelete]: apiEndpoint,
     [Route.ExamResponseAnalysisGet]: apiEndpoint,
+    [Route.ExamUploadedFilePresignedUrlPost]: apiEndpoint,
+    [Route.ExamUploadedFilePresignedUrlList]: apiEndpoint,
+    [Route.ExamUploadedFileDelete]: apiEndpoint,
   });
 
   api.bindToRoute(Route.PresignedUrlGet, [examBucket, examTable]);
@@ -190,4 +197,13 @@ export const Exam = ({ stack, app }: StackContext): void => {
   api.bindToRoute(Route.ResponseList, [examTable]);
   api.bindToRoute(Route.ResponseDelete, [examTable]);
   api.bindToRoute(Route.ExamResponseAnalysisGet, [examTable, examBucket]);
+  api.bindToRoute(Route.ExamUploadedFilePresignedUrlPost, [
+    examTable,
+    examBucket,
+  ]);
+  api.bindToRoute(Route.ExamUploadedFilePresignedUrlList, [
+    examTable,
+    examBucket,
+  ]);
+  api.bindToRoute(Route.ExamUploadedFileDelete, [examBucket]);
 };

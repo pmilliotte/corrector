@@ -57,5 +57,7 @@ export const commonMessages = {
     save: 'Enregistrer',
     firstName: 'Prénom',
     lastName: 'Nom',
+    error: 'Erreur',
+    step: 'Étape {step}',
   },
 };

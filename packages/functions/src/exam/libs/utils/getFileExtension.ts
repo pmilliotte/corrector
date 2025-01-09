@@ -13,4 +13,13 @@ export const getFileExtension = (fileName: string): string | undefined => {
 
 export const getFileSUpposedContentType = (
   extension: string,
-): string | undefined => (extension === 'pdf' ? 'application/pdf' : undefined);
+): string | undefined => {
+  if (extension === 'jpg') {
+    return 'image/jpeg';
+  }
+  if (extension === 'png') {
+    return 'image/png';
+  }
+
+  return;
+};

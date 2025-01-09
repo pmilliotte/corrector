@@ -3,6 +3,8 @@ import { ReactElement } from 'react';
 import Dropzone from 'react-dropzone';
 import { FormattedMessage } from 'react-intl';
 
+import { MAX_FILE_SIZE_BYTES } from '@corrector/shared';
+
 import { cn } from '~/lib';
 
 type UploadProps = {
@@ -11,7 +13,13 @@ type UploadProps = {
 };
 
 export const Upload = ({ onDrop, loading }: UploadProps): ReactElement => (
-  <Dropzone onDrop={onDrop}>
+  <Dropzone
+    onDrop={onDrop}
+    accept={{ 'image/png': ['.png'], 'image/jpeg': ['.jpg', '.jpeg'] }}
+    multiple={false}
+    maxFiles={1}
+    maxSize={MAX_FILE_SIZE_BYTES}
+  >
     {({ getRootProps, getInputProps, isDragActive }) => (
       <div
         {...getRootProps()}
