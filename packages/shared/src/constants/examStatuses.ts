@@ -1,5 +1,6 @@
 export const EXAM_STATUSES = [
-  'uploadProblems',
+  'uploadFiles',
+  'configureProblems',
   'toBeUploaded',
   'fileUploaded',
   'imagesUploaded',

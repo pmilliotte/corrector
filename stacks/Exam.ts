@@ -40,6 +40,7 @@ enum Route {
   ExamUploadedFilePresignedUrlPost = 'POST /examUploadedFilePresignedUrlPost',
   ExamUploadedFileDelete = 'POST /examUploadedFileDelete',
   ExamUploadedFilePresignedUrlList = 'GET /examUploadedFilePresignedUrlList',
+  ExamUpdate = 'POST /examUpdate',
 }
 
 export const Exam = ({ stack, app }: StackContext): void => {
@@ -153,6 +154,7 @@ export const Exam = ({ stack, app }: StackContext): void => {
     [Route.ExamUploadedFilePresignedUrlPost]: apiEndpoint,
     [Route.ExamUploadedFilePresignedUrlList]: apiEndpoint,
     [Route.ExamUploadedFileDelete]: apiEndpoint,
+    [Route.ExamUpdate]: apiEndpoint,
   });
 
   api.bindToRoute(Route.PresignedUrlGet, [examBucket, examTable]);
@@ -206,4 +208,5 @@ export const Exam = ({ stack, app }: StackContext): void => {
     examBucket,
   ]);
   api.bindToRoute(Route.ExamUploadedFileDelete, [examBucket]);
+  api.bindToRoute(Route.ExamUpdate, [examTable]);
 };

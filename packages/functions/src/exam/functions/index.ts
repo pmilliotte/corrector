@@ -17,6 +17,7 @@ import { examSubjectAnalysisQuestionMethodUpdate } from './examSubjectAnalysisQu
 import { examSubjectAnalysisQuestionUpdate } from './examSubjectAnalysisQuestionUpdate';
 import { examSubjectAnalyze } from './examSubjectAnalyze';
 import { examSubjectDelete } from './examSubjectDelete';
+import { examUpdate } from './examUpdate';
 import { examUploadedFileDelete } from './examUploadedFileDelete';
 import { examUploadedFilePresignedUrlList } from './examUploadedFilePresignedUrlList';
 import { examUploadedFilePresignedUrlPost } from './examUploadedFilePresignedUrlPost';
@@ -50,6 +51,7 @@ export const examRouter = router({
   examUploadedFilePresignedUrlPost,
   examUploadedFilePresignedUrlList,
   examUploadedFileDelete,
+  examUpdate,
 });
 
 export const handler = awsLambdaRequestHandler({

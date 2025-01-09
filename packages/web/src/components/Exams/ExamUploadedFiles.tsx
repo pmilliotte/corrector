@@ -30,6 +30,12 @@ export const ExamUploadedFiles = ({
       await utils.examUploadedFilePresignedUrlList.invalidate();
     },
   });
+  const { mutate: updateExam, isPending: updateExamPending } =
+    trpc.examUpdate.useMutation({
+      onSuccess: async () => {
+        await utils.examGet.invalidate();
+      },
+    });
 
   return (
     <div className="flex flex-col gap-2 h-full">
@@ -68,8 +74,16 @@ export const ExamUploadedFiles = ({
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
-      <Button className="self-end flex gap-2">
-        <ArrowRight size={16} />
+      <Button
+        className="self-end flex gap-2"
+        onClick={() => updateExam({ id: examId, status: 'analyzed' })}
+      >
+        {updateExamPending ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <ArrowRight size={16} />
+        )}
+
         <FormattedMessage id="common.step" values={{ step: 2 }} />
       </Button>
     </div>

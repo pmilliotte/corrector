@@ -14,8 +14,6 @@ const examSchema = schema({
   organizationId: string(),
   userId: string().key(),
   name: string(),
-  subjectFileName: string().optional(),
-  subjectUploadedAt: string().optional(),
   status: string().enum(...EXAM_STATUSES),
 });
 

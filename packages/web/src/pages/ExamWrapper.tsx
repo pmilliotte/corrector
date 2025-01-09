@@ -32,7 +32,7 @@ export const ExamWrapper = (): ReactElement => {
 
   const ExamContent = () => {
     switch (status) {
-      case 'uploadProblems':
+      case 'uploadFiles':
         return <ExamUploadedFiles examId={examId} />;
       default:
         return <></>;
