@@ -3,6 +3,7 @@ import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
+import { ExamConfigureProblems } from '~/components/Exams/ExamConfigureProblems';
 import { ExamUploadedFiles } from '~/components/Exams/ExamUploadedFiles';
 import { Badge, Separator } from '~/components/ui';
 import { trpc } from '~/lib';
@@ -28,12 +29,14 @@ export const ExamWrapper = (): ReactElement => {
     );
   }
 
-  const { subject, created, name, status } = exam;
+  const { subject, created, name, status, problems } = exam;
 
   const ExamContent = () => {
     switch (status) {
       case 'uploadFiles':
         return <ExamUploadedFiles examId={examId} />;
+      case 'configureProblems':
+        return <ExamConfigureProblems examId={examId} problems={problems} />;
       default:
         return <></>;
     }

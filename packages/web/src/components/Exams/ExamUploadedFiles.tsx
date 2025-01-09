@@ -76,7 +76,7 @@ export const ExamUploadedFiles = ({
       </div>
       <Button
         className="self-end flex gap-2"
-        onClick={() => updateExam({ id: examId, status: 'analyzed' })}
+        onClick={() => updateExam({ id: examId, status: 'configureProblems' })}
       >
         {updateExamPending ? (
           <Loader2 className="animate-spin" size={16} />

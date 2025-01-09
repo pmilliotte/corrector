@@ -2,7 +2,7 @@ import { Loader2, TriangleAlert } from 'lucide-react';
 import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { CreateClassroomDialog } from '~/components/Classrooms';
+import { CreateExamDialog } from '~/components/Exams/CreateExamDialog';
 import { trpc } from '~/lib';
 
 import { ExamTable } from '../components/Exams/ExamTable';
@@ -31,7 +31,7 @@ export const Exams = (): ReactElement => {
         <div className="font-semibold">
           <FormattedMessage id="exams.title" />
         </div>
-        <CreateClassroomDialog />
+        <CreateExamDialog />
       </div>
       <ExamTable exams={exams} />
     </div>

@@ -216,6 +216,7 @@ export const CreateExamDialog = (): ReactElement => {
             <DialogFooter>
               <Button
                 type="submit"
+                className="flex items-center gap-2"
                 disabled={isPending || Object.keys(errors).length > 0}
               >
                 {isPending ? (

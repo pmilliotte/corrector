@@ -7,6 +7,7 @@ import { authedProcedure } from '~/trpc';
 import {
   getFileExtension,
   getFileSUpposedContentType,
+  Metadata,
   requestSignedUrlPost,
   validateExamOwnership,
 } from '../libs';
@@ -34,8 +35,9 @@ export const examUploadedFilePresignedUrlPost = authedProcedure
 
     const fileKey = `users/${userId}/exams/${examId}/uploadedFiles/${Date.now()}.${fileExtension}`;
     // Metadata arguments must start with x-amz-meta and be written in kebab case
-    const metadata = {
+    const metadata: Metadata = {
       'x-amz-meta-original-file-name': encodeURIComponent(fileName),
+      'x-amz-meta-file-status': 'uploaded',
     };
 
     const { url, fields } = await requestSignedUrlPost({

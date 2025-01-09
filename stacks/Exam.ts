@@ -12,7 +12,6 @@ import {
 } from 'sst/constructs';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
-import { PDF_FILE_NAME } from '@corrector/shared';
 
 import { Core } from './Core';
 
@@ -41,6 +40,7 @@ enum Route {
   ExamUploadedFileDelete = 'POST /examUploadedFileDelete',
   ExamUploadedFilePresignedUrlList = 'GET /examUploadedFilePresignedUrlList',
   ExamUpdate = 'POST /examUpdate',
+  ExamProblemList = 'GET /examProblemList',
 }
 
 export const Exam = ({ stack, app }: StackContext): void => {
@@ -54,27 +54,43 @@ export const Exam = ({ stack, app }: StackContext): void => {
     primaryIndex: { partitionKey: PARTITION_KEY, sortKey: SORT_KEY },
   });
 
-  const ON_FILE_UPLOADED_NOTIFICATION = 'onFileUploaded';
+  // const ON_FILE_UPLOADED_NOTIFICATION = 'onFileUploaded';
+  const ON_EXAM_FILE_UPLOADED_NOTIFICATION = 'onExamFileUploaded';
 
-  const graphicsmagickLayer = LayerVersion.fromLayerVersionArn(
+  // const graphicsmagickLayer = LayerVersion.fromLayerVersionArn(
+  //   stack,
+  //   'graphicsmagick-layer',
+  //   'arn:aws:lambda:eu-west-1:175033217214:layer:graphicsmagick:2',
+  // );
+  // const ghostscriptLayer = LayerVersion.fromLayerVersionArn(
+  //   stack,
+  //   'ghostscript-layer',
+  //   'arn:aws:lambda:eu-west-1:764866452798:layer:ghostscript:15',
+  // );
+  // const onFileUploadedFunction = new Function(stack, 'exam-file-uploaded', {
+  //   handler: 'packages/functions/src/exam/functions/onFileUploaded.handler',
+  //   timeout: '3 minutes',
+  //   architecture: 'x86_64',
+  //   layers: [graphicsmagickLayer, ghostscriptLayer],
+  //   environment: {
+  //     GM_PATH: process.env.GM_PATH ?? '',
+  //   },
+  // });
+
+  const openAiApiKey = new Config.Secret(stack, 'OPENAI_API_KEY');
+  const openAiProjectId = new Config.Secret(stack, 'OPENAI_PROJECT_ID');
+
+  const onexamFileUploadedFunction = new Function(
     stack,
-    'graphicsmagick-layer',
-    'arn:aws:lambda:eu-west-1:175033217214:layer:graphicsmagick:2',
-  );
-  const ghostscriptLayer = LayerVersion.fromLayerVersionArn(
-    stack,
-    'ghostscript-layer',
-    'arn:aws:lambda:eu-west-1:764866452798:layer:ghostscript:15',
-  );
-  const onFileUploadedFunction = new Function(stack, 'exam-file-uploaded', {
-    handler: 'packages/functions/src/exam/functions/onFileUploaded.handler',
-    timeout: '3 minutes',
-    architecture: 'x86_64',
-    layers: [graphicsmagickLayer, ghostscriptLayer],
-    environment: {
-      GM_PATH: process.env.GM_PATH ?? '',
+    'exam-file-problem-uploaded',
+    {
+      handler:
+        'packages/functions/src/exam/functions/onExamFileUploaded.handler',
+      timeout: '3 minutes',
+      architecture: 'x86_64',
+      bind: [openAiApiKey, openAiProjectId],
     },
-  });
+  );
 
   const examBucket = new Bucket(stack, 'exam-bucket', {
     name: `${stack.stage}-${app.name}-exam`,
@@ -94,18 +110,19 @@ export const Exam = ({ stack, app }: StackContext): void => {
       },
     },
     notifications: {
-      [ON_FILE_UPLOADED_NOTIFICATION]: {
-        function: onFileUploadedFunction,
+      // [ON_FILE_UPLOADED_NOTIFICATION]: {
+      //   function: onFileUploadedFunction,
+      //   events: ['object_created'],
+      //   filters: [{ suffix: `/${PDF_FILE_NAME}.pdf` }],
+      // },
+      [ON_EXAM_FILE_UPLOADED_NOTIFICATION]: {
+        function: onexamFileUploadedFunction,
         events: ['object_created'],
-        filters: [{ suffix: `/${PDF_FILE_NAME}.pdf` }],
       },
     },
   });
 
   examBucket.bind([examBucket, examTable]);
-
-  const openAiApiKey = new Config.Secret(stack, 'OPENAI_API_KEY');
-  const openAiProjectId = new Config.Secret(stack, 'OPENAI_PROJECT_ID');
 
   const i18nLayer = new LayerVersion(stack, 'i18n', {
     description: 'Locales for i18n',
@@ -155,6 +172,7 @@ export const Exam = ({ stack, app }: StackContext): void => {
     [Route.ExamUploadedFilePresignedUrlList]: apiEndpoint,
     [Route.ExamUploadedFileDelete]: apiEndpoint,
     [Route.ExamUpdate]: apiEndpoint,
+    [Route.ExamProblemList]: apiEndpoint,
   });
 
   api.bindToRoute(Route.PresignedUrlGet, [examBucket, examTable]);
@@ -209,4 +227,5 @@ export const Exam = ({ stack, app }: StackContext): void => {
   ]);
   api.bindToRoute(Route.ExamUploadedFileDelete, [examBucket]);
   api.bindToRoute(Route.ExamUpdate, [examTable]);
+  api.bindToRoute(Route.ExamProblemList, [examTable]);
 };

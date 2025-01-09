@@ -33,11 +33,12 @@ export const examCreate = authedProcedure
         .item({
           id,
           name,
-          organizationId,
           subject,
           userId,
           division,
+          organizationId,
           status: 'uploadFiles',
+          problems: {},
         })
         .options({
           condition: {
