@@ -13,7 +13,7 @@
     "vitest": "^1.4.0"
   },
   "dependencies": {
-    "sst": "^2.41.4"
+    "sst": "^3.5.5"
   },
   "peerDependencies": {
     "@aws-sdk/client-sso-oidc": "^3.699.0"
