@@ -37,7 +37,7 @@ export const App = (): ReactElement => {
     trpc.createClient({
       links: [
         httpLink({
-          url: `${import.meta.env.VITE_APP_API_URL}`,
+          url: import.meta.env.VITE_APP_API_URL,
           headers: async () => {
             const { tokens } = await fetchAuthSession();
 

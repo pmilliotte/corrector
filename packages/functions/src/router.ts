@@ -1,8 +1,7 @@
-import { coreRouter } from './core';
-import { examRouter } from './exam';
+import { coreRouter } from './functions/trpc';
 import { mergeRouters } from './trpc';
 
-const appRouter = mergeRouters(coreRouter, examRouter);
+const appRouter = mergeRouters(coreRouter);
 
 // Exported for frontend
 export type AppRouter = typeof appRouter;

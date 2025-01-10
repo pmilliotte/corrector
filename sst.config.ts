@@ -3,10 +3,26 @@
 
 export default $config({
   app: input => ({
-    name: 'corrector',
+    name: 'test',
     removal: input.stage === 'production' ? 'retain' : 'remove',
     protect: ['production'].includes(input.stage),
     home: 'aws',
+    providers: {
+      aws: {
+        region: 'eu-west-1',
+      },
+    },
   }),
-  run: async () => {},
+  run: async () => {
+    await import('./infra/storage');
+    const auth = await import('./infra/auth');
+    await import('./infra/api');
+    await import('./infra/frontend');
+
+    return {
+      UserPool: auth.userPool.id,
+      Region: aws.getRegionOutput().name,
+      UserPoolClient: auth.userPoolClient.id,
+    };
+  },
 });

@@ -5,6 +5,55 @@
 
 declare module "sst" {
   export interface Resource {
+    "OpenaiApiKey": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "OpenaiProjectId": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "Uploads": {
+      "name": string
+      "type": "sst.aws.Bucket"
+    }
+    "api": {
+      "type": "sst.aws.ApiGatewayV2"
+      "url": string
+    }
+    "exam-bucket": {
+      "name": string
+      "type": "sst.aws.Bucket"
+    }
+    "exam-file-problem-uploaded": {
+      "name": string
+      "type": "sst.aws.Function"
+    }
+    "exam-table": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
+    "organization-table": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
+    "pre-token-generation": {
+      "name": string
+      "type": "sst.aws.Function"
+    }
+    "users": {
+      "id": string
+      "type": "sst.aws.CognitoUserPool"
+    }
+    "users-client": {
+      "id": string
+      "secret": string
+      "type": "sst.aws.CognitoUserPoolClient"
+    }
+    "web": {
+      "type": "sst.aws.StaticSite"
+      "url": string
+    }
   }
 }
 /// <reference path="sst-env.d.ts" />

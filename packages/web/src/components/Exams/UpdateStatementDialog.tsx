@@ -25,9 +25,8 @@ type UpdateStatementDialogProps = {
 
 export const UpdateStatementDialog = ({
   statement,
-  examId,
+  // examId,
 }: UpdateStatementDialogProps): ReactElement => {
-  console.log('examId', examId);
   const [text, setText] = useState<string>(statement.text);
 
   return (
