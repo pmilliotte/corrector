@@ -10,7 +10,7 @@
     "circular": "pnpm depcruise --validate .dependency-cruiser.js .",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "start": "sst bind vite"
+    "start": "vite"
   },
   "dependencies": {
     "@aws-amplify/auth": "^6.4.0",
