@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      sst:
+        specifier: 3.5.5
+        version: 3.5.5
     devDependencies:
       '@eslint/js':
         specifier: ^9.0.0
@@ -17,9 +21,9 @@ importers:
       '@tsconfig/node18':
         specifier: ^18.2.4
         version: 18.2.4
-      aws-cdk-lib:
-        specifier: 2.132.1
-        version: 2.132.1(constructs@10.3.0)
+      '@types/aws-lambda':
+        specifier: 8.10.147
+        version: 8.10.147
       constructs:
         specifier: 10.3.0
         version: 10.3.0
@@ -47,9 +51,6 @@ importers:
       prettier:
         specifier: ^3.2.5
         version: 3.2.5
-      sst:
-        specifier: ^3.5.5
-        version: 3.5.5
       typescript:
         specifier: ^5.4.4
         version: 5.4.4
@@ -4022,6 +4023,9 @@ packages:
 
   '@types/aws-lambda@8.10.137':
     resolution: {integrity: sha512-YNFwzVarXAOXkjuFxONyDw1vgRNzyH8AuyN19s0bM+ChSu/bzxb5XPxYFLXoqoM+tvgzwR3k7fXcEOW125yJxg==}
+
+  '@types/aws-lambda@8.10.147':
+    resolution: {integrity: sha512-nD0Z9fNIZcxYX5Mai2CTmFD7wX7UldCkW2ezCF8D1T5hdiLsnTWDGRpfRYntU6VjTdLQjOvyszru7I1c1oCQew==}
 
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -8280,7 +8284,7 @@ snapshots:
     dependencies:
       '@aws-amplify/data-schema-types': 1.1.1
       '@smithy/util-base64': 3.0.0
-      '@types/aws-lambda': 8.10.137
+      '@types/aws-lambda': 8.10.147
       '@types/json-schema': 7.0.15
       rxjs: 7.8.1
 
@@ -14406,6 +14410,8 @@ snapshots:
   '@tsconfig/node18@18.2.4': {}
 
   '@types/aws-lambda@8.10.137': {}
+
+  '@types/aws-lambda@8.10.147': {}
 
   '@types/babel__core@7.20.5':
     dependencies:

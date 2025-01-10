@@ -17,7 +17,6 @@
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@tsconfig/node18": "^18.2.4",
     "@types/aws-lambda": "8.10.147",
-    "aws-cdk-lib": "2.132.1",
     "constructs": "10.3.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
