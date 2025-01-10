@@ -67,8 +67,15 @@ export const examsMessages = {
     },
     problem: {
       title: 'Problème {path} : {title}',
+      path: 'Problème {path}',
+      statement: {
+        modify: {
+          title: 'Modifier',
+          description: "Vérifier l'affichage avant de valider",
+        },
+      },
       question: {
-        title: 'Question {path}',
+        title: 'Question {path} :',
         marks: '{mark, plural, =1 {# point} other {# points}}',
         mark: '{mark} / {total, plural, =1 {# point} other {# points}}',
         points: 'point(s)',

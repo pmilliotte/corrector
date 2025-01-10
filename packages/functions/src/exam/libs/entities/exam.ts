@@ -1,8 +1,10 @@
 import {
+  anyOf,
   Entity,
   FormattedItem,
   list,
   map,
+  number,
   record,
   schema,
   string,
@@ -15,10 +17,22 @@ import { ExamTable } from '../table';
 
 export const EXAM_ENTITY_NAME = 'Exam';
 
+const statementSchema = map({
+  type: string().const('statement'),
+  text: string(),
+  id: string(),
+});
+
+const questionSchema = map({
+  type: string().const('question'),
+  text: string(),
+  index: number(),
+  id: string(),
+});
+
 const problemSchema = map({
-  content: list(
-    map({ type: string().enum('statement', 'question'), text: string() }),
-  ),
+  content: list(anyOf(statementSchema, questionSchema)),
+  id: string(),
 });
 
 const examSchema = schema({

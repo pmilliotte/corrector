@@ -4,6 +4,7 @@ import { ChatPromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { ChatOpenAI } from '@langchain/openai';
 import { S3Event } from 'aws-lambda';
+import { randomUUID } from 'crypto';
 import { $set, UpdateItemCommand } from 'dynamodb-toolbox';
 import { Bucket } from 'sst/node/bucket';
 import { Config } from 'sst/node/config';
@@ -28,7 +29,7 @@ export const handler = async (event: S3Event): Promise<void> => {
 
       const context = `Ton objectif est de retranscrire fidèlement les énoncés des problèmes que je vais te fournir sous forme d'une image. Tu dois découper chaque problème en autant de questions ou texte introductif ou intermédiaire qu'il contient.
 
-À chaque fois que tu utilises le langage LaTeX, tu utilises les délimiteurs suivants :
+Important : Toute utilisation du langage LaTeX doit systématiquement être délimitée par les délimiteurs suivants :
 - Un seul symbole dollar '$' pour du rendu inline ;
 - Deux symboles dollar '$$' pour du rendu en bloc.`;
 
@@ -106,12 +107,53 @@ export const handler = async (event: S3Event): Promise<void> => {
 
       const { problems } = await chain.invoke({});
 
+      const formattedProblems = problems.map(problem => ({
+        content: problem.content.reduce(
+          (acc, item) => {
+            if (item.type === 'statement') {
+              return {
+                ...acc,
+                items: [
+                  ...acc.items,
+                  {
+                    type: 'statement' as const,
+                    text: item.text,
+                    id: randomUUID(),
+                  },
+                ],
+              };
+            }
+
+            return {
+              lastQuestion: acc.lastQuestion + 1,
+              items: [
+                ...acc.items,
+                {
+                  type: 'question' as const,
+                  text: item.text,
+                  index: acc.lastQuestion + 1,
+                  id: randomUUID(),
+                },
+              ],
+            };
+          },
+          {
+            lastQuestion: 0,
+            items: [] as (
+              | { text: string; type: 'statement'; id: string }
+              | { text: string; type: 'question'; index: number; id: string }
+            )[],
+          },
+        ).items,
+        id: randomUUID(),
+      }));
+
       await ExamEntity.build(UpdateItemCommand)
         .item({
           id: examId,
           userId,
           problems: {
-            [fileName]: $set(problems),
+            [fileName]: $set(formattedProblems),
           },
         })
         .send();

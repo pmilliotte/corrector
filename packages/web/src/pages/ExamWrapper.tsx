@@ -1,3 +1,5 @@
+import compact from 'lodash/compact';
+import flatMap from 'lodash/flatMap';
 import { Loader2, TriangleAlert } from 'lucide-react';
 import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -36,7 +38,12 @@ export const ExamWrapper = (): ReactElement => {
       case 'uploadFiles':
         return <ExamUploadedFiles examId={examId} />;
       case 'configureProblems':
-        return <ExamConfigureProblems examId={examId} problems={problems} />;
+        return (
+          <ExamConfigureProblems
+            examId={examId}
+            problems={flatMap(compact(Object.values(problems)))}
+          />
+        );
       default:
         return <></>;
     }
