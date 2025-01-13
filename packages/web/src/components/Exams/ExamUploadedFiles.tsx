@@ -31,7 +31,7 @@ export const ExamUploadedFiles = ({
     },
   });
   const { mutate: updateExam, isPending: updateExamPending } =
-    trpc.examUpdate.useMutation({
+    trpc.examConfigureProblems.useMutation({
       onSuccess: async () => {
         await utils.examGet.invalidate();
       },
@@ -76,7 +76,7 @@ export const ExamUploadedFiles = ({
       </div>
       <Button
         className="self-end flex gap-2"
-        onClick={() => updateExam({ id: examId, status: 'configureProblems' })}
+        onClick={() => updateExam({ id: examId })}
       >
         {updateExamPending ? (
           <Loader2 className="animate-spin" size={16} />

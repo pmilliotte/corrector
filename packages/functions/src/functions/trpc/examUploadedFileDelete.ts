@@ -27,9 +27,7 @@ export const examUploadedFileDelete = authedProcedure
       .item({
         id: examId,
         userId,
-        problems: {
-          [fileName]: $remove(),
-        },
+        problems: { uploadFiles: { [fileName]: $remove() } },
       })
       .send();
   });

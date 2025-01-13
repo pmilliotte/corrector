@@ -105,56 +105,93 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
 
       const { problems } = await chain.invoke({});
 
-      const formattedProblems = problems.map(problem => ({
-        content: problem.content.reduce(
-          (acc, item) => {
-            if (item.type === 'statement') {
-              return {
-                ...acc,
-                items: [
-                  ...acc.items,
-                  {
-                    type: 'statement' as const,
-                    text: item.text,
-                    id: randomUUID(),
-                  },
-                ],
-              };
-            }
-
-            return {
-              lastQuestion: acc.lastQuestion + 1,
-              items: [
-                ...acc.items,
-                {
-                  type: 'question' as const,
-                  text: item.text,
-                  index: acc.lastQuestion + 1,
-                  id: randomUUID(),
-                },
-              ],
-            };
-          },
-          {
-            lastQuestion: 0,
-            items: [] as (
-              | { text: string; type: 'statement'; id: string }
-              | { text: string; type: 'question'; index: number; id: string }
-            )[],
-          },
-        ).items,
-        id: randomUUID(),
-      }));
+      const formattedProblems = problems.reduce(
+        (acc, problem) => ({
+          ...acc,
+          ...formatProblem(problem),
+        }),
+        {} as FormattedProblems,
+      );
 
       await ExamEntity.build(UpdateItemCommand)
         .item({
           id: examId,
           userId,
           problems: {
-            [fileName]: $set(formattedProblems),
+            uploadFiles: {
+              [fileName]: $set(formattedProblems),
+            },
           },
         })
         .send();
     }),
   );
+};
+
+type Statement = {
+  type: 'statement' | 'question';
+  text: string;
+};
+type FormattedStatement =
+  | {
+      id: string;
+      type: 'statement';
+      text: string;
+    }
+  | {
+      id: string;
+      type: 'question';
+      text: string;
+      index: number;
+    };
+
+type Problem = {
+  content: {
+    text: string;
+    type: 'statement' | 'question';
+  }[];
+};
+
+type FormattedProblem = { content: FormattedStatement[] };
+type FormattedProblems = {
+  [key: string]: FormattedProblem | undefined;
+};
+
+const formatStatement = (
+  statement: Statement,
+  index: number,
+): FormattedStatement => {
+  if (statement.type === 'statement') {
+    return {
+      ...statement,
+      type: 'statement',
+      id: randomUUID(),
+    };
+  }
+
+  return {
+    ...statement,
+    type: 'question',
+    id: randomUUID(),
+    index,
+  };
+};
+const formatProblem = (problem: Problem): FormattedProblems => {
+  let questionIndex = 0;
+
+  const formattedProblemContent = problem.content.reduce((acc, statement) => {
+    if (statement.type === 'statement') {
+      return [...acc, formatStatement(statement, questionIndex)];
+    }
+
+    questionIndex++;
+
+    return [...acc, formatStatement(statement, questionIndex)];
+  }, [] as FormattedStatement[]);
+
+  return {
+    [randomUUID()]: {
+      content: formattedProblemContent,
+    },
+  };
 };

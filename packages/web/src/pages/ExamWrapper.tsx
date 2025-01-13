@@ -1,5 +1,3 @@
-import compact from 'lodash/compact';
-import flatMap from 'lodash/flatMap';
 import { Loader2, TriangleAlert } from 'lucide-react';
 import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -41,7 +39,7 @@ export const ExamWrapper = (): ReactElement => {
         return (
           <ExamConfigureProblems
             examId={examId}
-            problems={flatMap(compact(Object.values(problems)))}
+            problems={problems.configureProblems}
           />
         );
       default:

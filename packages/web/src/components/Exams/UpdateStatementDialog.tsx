@@ -16,7 +16,7 @@ import {
 
 export type ProblemContent =
   | { type: 'statement'; text: string; id: string }
-  | { type: 'question'; text: string; index: number; id: string };
+  | { type: 'question'; text: string; id: string; index: number };
 
 type UpdateStatementDialogProps = {
   statement: ProblemContent;

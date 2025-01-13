@@ -26,13 +26,12 @@ const statementSchema = map({
 const questionSchema = map({
   type: string().const('question'),
   text: string(),
-  index: number(),
   id: string(),
+  index: number(),
 });
 
 const problemSchema = map({
   content: list(anyOf(statementSchema, questionSchema)),
-  id: string(),
 });
 
 const examSchema = schema({
@@ -43,7 +42,12 @@ const examSchema = schema({
   organizationId: string(),
   name: string(),
   status: string().enum(...EXAM_STATUSES),
-  problems: record(string(), list(problemSchema)).default({}).required(),
+  problems: map({
+    uploadFiles: record(string(), record(string(), problemSchema)),
+    configureProblems: record(string(), problemSchema),
+  })
+    .default({ uploadFiles: {}, configureProblems: {} })
+    .required(),
 });
 
 export const computeExamEntitySortKey = ({

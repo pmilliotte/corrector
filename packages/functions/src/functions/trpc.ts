@@ -6,6 +6,7 @@ import { classroomCreate } from './trpc/classroomCreate';
 import { classroomGet } from './trpc/classroomGet';
 import { classroomList } from './trpc/classroomList';
 import { classroomStudentList } from './trpc/classroomStudentList';
+import { examConfigureProblems } from './trpc/examConfigureProblems';
 import { examCreate } from './trpc/examCreate';
 import { examFileGet } from './trpc/examFileGet';
 import { examFilesGet } from './trpc/examFilesGet';
@@ -21,7 +22,6 @@ import { examSubjectAnalysisQuestionMethodUpdate } from './trpc/examSubjectAnaly
 import { examSubjectAnalysisQuestionUpdate } from './trpc/examSubjectAnalysisQuestionUpdate';
 import { examSubjectAnalyze } from './trpc/examSubjectAnalyze';
 import { examSubjectDelete } from './trpc/examSubjectDelete';
-import { examUpdate } from './trpc/examUpdate';
 import { examUploadedFileDelete } from './trpc/examUploadedFileDelete';
 import { examUploadedFilePresignedUrlList } from './trpc/examUploadedFilePresignedUrlList';
 import { examUploadedFilePresignedUrlPost } from './trpc/examUploadedFilePresignedUrlPost';
@@ -63,7 +63,7 @@ export const coreRouter = router({
   examUploadedFilePresignedUrlPost,
   examUploadedFilePresignedUrlList,
   examUploadedFileDelete,
-  examUpdate,
+  examConfigureProblems,
 });
 
 export const handler = awsLambdaRequestHandler({

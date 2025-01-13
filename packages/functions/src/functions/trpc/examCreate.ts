@@ -36,7 +36,7 @@ export const examCreate = authedProcedure
           division,
           organizationId,
           status: 'uploadFiles',
-          problems: {},
+          problems: { uploadFiles: {}, configureProblems: {} },
         })
         .options({
           condition: {
