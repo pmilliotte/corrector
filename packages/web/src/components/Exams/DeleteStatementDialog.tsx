@@ -1,6 +1,8 @@
-import { Trash2 } from 'lucide-react';
-import { ReactElement } from 'react';
+import { Loader2, Trash2 } from 'lucide-react';
+import { ReactElement, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+
+import { trpc } from '~/lib';
 
 import {
   AlertDialog,
@@ -19,18 +21,27 @@ export type ProblemContent =
   | { type: 'question'; text: string; index: number; id: string };
 
 type DeleteStatementDialogProps = {
-  statementId: string;
   examId: string;
+  statementId: string;
+  problemId: string;
 };
 
 export const DeleteStatementDialog = ({
-  statementId,
   examId,
+  statementId,
+  problemId,
 }: DeleteStatementDialogProps): ReactElement => {
-  console.log(statementId, examId);
+  const utils = trpc.useUtils();
+  const [open, setOpen] = useState(false);
+  const { mutate, isPending } = trpc.examStatementDelete.useMutation({
+    onSuccess: async () => {
+      await utils.examGet.invalidate();
+      setOpen(false);
+    },
+  });
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button variant="outline" size="icon">
           <Trash2 size={16} />
@@ -50,10 +61,14 @@ export const DeleteStatementDialog = ({
             <FormattedMessage id="common.cancel" />
           </AlertDialogCancel>
           <Button
-            onClick={() => console.log('continue')}
+            onClick={() => mutate({ examId, problemId, statementId })}
             className="flex items-center gap-2"
           >
-            <Trash2 size={16} />
+            {isPending ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              <Trash2 size={16} />
+            )}
             <FormattedMessage id="common.delete" />
           </Button>
         </AlertDialogFooter>

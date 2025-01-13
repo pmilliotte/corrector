@@ -19,13 +19,19 @@ export const ExamConfigureProblems = ({
   const StatementActions = ({
     statement,
     position,
+    problemId,
   }: {
     statement: ProblemContent;
     position: number;
+    problemId: string;
   }) => (
     <div className="flex items-center gap-1">
       <UpdateStatementDialog statement={statement} examId={examId} />
-      <DeleteStatementDialog statementId={statement.id} examId={examId} />
+      <DeleteStatementDialog
+        examId={examId}
+        statementId={statement.id}
+        problemId={problemId}
+      />
       <InsertStatementDialog position={position} examId={examId} />
     </div>
   );
@@ -58,6 +64,7 @@ export const ExamConfigureProblems = ({
                     <StatementActions
                       statement={statement}
                       position={index + 1}
+                      problemId={problemId}
                     />
                   </div>
                 ) : (
@@ -77,6 +84,7 @@ export const ExamConfigureProblems = ({
                     <StatementActions
                       statement={statement}
                       position={index + 1}
+                      problemId={problemId}
                     />
                   </div>
                 ),

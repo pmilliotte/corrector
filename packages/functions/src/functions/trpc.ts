@@ -15,6 +15,7 @@ import { examList } from './trpc/examList';
 import { examResponseAnalysisGet } from './trpc/examResponseAnalysisGet';
 import { examResponseAnalyze } from './trpc/examResponseAnalyze';
 import { examResponseList } from './trpc/examResponseList';
+import { examStatementDelete } from './trpc/examStatementDelete';
 import { examSubjectAnalysisGet } from './trpc/examSubjectAnalysisGet';
 import { examSubjectAnalysisQuestionMethodAdd } from './trpc/examSubjectAnalysisQuestionMethodAdd';
 import { examSubjectAnalysisQuestionMethodDelete } from './trpc/examSubjectAnalysisQuestionMethodDelete';
@@ -64,6 +65,7 @@ export const coreRouter = router({
   examUploadedFilePresignedUrlList,
   examUploadedFileDelete,
   examConfigureProblems,
+  examStatementDelete,
 });
 
 export const handler = awsLambdaRequestHandler({
