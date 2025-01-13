@@ -13,10 +13,6 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "Uploads": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
     "api": {
       "type": "sst.aws.ApiGatewayV2"
       "url": string

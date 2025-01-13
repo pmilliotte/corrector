@@ -1,5 +1,5 @@
 import { userPool, userPoolClient } from './auth';
-import { examTable, organizationTable } from './storage';
+import { examBucket, examTable, organizationTable } from './storage';
 
 enum Route {
   AnyGet = 'GET /{proxy+}',
@@ -27,7 +27,7 @@ api.route(
   Route.AnyGet,
   {
     handler: 'packages/functions/src/functions/trpc.handler',
-    link: [organizationTable, examTable],
+    link: [organizationTable, examTable, examBucket],
   },
   {
     auth: {
@@ -41,7 +41,7 @@ api.route(
   Route.AnyPost,
   {
     handler: 'packages/functions/src/functions/trpc.handler',
-    link: [organizationTable],
+    link: [organizationTable, examTable, examBucket],
   },
   {
     auth: {

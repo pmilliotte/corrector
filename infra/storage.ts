@@ -5,8 +5,6 @@ import {
   SORT_KEY,
 } from '@corrector/backend-shared';
 
-export const bucket = new sst.aws.Bucket('Uploads');
-
 export const organizationTable = new sst.aws.Dynamo('organization-table', {
   fields: {
     [PARTITION_KEY]: 'string',
@@ -30,7 +28,7 @@ export const examTable = new sst.aws.Dynamo('exam-table', {
 export const openAiApiKey = new sst.Secret('OpenaiApiKey');
 export const openAiProjectId = new sst.Secret('OpenaiProjectId');
 
-const examBucket = new sst.aws.Bucket('exam-bucket', {
+export const examBucket = new sst.aws.Bucket('exam-bucket', {
   transform: {
     bucket: {
       lifecycleRules: [
