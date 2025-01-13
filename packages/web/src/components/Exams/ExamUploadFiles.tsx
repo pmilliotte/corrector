@@ -11,7 +11,7 @@ type ExamUploadedFilesProps = {
   examId: string;
 };
 
-export const ExamUploadedFiles = ({
+export const ExamUploadFiles = ({
   examId,
 }: ExamUploadedFilesProps): ReactElement => {
   const utils = trpc.useUtils();

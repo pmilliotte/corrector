@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
 import { ExamConfigureProblems } from '~/components/Exams/ExamConfigureProblems';
-import { ExamUploadedFiles } from '~/components/Exams/ExamUploadedFiles';
+import { ExamUploadFiles } from '~/components/Exams/ExamUploadFiles';
 import { Badge, Separator } from '~/components/ui';
 import { trpc } from '~/lib';
 
@@ -34,7 +34,7 @@ export const ExamWrapper = (): ReactElement => {
   const ExamContent = () => {
     switch (status) {
       case 'uploadFiles':
-        return <ExamUploadedFiles examId={examId} />;
+        return <ExamUploadFiles examId={examId} />;
       case 'configureProblems':
         return (
           <ExamConfigureProblems
