@@ -14,6 +14,7 @@ export const api = new sst.aws.ApiGatewayV2('api', {
     allowHeaders: ['content-type', 'authorization'],
     allowMethods: ['POST', 'GET', 'OPTIONS'],
   },
+  link: [organizationTable, examTable, examBucket],
 });
 const jwtAuthorizer = api.addAuthorizer({
   name: 'cognitoAuthorizer',
@@ -23,31 +24,17 @@ const jwtAuthorizer = api.addAuthorizer({
   },
 });
 
-api.route(
-  Route.AnyGet,
-  {
-    handler: 'packages/functions/src/functions/trpc.handler',
-    link: [organizationTable, examTable, examBucket],
-  },
-  {
-    auth: {
-      jwt: {
-        authorizer: jwtAuthorizer.id,
-      },
+api.route(Route.AnyGet, 'packages/functions/src/functions/trpc.handler', {
+  auth: {
+    jwt: {
+      authorizer: jwtAuthorizer.id,
     },
   },
-);
-api.route(
-  Route.AnyPost,
-  {
-    handler: 'packages/functions/src/functions/trpc.handler',
-    link: [organizationTable, examTable, examBucket],
-  },
-  {
-    auth: {
-      jwt: {
-        authorizer: jwtAuthorizer.id,
-      },
+});
+api.route(Route.AnyPost, 'packages/functions/src/functions/trpc.handler', {
+  auth: {
+    jwt: {
+      authorizer: jwtAuthorizer.id,
     },
   },
-);
+});

@@ -3,7 +3,7 @@
 
 export default $config({
   app: input => ({
-    name: 'test',
+    name: 'corrector',
     removal: input.stage === 'production' ? 'retain' : 'remove',
     protect: ['production'].includes(input.stage),
     home: 'aws',
