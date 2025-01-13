@@ -4,5 +4,6 @@ export * from './getFileExtension';
 export * from './getFileKeyPrefix';
 export * from './i18n';
 export * from './parseExamUploadedFileKey';
+export * from './reindexProblemStatements';
 export * from './requestSignedUrl';
 export * from './s3';

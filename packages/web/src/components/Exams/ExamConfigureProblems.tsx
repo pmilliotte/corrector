@@ -26,13 +26,21 @@ export const ExamConfigureProblems = ({
     problemId: string;
   }) => (
     <div className="flex items-center gap-1">
-      <UpdateStatementDialog statement={statement} examId={examId} />
+      <UpdateStatementDialog
+        statement={statement}
+        examId={examId}
+        problemId={problemId}
+      />
       <DeleteStatementDialog
         examId={examId}
         statementId={statement.id}
         problemId={problemId}
       />
-      <InsertStatementDialog position={position} examId={examId} />
+      <InsertStatementDialog
+        position={position}
+        examId={examId}
+        problemId={problemId}
+      />
     </div>
   );
 
@@ -47,7 +55,11 @@ export const ExamConfigureProblems = ({
                   id="exams.problem.path"
                   values={{ path: problemIndex + 1 }}
                 />
-                <InsertStatementDialog position={0} examId={examId} />
+                <InsertStatementDialog
+                  position={0}
+                  examId={examId}
+                  problemId={problemId}
+                />
               </div>
               <Separator />
             </div>

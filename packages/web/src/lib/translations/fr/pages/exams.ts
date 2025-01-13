@@ -79,8 +79,12 @@ export const examsMessages = {
         },
         add: {
           title: 'Insérer',
-          description:
-            "Insérer à l'exercice une question ou une partie d'énoncé",
+          description: "Insérer une question ou une partie d'énoncé",
+          select: 'Type de texte',
+        },
+        type: {
+          statement: 'Énoncé',
+          question: 'Question',
         },
       },
       question: {

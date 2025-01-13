@@ -1,20 +1,26 @@
 import { TRPCError } from '@trpc/server';
+import { randomUUID } from 'crypto';
 import { $set, GetItemCommand, UpdateItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
 import { ExamEntity, reindexStatements } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
-export const examStatementDelete = authedProcedure
+export const examStatementInsert = authedProcedure
   .input(
     z.object({
       problemId: z.string(),
-      statementId: z.string(),
+      position: z.number(),
+      text: z.string(),
+      type: z.enum(['statement', 'question']),
       examId: z.string(),
     }),
   )
   .mutation(
-    async ({ ctx: { session }, input: { statementId, problemId, examId } }) => {
+    async ({
+      ctx: { session },
+      input: { position, type, problemId, examId, text },
+    }) => {
       const { id: userId } = session;
 
       const { Item: exam } = await ExamEntity.build(GetItemCommand)
@@ -26,10 +32,14 @@ export const examStatementDelete = authedProcedure
       }
 
       const problemContent = exam.problems.configureProblems[problemId].content;
-      const filteredProblemContent = problemContent.filter(
-        statement => statement.id !== statementId,
-      );
-      const indexedProblemContent = reindexStatements(filteredProblemContent);
+
+      problemContent.splice(position, 0, {
+        text,
+        id: randomUUID(),
+        ...(type === 'question' ? { index: 1, type } : { type }),
+      });
+
+      const indexedProblemContent = reindexStatements(problemContent);
 
       await ExamEntity.build(UpdateItemCommand)
         .item({
