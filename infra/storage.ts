@@ -52,7 +52,13 @@ const onexamFileUploadedFunction = new sst.aws.Function(
     handler: 'packages/functions/src/functions/onExamFileUploaded.handler',
     timeout: '3 minutes',
     architecture: 'x86_64',
-    link: [openAiApiKey, openAiProjectId, examBucket, examTable],
+    link: [
+      openAiApiKey,
+      openAiProjectId,
+      examBucket,
+      examTable,
+      organizationTable,
+    ],
   },
 );
 examBucket.notify({

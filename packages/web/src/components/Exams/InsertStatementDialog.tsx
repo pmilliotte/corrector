@@ -1,4 +1,4 @@
-import { Pencil, Save } from 'lucide-react';
+import { BetweenHorizonalEnd, Save } from 'lucide-react';
 import { ReactElement, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -18,33 +18,33 @@ export type ProblemContent =
   | { type: 'statement'; text: string; id: string }
   | { type: 'question'; text: string; index: number; id: string };
 
-type UpdateStatementDialogProps = {
-  statement: ProblemContent;
+type InsertStatementDialogProps = {
+  position: number;
   examId: string;
 };
 
-export const UpdateStatementDialog = ({
-  statement,
+export const InsertStatementDialog = ({
+  position,
   examId,
-}: UpdateStatementDialogProps): ReactElement => {
-  const [text, setText] = useState<string>(statement.text);
+}: InsertStatementDialogProps): ReactElement => {
+  const [text, setText] = useState<string>('');
 
-  console.log(examId);
+  console.log(position, examId);
 
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" size="icon">
-          <Pencil size={16} />
+          <BetweenHorizonalEnd size={16} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            <FormattedMessage id="exams.problem.statement.modify.title" />
+            <FormattedMessage id="exams.problem.statement.add.title" />
           </DialogTitle>
           <DialogDescription>
-            <FormattedMessage id="exams.problem.statement.modify.description" />
+            <FormattedMessage id="exams.problem.statement.add.description" />
           </DialogDescription>
         </DialogHeader>
         <Textarea value={text} onChange={e => setText(e.target.value)} />

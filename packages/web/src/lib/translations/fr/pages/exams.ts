@@ -73,6 +73,15 @@ export const examsMessages = {
           title: 'Modifier',
           description: "Vérifier l'affichage avant de valider",
         },
+        delete: {
+          title: 'Supprimer',
+          description: 'Supprimer définitivement cet énoncé ?',
+        },
+        add: {
+          title: 'Insérer',
+          description:
+            "Insérer à l'exercice une question ou une partie d'énoncé",
+        },
       },
       question: {
         title: 'Question {path} :',
