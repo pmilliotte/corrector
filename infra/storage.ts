@@ -49,7 +49,7 @@ const ON_EXAM_FILE_UPLOADED_NOTIFICATION = 'onExamFileUploaded';
 const onexamFileUploadedFunction = new sst.aws.Function(
   'exam-file-problem-uploaded',
   {
-    handler: 'packages/functions/src/exam/functions/onExamFileUploaded.handler',
+    handler: 'packages/functions/src/functions/onExamFileUploaded.handler',
     timeout: '3 minutes',
     architecture: 'x86_64',
     link: [openAiApiKey, openAiProjectId, examBucket, examTable],
