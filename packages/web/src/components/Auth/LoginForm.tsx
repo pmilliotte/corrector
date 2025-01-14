@@ -6,9 +6,9 @@ import {
   useMutation,
 } from '@tanstack/react-query';
 import { KeyRound, Loader2 } from 'lucide-react';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { cn, useIntl } from '~/lib';
@@ -30,7 +30,6 @@ export const LoginForm = ({
   ...props
 }: UserAuthFormProps): React.ReactElement => {
   const t = useIntl();
-  const [signinError, setSigninError] = useState(false);
 
   const formSchema = z.object({
     email: z.string().email(
@@ -56,7 +55,6 @@ export const LoginForm = ({
 
   const { mutate: submit, isPending } = useMutation({
     mutationFn: async ({ email, password }: z.infer<typeof formSchema>) => {
-      setSigninError(false);
       try {
         const signInResp = await signIn({ username: email, password });
 
@@ -70,7 +68,13 @@ export const LoginForm = ({
           await refetchAuthSession();
         }
       } catch (e) {
-        setSigninError(true);
+        toast(t.formatMessage({ id: 'login.signin' }), {
+          description: t.formatMessage({ id: 'login.loginError' }),
+          action: {
+            label: t.formatMessage({ id: 'common.close' }),
+            onClick: () => {},
+          },
+        });
       }
     },
   });
@@ -138,10 +142,6 @@ export const LoginForm = ({
           ) : form.formState.errors.password !== undefined ? (
             <div className="text-sm text-destructive">
               {form.formState.errors.password.message}
-            </div>
-          ) : signinError ? (
-            <div className="text-sm text-destructive">
-              <FormattedMessage id="login.signinError" />
             </div>
           ) : (
             <></>
