@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { HumanMessage } from '@langchain/core/messages';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
@@ -87,6 +88,11 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
                     .describe(
                       "Si le texte correspond à un texte introductif ou intermédiaire, ou s'il s'agit d'une question.",
                     ),
+                  numberOfLines: z
+                    .number()
+                    .describe(
+                      "Le nombre de lignes dont un élève a besoin pour répondre à la question de manière complète et strucurée, 0 si s'il s'agit d'un texte introductif ou intermédiaire",
+                    ),
                 })
                 .strict()
                 .array(),
@@ -131,24 +137,28 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
 type Statement = {
   type: 'statement' | 'question';
   text: string;
+  numberOfLines: number;
 };
 type FormattedStatement =
   | {
       id: string;
       type: 'statement';
       text: string;
+      numberOfLines: number;
     }
   | {
       id: string;
       type: 'question';
       text: string;
       index: number;
+      numberOfLines: number;
     };
 
 type Problem = {
   content: {
     text: string;
     type: 'statement' | 'question';
+    numberOfLines: number;
   }[];
 };
 

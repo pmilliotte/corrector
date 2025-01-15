@@ -63,11 +63,13 @@ type Statement =
   | {
       type: 'statement';
       text: string;
+      numberOfLines: number;
     }
   | {
       type: 'question';
       text: string;
       index: number;
+      numberOfLines: number;
     }
   | {
       type: 'problem';
@@ -89,7 +91,7 @@ export const generatePdfWithPuppeteer = async (
         case 'statement':
           return `<div class="statement">${htmlString}</div>`;
         case 'question': {
-          const numberOfLines = 2;
+          const numberOfLines = statement.numberOfLines;
           let htmlLines = '';
           for (let i = 0; i < numberOfLines; i++) {
             htmlLines += '<div class="line"></div>';
