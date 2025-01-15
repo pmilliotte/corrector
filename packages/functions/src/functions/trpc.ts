@@ -10,6 +10,7 @@ import { examConfigureProblems } from './trpc/examConfigureProblems';
 import { examCreate } from './trpc/examCreate';
 import { examFileGet } from './trpc/examFileGet';
 import { examFilesGet } from './trpc/examFilesGet';
+import { examGeneratePdf } from './trpc/examGeneratePdf';
 import { examGet } from './trpc/examGet';
 import { examList } from './trpc/examList';
 import { examResponseAnalysisGet } from './trpc/examResponseAnalysisGet';
@@ -70,6 +71,7 @@ export const coreRouter = router({
   examStatementDelete,
   examStatementInsert,
   examStatementUpdate,
+  examGeneratePdf,
 });
 
 export const handler = awsLambdaRequestHandler({

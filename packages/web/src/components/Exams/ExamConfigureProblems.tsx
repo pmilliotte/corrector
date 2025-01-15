@@ -1,8 +1,11 @@
 import { MathJax } from 'better-react-mathjax';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { Separator } from '../ui';
+import { trpc } from '~/lib';
+
+import { Button, Separator } from '../ui';
 import { DeleteStatementDialog } from './DeleteStatementDialog';
 import { InsertStatementDialog } from './InsertStatementDialog';
 import { ProblemContent, UpdateStatementDialog } from './UpdateStatementDialog';
@@ -16,6 +19,9 @@ export const ExamConfigureProblems = ({
   examId,
   problems,
 }: ExamConfigureProblemsProps): ReactElement => {
+  const { mutate: updateExam, isPending: updateExamPending } =
+    trpc.examGeneratePdf.useMutation();
+
   const StatementActions = ({
     statement,
     position,
@@ -46,6 +52,17 @@ export const ExamConfigureProblems = ({
 
   return (
     <div className="flex flex-col gap-2 h-full">
+      <Button
+        className="self-end flex gap-2"
+        onClick={() => updateExam({ id: examId })}
+      >
+        {updateExamPending ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <ArrowRight size={16} />
+        )}
+        <FormattedMessage id="exams.generatePdf" values={{ step: 2 }} />
+      </Button>
       {Object.entries(problems).map(([problemId, problem], problemIndex) =>
         problem === undefined ? null : (
           <div key={problemId} className="flex flex-col border p-2 rounded-lg">

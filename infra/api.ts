@@ -24,14 +24,23 @@ const jwtAuthorizer = api.addAuthorizer({
   },
 });
 
-api.route(Route.AnyGet, 'packages/functions/src/functions/trpc.handler', {
+const trpcGet = new sst.aws.Function('trpc-get', {
+  handler: 'packages/functions/src/functions/trpc.handler',
+  link: [examBucket, examTable, organizationTable],
+});
+api.route(Route.AnyGet, trpcGet.arn, {
   auth: {
     jwt: {
       authorizer: jwtAuthorizer.id,
     },
   },
 });
-api.route(Route.AnyPost, 'packages/functions/src/functions/trpc.handler', {
+
+const trpcPost = new sst.aws.Function('trpc-post', {
+  handler: 'packages/functions/src/functions/trpc.handler',
+  link: [examBucket, examTable, organizationTable],
+});
+api.route(Route.AnyPost, trpcPost.arn, {
   auth: {
     jwt: {
       authorizer: jwtAuthorizer.id,

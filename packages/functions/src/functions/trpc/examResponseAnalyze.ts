@@ -1,6 +1,5 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { UpdateItemCommand } from 'dynamodb-toolbox';
-import { writeFileSync } from 'fs';
 import { Resource } from 'sst';
 import { z } from 'zod';
 
@@ -55,13 +54,6 @@ export const examResponseAnalyze = authedProcedure
       });
 
       const response = await chain.invoke({});
-
-      writeFileSync(
-        '/Users/pierremilliotte/Projects/corrector/response.json',
-        JSON.stringify(response),
-      );
-
-      console.log('RESPONSE OOOOOOOOOOOKKKKKKKKKKKKKK');
 
       await s3Client.send(
         new PutObjectCommand({

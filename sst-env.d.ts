@@ -37,6 +37,14 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Function"
     }
+    "trpc-get": {
+      "name": string
+      "type": "sst.aws.Function"
+    }
+    "trpc-post": {
+      "name": string
+      "type": "sst.aws.Function"
+    }
     "users": {
       "id": string
       "type": "sst.aws.CognitoUserPool"

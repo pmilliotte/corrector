@@ -65,6 +65,7 @@ export const examsMessages = {
       responses: { title: 'Réponses' },
       correction: { title: 'Correction' },
     },
+    generatePdf: 'Générer le sujet',
     problem: {
       title: 'Problème {path} : {title}',
       path: 'Problème {path}',
