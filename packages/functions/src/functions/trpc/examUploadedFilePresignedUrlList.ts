@@ -36,16 +36,16 @@ export const examUploadedFilePresignedUrlList = authedProcedure
 
           const fileName = Key.replace(prefix, '');
 
-          const url = await requestSignedUrlGet({
+          const response = await requestSignedUrlGet({
             fileKey: Key,
             bucketName: Resource['exam-bucket'].name,
           });
 
-          if (url === undefined) {
+          if (response === undefined) {
             throw new Error();
           }
 
-          return { fileName, url };
+          return { fileName, ...response };
         }),
     );
 

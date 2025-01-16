@@ -18,9 +18,10 @@ export const ExamUploadFiles = ({
   const { onDrop, isLoading: dropLoading } = useOnProblemDrop(async () => {
     await utils.examUploadedFilePresignedUrlList.invalidate();
   });
-  const { data: files } = trpc.examUploadedFilePresignedUrlList.useQuery({
-    examId,
-  });
+  const { data: files, isLoading: filesLoading } =
+    trpc.examUploadedFilePresignedUrlList.useQuery({
+      examId,
+    });
   const {
     mutate: removeFile,
     isPending: removeFilePending,
@@ -77,8 +78,12 @@ export const ExamUploadFiles = ({
       <Button
         className="self-end flex gap-2"
         onClick={() => updateExam({ id: examId })}
+        disabled={
+          files === undefined ||
+          files.find(({ status }) => status !== 'analyzed') !== undefined
+        }
       >
-        {updateExamPending ? (
+        {updateExamPending || filesLoading ? (
           <Loader2 className="animate-spin" size={16} />
         ) : (
           <ArrowRight size={16} />

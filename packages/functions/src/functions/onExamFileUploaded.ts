@@ -1,5 +1,9 @@
 /* eslint-disable max-lines */
-import { GetObjectCommand } from '@aws-sdk/client-s3';
+import {
+  CopyObjectCommand,
+  GetObjectCommand,
+  HeadObjectCommand,
+} from '@aws-sdk/client-s3';
 import { HumanMessage } from '@langchain/core/messages';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
@@ -130,6 +134,25 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
           },
         })
         .send();
+
+      const bucketName = Resource['exam-bucket'].name;
+
+      const { Metadata } = await s3Client.send(
+        new HeadObjectCommand({
+          Bucket: bucketName,
+          Key: objectKey,
+        }),
+      );
+
+      await s3Client.send(
+        new CopyObjectCommand({
+          Bucket: bucketName,
+          Key: objectKey,
+          CopySource: `${bucketName}/${objectKey}`,
+          MetadataDirective: 'REPLACE',
+          Metadata: { ...(Metadata ?? {}), 'file-status': 'analyzed' },
+        }),
+      );
     }),
   );
 };

@@ -5,9 +5,14 @@ import {
 } from '@aws-sdk/s3-presigned-post';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
+import {
+  ExamUploadedFileStatus,
+  isExamUploadedFileStatus,
+} from '@corrector/shared';
+
 import { s3Client } from '~/clients';
 
-import { Metadata } from '../types';
+import { Metadata as MetadataType } from '../types';
 
 export const requestSignedUrlPost = async ({
   contentType,
@@ -18,7 +23,7 @@ export const requestSignedUrlPost = async ({
   contentType: string;
   fileKey: string;
   //metadata arguments must start with x-amz-meta- and be written in kebab case
-  metadata: Metadata;
+  metadata: MetadataType;
   bucketName: string;
 }): Promise<{ url: string; fields: Record<string, string> }> => {
   const Fields = { key: fileKey, ...metadata };
@@ -45,15 +50,28 @@ export const requestSignedUrlGet = async ({
 }: {
   fileKey: string;
   bucketName: string;
-}): Promise<string | undefined> => {
+}): Promise<
+  | {
+      url: string;
+      status: ExamUploadedFileStatus;
+    }
+  | undefined
+> => {
+  let fileStatus: string | undefined;
   try {
     // Ensures that object exists
-    await s3Client.send(
+    const { Metadata } = await s3Client.send(
       new HeadObjectCommand({
         Bucket: bucketName,
         Key: fileKey,
       }),
     );
+
+    fileStatus = Metadata?.['file-status'];
+
+    if (fileStatus === undefined || !isExamUploadedFileStatus(fileStatus)) {
+      throw new Error();
+    }
   } catch {
     return;
   }
@@ -67,5 +85,5 @@ export const requestSignedUrlGet = async ({
     { expiresIn: 300 },
   );
 
-  return url;
+  return { url, status: fileStatus };
 };
