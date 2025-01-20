@@ -65,13 +65,13 @@ export const examsMessages = {
       responses: { title: 'Réponses' },
       correction: { title: 'Correction' },
     },
-    generatePdf: 'Générer le sujet',
+    generatePdf: 'Vérifier le pdf',
     problem: {
       title: 'Problème {path} : {title}',
       path: 'Problème {path}',
       statement: {
         modify: {
-          title: 'Modifier',
+          title: "Modifier l'énoncé",
           description: "Vérifier l'affichage avant de valider",
         },
         delete: {

@@ -1,5 +1,5 @@
 import { MathJax } from 'better-react-mathjax';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { ExternalLink, Loader2 } from 'lucide-react';
 import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -19,8 +19,22 @@ export const ExamConfigureProblems = ({
   examId,
   problems,
 }: ExamConfigureProblemsProps): ReactElement => {
+  const { data: subjectUrl, refetch } =
+    trpc.examSubjectPresignedUrlGet.useQuery(
+      {
+        examId,
+      },
+      { enabled: false },
+    );
   const { mutate: updateExam, isPending: updateExamPending } =
-    trpc.examGeneratePdf.useMutation();
+    trpc.examGeneratePdf.useMutation({
+      onSuccess: async () => {
+        await refetch();
+        console.log('subjectUrl', subjectUrl);
+        subjectUrl !== undefined &&
+          window.open(subjectUrl, '_blank', 'noopener,noreferrer');
+      },
+    });
 
   const StatementActions = ({
     statement,
@@ -52,17 +66,6 @@ export const ExamConfigureProblems = ({
 
   return (
     <div className="flex flex-col gap-2 h-full">
-      <Button
-        className="self-end flex gap-2"
-        onClick={() => updateExam({ id: examId })}
-      >
-        {updateExamPending ? (
-          <Loader2 className="animate-spin" size={16} />
-        ) : (
-          <ArrowRight size={16} />
-        )}
-        <FormattedMessage id="exams.generatePdf" values={{ step: 2 }} />
-      </Button>
       {Object.entries(problems).map(([problemId, problem], problemIndex) =>
         problem === undefined ? null : (
           <div key={problemId} className="flex flex-col border p-2 rounded-lg">
@@ -122,6 +125,17 @@ export const ExamConfigureProblems = ({
           </div>
         ),
       )}
+      <Button
+        className="self-end flex gap-2"
+        onClick={() => updateExam({ id: examId })}
+      >
+        {updateExamPending ? (
+          <Loader2 className="animate-spin" size={16} />
+        ) : (
+          <ExternalLink size={16} />
+        )}
+        <FormattedMessage id="exams.generatePdf" />
+      </Button>
     </div>
   );
 };

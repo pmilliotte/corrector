@@ -48,6 +48,7 @@ export const examGeneratePdf = authedProcedure
         Bucket: Resource['exam-bucket'].name,
         Key: fileKey,
         Body: pdfBuffer,
+        ContentType: 'application/pdf',
       }),
     );
   });

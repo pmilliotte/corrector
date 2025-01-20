@@ -23,6 +23,7 @@ import { examSubjectAnalysisQuestionMethodAdd } from './trpc/examSubjectAnalysis
 import { examSubjectAnalysisQuestionMethodDelete } from './trpc/examSubjectAnalysisQuestionMethodDelete';
 import { examSubjectAnalysisQuestionMethodUpdate } from './trpc/examSubjectAnalysisQuestionMethodUpdate';
 import { examSubjectAnalysisQuestionUpdate } from './trpc/examSubjectAnalysisQuestionUpdate';
+import { examSubjectPresignedUrlGet } from './trpc/examSubjectPresignedUrlGet';
 import { examUploadedFileDelete } from './trpc/examUploadedFileDelete';
 import { examUploadedFilePresignedUrlList } from './trpc/examUploadedFilePresignedUrlList';
 import { examUploadedFilePresignedUrlPost } from './trpc/examUploadedFilePresignedUrlPost';
@@ -68,6 +69,7 @@ export const coreRouter = router({
   examStatementUpdate,
   examGeneratePdf,
   examUploadedFileStatusList,
+  examSubjectPresignedUrlGet,
 });
 
 export const handler = awsLambdaRequestHandler({
