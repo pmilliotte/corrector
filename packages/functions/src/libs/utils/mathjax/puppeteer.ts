@@ -138,7 +138,7 @@ export const generatePdfWithPuppeteer = async (
                   padding-top: 24px;
                   width: 100%;
                   position: relative;
-                  border-bottom: solid 1px #f3f6f4;
+                  border-bottom: solid 1px #eeeeee;
                 }
                 
                 .answer-container {
