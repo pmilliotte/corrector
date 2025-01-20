@@ -14,7 +14,6 @@ import { examGeneratePdf } from './trpc/examGeneratePdf';
 import { examGet } from './trpc/examGet';
 import { examList } from './trpc/examList';
 import { examResponseAnalysisGet } from './trpc/examResponseAnalysisGet';
-import { examResponseAnalyze } from './trpc/examResponseAnalyze';
 import { examResponseList } from './trpc/examResponseList';
 import { examStatementDelete } from './trpc/examStatementDelete';
 import { examStatementInsert } from './trpc/examStatementInsert';
@@ -24,8 +23,6 @@ import { examSubjectAnalysisQuestionMethodAdd } from './trpc/examSubjectAnalysis
 import { examSubjectAnalysisQuestionMethodDelete } from './trpc/examSubjectAnalysisQuestionMethodDelete';
 import { examSubjectAnalysisQuestionMethodUpdate } from './trpc/examSubjectAnalysisQuestionMethodUpdate';
 import { examSubjectAnalysisQuestionUpdate } from './trpc/examSubjectAnalysisQuestionUpdate';
-import { examSubjectAnalyze } from './trpc/examSubjectAnalyze';
-import { examSubjectDelete } from './trpc/examSubjectDelete';
 import { examUploadedFileDelete } from './trpc/examUploadedFileDelete';
 import { examUploadedFilePresignedUrlList } from './trpc/examUploadedFilePresignedUrlList';
 import { examUploadedFilePresignedUrlPost } from './trpc/examUploadedFilePresignedUrlPost';
@@ -51,12 +48,10 @@ export const coreRouter = router({
   examList,
   examGet,
   examFilesGet,
-  examSubjectDelete,
   examFileGet,
-  examSubjectAnalyze,
   examSubjectAnalysisGet,
-  examResponseAnalyze,
   examResponseList,
+  examStatementInsert,
   responseCreate,
   responseList,
   responseDelete,
@@ -70,7 +65,6 @@ export const coreRouter = router({
   examUploadedFileDelete,
   examConfigureProblems,
   examStatementDelete,
-  examStatementInsert,
   examStatementUpdate,
   examGeneratePdf,
   examUploadedFileStatusList,

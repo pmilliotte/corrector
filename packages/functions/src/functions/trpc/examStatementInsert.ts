@@ -27,16 +27,19 @@ export const examStatementInsert = authedProcedure
         .key({ id: examId, userId })
         .send();
 
-      if (exam?.problems.configureProblems[problemId] === undefined) {
+      const problem = exam?.problems.configureProblems[problemId];
+
+      if (problem === undefined) {
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
 
-      const problemContent = exam.problems.configureProblems[problemId].content;
+      const problemContent = problem.content;
 
       problemContent.splice(position, 0, {
         text,
         id: randomUUID(),
         ...(type === 'question' ? { index: 1, type } : { type }),
+        numberOfLines: 1,
       });
 
       const indexedProblemContent = reindexStatements(problemContent);

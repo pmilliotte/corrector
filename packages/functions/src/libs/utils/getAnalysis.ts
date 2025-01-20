@@ -1,4 +1,5 @@
 import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { Resource } from 'sst';
 import { Readable } from 'stream';
 
 import { streamToString } from '@corrector/backend-shared';

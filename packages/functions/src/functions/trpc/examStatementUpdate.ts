@@ -25,11 +25,13 @@ export const examStatementUpdate = authedProcedure
         .key({ id: examId, userId })
         .send();
 
-      if (exam?.problems.configureProblems[problemId] === undefined) {
+      const problem = exam?.problems.configureProblems[problemId];
+
+      if (problem === undefined) {
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
 
-      const problemContent = exam.problems.configureProblems[problemId].content;
+      const problemContent = problem.content;
       const updatedProblemContent = problemContent.map(statement =>
         statement.id !== statementId ? statement : { ...statement, text },
       );
