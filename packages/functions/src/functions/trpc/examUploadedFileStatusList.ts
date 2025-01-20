@@ -1,13 +1,14 @@
-import { GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { HeadObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { Resource } from 'sst';
 import { z } from 'zod';
+
+import { isExamUploadedFileStatus } from '@corrector/shared';
 
 import { s3Client } from '~/clients';
 import { validateExamOwnership } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
-export const examUploadedFilePresignedUrlList = authedProcedure
+export const examUploadedFileStatusList = authedProcedure
   .input(
     z.object({
       examId: z.string(),
@@ -20,14 +21,16 @@ export const examUploadedFilePresignedUrlList = authedProcedure
 
     const prefix = `users/${userId}/exams/${examId}/uploadedFiles/`;
 
+    const bucketName = Resource['exam-bucket'].name;
+
     const { Contents: uploadedFiles = [] } = await s3Client.send(
       new ListObjectsV2Command({
-        Bucket: Resource['exam-bucket'].name,
+        Bucket: bucketName,
         Prefix: prefix,
       }),
     );
 
-    const urls = await Promise.all(
+    const statuses = await Promise.all(
       uploadedFiles
         .sort((a, b) => (a.Key ?? '').localeCompare(b.Key ?? ''))
         .map(async ({ Key }) => {
@@ -37,18 +40,25 @@ export const examUploadedFilePresignedUrlList = authedProcedure
 
           const fileName = Key.replace(prefix, '');
 
-          const url = await getSignedUrl(
-            s3Client,
-            new GetObjectCommand({
-              Bucket: Resource['exam-bucket'].name,
+          const { Metadata } = await s3Client.send(
+            new HeadObjectCommand({
+              Bucket: bucketName,
               Key,
             }),
-            { expiresIn: 300 },
           );
 
-          return { fileName, url };
+          const fileStatus = Metadata?.['file-status'];
+
+          if (
+            fileStatus === undefined ||
+            !isExamUploadedFileStatus(fileStatus)
+          ) {
+            throw new Error();
+          }
+
+          return { fileName, status: fileStatus };
         }),
     );
 
-    return urls;
+    return statuses;
   });

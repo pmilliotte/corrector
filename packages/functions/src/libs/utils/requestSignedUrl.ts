@@ -1,14 +1,9 @@
-import { GetObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
 import {
   createPresignedPost,
   type PresignedPostOptions,
 } from '@aws-sdk/s3-presigned-post';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-
-import {
-  ExamUploadedFileStatus,
-  isExamUploadedFileStatus,
-} from '@corrector/shared';
 
 import { s3Client } from '~/clients';
 
@@ -50,32 +45,9 @@ export const requestSignedUrlGet = async ({
 }: {
   fileKey: string;
   bucketName: string;
-}): Promise<
-  | {
-      url: string;
-      status: ExamUploadedFileStatus;
-    }
-  | undefined
-> => {
-  let fileStatus: string | undefined;
-  try {
-    // Ensures that object exists
-    const { Metadata } = await s3Client.send(
-      new HeadObjectCommand({
-        Bucket: bucketName,
-        Key: fileKey,
-      }),
-    );
-
-    fileStatus = Metadata?.['file-status'];
-
-    if (fileStatus === undefined || !isExamUploadedFileStatus(fileStatus)) {
-      throw new Error();
-    }
-  } catch {
-    return;
-  }
-
+}): Promise<{
+  url: string;
+}> => {
   const url = await getSignedUrl(
     s3Client,
     new GetObjectCommand({
@@ -85,5 +57,5 @@ export const requestSignedUrlGet = async ({
     { expiresIn: 300 },
   );
 
-  return { url, status: fileStatus };
+  return { url };
 };

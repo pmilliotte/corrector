@@ -1,5 +1,5 @@
 import { ArrowRight, Loader2, Trash2 } from 'lucide-react';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { trpc, useOnProblemDrop } from '~/lib';
@@ -16,10 +16,17 @@ export const ExamUploadFiles = ({
 }: ExamUploadedFilesProps): ReactElement => {
   const utils = trpc.useUtils();
   const { onDrop, isLoading: dropLoading } = useOnProblemDrop(async () => {
-    await utils.examUploadedFilePresignedUrlList.invalidate();
+    await Promise.all([
+      utils.examUploadedFileStatusList.invalidate(),
+      utils.examUploadedFilePresignedUrlList.invalidate(),
+    ]);
   });
-  const { data: files, isLoading: filesLoading } =
+  const { data: fileUrls, isLoading: fileUrlsLoading } =
     trpc.examUploadedFilePresignedUrlList.useQuery({
+      examId,
+    });
+  const { data: fileStatuses, isLoading: fileStatusesLoading } =
+    trpc.examUploadedFileStatusList.useQuery({
       examId,
     });
   const {
@@ -28,7 +35,10 @@ export const ExamUploadFiles = ({
     variables,
   } = trpc.examUploadedFileDelete.useMutation({
     onSuccess: async () => {
-      await utils.examUploadedFilePresignedUrlList.invalidate();
+      await Promise.all([
+        utils.examUploadedFileStatusList.invalidate(),
+        utils.examUploadedFilePresignedUrlList.invalidate(),
+      ]);
     },
   });
   const { mutate: updateExam, isPending: updateExamPending } =
@@ -37,6 +47,26 @@ export const ExamUploadFiles = ({
         await utils.examGet.invalidate();
       },
     });
+
+  useEffect(() => {
+    const isAnalysing =
+      fileStatuses?.find(({ status }) => status !== 'analyzed') !== undefined;
+    if (!isAnalysing) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      void utils.examUploadedFileStatusList.invalidate();
+    }, 2000);
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+    }, 50000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [utils, fileStatuses]);
 
   return (
     <div className="flex flex-col gap-2 h-full">
@@ -49,7 +79,7 @@ export const ExamUploadFiles = ({
       <div className="relative h-full">
         <ScrollArea>
           <div className="flex space-x-4 py-2 pb-2">
-            {files?.map(({ url, fileName }) => (
+            {fileUrls?.map(({ url, fileName }) => (
               <div className="relative" key={fileName}>
                 <div className="w-[250px] aspect-[3/4] border rounded-lg overflow-hidden relative">
                   <div
@@ -79,11 +109,11 @@ export const ExamUploadFiles = ({
         className="self-end flex gap-2"
         onClick={() => updateExam({ id: examId })}
         disabled={
-          files === undefined ||
-          files.find(({ status }) => status !== 'analyzed') !== undefined
+          fileStatuses === undefined ||
+          fileStatuses.find(({ status }) => status !== 'analyzed') !== undefined
         }
       >
-        {updateExamPending || filesLoading ? (
+        {updateExamPending || fileUrlsLoading || fileStatusesLoading ? (
           <Loader2 className="animate-spin" size={16} />
         ) : (
           <ArrowRight size={16} />

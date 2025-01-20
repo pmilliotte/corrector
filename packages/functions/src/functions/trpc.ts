@@ -29,6 +29,7 @@ import { examSubjectDelete } from './trpc/examSubjectDelete';
 import { examUploadedFileDelete } from './trpc/examUploadedFileDelete';
 import { examUploadedFilePresignedUrlList } from './trpc/examUploadedFilePresignedUrlList';
 import { examUploadedFilePresignedUrlPost } from './trpc/examUploadedFilePresignedUrlPost';
+import { examUploadedFileStatusList } from './trpc/examUploadedFileStatusList';
 import { organizationList } from './trpc/organizationList';
 import { presignedUrlGet } from './trpc/presignedUrlGet';
 import { presignedUrlPost } from './trpc/presignedUrlPost';
@@ -72,6 +73,7 @@ export const coreRouter = router({
   examStatementInsert,
   examStatementUpdate,
   examGeneratePdf,
+  examUploadedFileStatusList,
 });
 
 export const handler = awsLambdaRequestHandler({
