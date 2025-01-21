@@ -6,6 +6,7 @@ export * from './examUploadedFileStatuses';
 export * from './fileSize';
 export * from './fileTypes';
 export * from './general';
+export * from './mark';
 export * from './numberOfLines';
 export * from './payload';
 export * from './problemStatuses';

@@ -6,7 +6,12 @@ import { useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
 import { z } from 'zod';
 
-import { MAX_NUMBER_OF_LINES, MIN_NUMBER_OF_LINES } from '@corrector/shared';
+import {
+  MAX_MARK,
+  MAX_NUMBER_OF_LINES,
+  MIN_MARK,
+  MIN_NUMBER_OF_LINES,
+} from '@corrector/shared';
 
 import { trpc, useIntl } from '~/lib';
 
@@ -55,6 +60,7 @@ const formSchema = z
             .number()
             .min(MIN_NUMBER_OF_LINES)
             .max(MAX_NUMBER_OF_LINES),
+          mark: z.coerce.number().min(MIN_MARK).max(MAX_MARK).optional(),
         }),
       ),
   );
@@ -73,6 +79,7 @@ export const InsertStatementDialog = ({
       type: undefined,
       text: '',
       numberOfLines: 1,
+      mark: 1,
     },
   });
   const { mutate, isPending } = trpc.examStatementInsert.useMutation({
@@ -180,6 +187,30 @@ export const InsertStatementDialog = ({
                         type="number"
                         max={MAX_NUMBER_OF_LINES}
                         min={MIN_NUMBER_OF_LINES}
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="mark"
+                render={({ field }) => (
+                  <FormItem className="flex items-center gap-2 space-y-0">
+                    <FormLabel
+                      htmlFor="numberOfLines"
+                      className="text-right grow whitespace-nowrap"
+                    >
+                      <FormattedMessage id="exams.problem.statement.mark" />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={form.getValues('type') !== 'question'}
+                        type="number"
+                        step={0.25}
+                        max={MAX_MARK}
+                        min={MIN_MARK}
                         {...field}
                       />
                     </FormControl>

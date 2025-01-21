@@ -66,9 +66,10 @@ export const examsMessages = {
     ready: { open: 'Ouvrir le sujet' },
     problem: {
       title: 'Problème {path} : {title}',
-      path: 'Problème {path}',
+      path: 'Problème {path} ({mark, plural, =1 {# point} other {# points}})',
       statement: {
         numberOfLines: '{numberOfLines, plural, =1 {# ligne} other {# lignes}}',
+        mark: 'Barème',
         numberOfLinesLabel: 'Lignes pour la réponse',
         modify: {
           title: "Modifier l'énoncé",

@@ -15,12 +15,13 @@ export const examStatementInsert = authedProcedure
       type: z.enum(['statement', 'question']),
       examId: z.string(),
       numberOfLines: z.number().optional(),
+      mark: z.number().optional(),
     }),
   )
   .mutation(
     async ({
       ctx: { session },
-      input: { position, type, problemId, examId, text, numberOfLines },
+      input: { position, type, problemId, examId, text, numberOfLines, mark },
     }) => {
       const { id: userId } = session;
 
@@ -46,7 +47,12 @@ export const examStatementInsert = authedProcedure
         text,
         id: randomUUID(),
         ...(type === 'question'
-          ? { index: 1, type, numberOfLines: numberOfLines ?? 1, mark: 0 }
+          ? {
+              index: 1,
+              type,
+              numberOfLines: numberOfLines ?? 1,
+              mark: mark ?? 0,
+            }
           : { type }),
       });
 

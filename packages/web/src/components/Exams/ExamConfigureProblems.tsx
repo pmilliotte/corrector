@@ -83,7 +83,16 @@ export const ExamConfigureProblems = ({
             <div className="flex items-center justify-between">
               <FormattedMessage
                 id="exams.problem.path"
-                values={{ path: problemIndex + 1 }}
+                values={{
+                  path: problemIndex + 1,
+                  mark: content.reduce((acc, statement) => {
+                    if (statement.type === 'question') {
+                      return acc + statement.mark;
+                    }
+
+                    return acc;
+                  }, 0),
+                }}
               />
               <InsertStatementDialog
                 position={0}

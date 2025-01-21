@@ -2,7 +2,12 @@ import { TRPCError } from '@trpc/server';
 import { $set, GetItemCommand, UpdateItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
-import { MAX_NUMBER_OF_LINES, MIN_NUMBER_OF_LINES } from '@corrector/shared';
+import {
+  MAX_MARK,
+  MAX_NUMBER_OF_LINES,
+  MIN_MARK,
+  MIN_NUMBER_OF_LINES,
+} from '@corrector/shared';
 
 import { ExamEntity } from '~/libs';
 import { authedProcedure } from '~/trpc';
@@ -14,17 +19,18 @@ export const examStatementUpdate = authedProcedure
       statementId: z.string(),
       examId: z.string(),
       text: z.string(),
-      numberOfLines: z.coerce
+      numberOfLines: z
         .number()
         .min(MIN_NUMBER_OF_LINES)
         .max(MAX_NUMBER_OF_LINES)
         .optional(),
+      mark: z.number().min(MIN_MARK).max(MAX_MARK).optional(),
     }),
   )
   .mutation(
     async ({
       ctx: { session },
-      input: { statementId, problemId, examId, text, numberOfLines },
+      input: { statementId, problemId, examId, text, numberOfLines, mark },
     }) => {
       const { id: userId } = session;
 
@@ -49,11 +55,16 @@ export const examStatementUpdate = authedProcedure
         if (statement.id !== statementId) {
           return statement;
         }
-        if (statement.type === 'statement' || numberOfLines === undefined) {
+        if (statement.type === 'statement') {
           return { ...statement, text };
         }
 
-        return { ...statement, text, numberOfLines };
+        return {
+          ...statement,
+          ...(numberOfLines === undefined ? {} : { numberOfLines }),
+          ...(mark === undefined ? {} : { mark }),
+          text,
+        };
       });
 
       await ExamEntity.build(UpdateItemCommand)

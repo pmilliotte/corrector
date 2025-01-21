@@ -7,7 +7,9 @@ import { z } from 'zod';
 
 import {
   FormattedStatementWithMarks,
+  MAX_MARK,
   MAX_NUMBER_OF_LINES,
+  MIN_MARK,
   MIN_NUMBER_OF_LINES,
 } from '@corrector/shared';
 
@@ -44,6 +46,7 @@ const formSchema = z.object({
     .min(MIN_NUMBER_OF_LINES)
     .max(MAX_NUMBER_OF_LINES)
     .optional(),
+  mark: z.coerce.number().min(MIN_MARK).max(MAX_MARK).optional(),
 });
 
 export const UpdateStatementDialog = ({
@@ -59,6 +62,7 @@ export const UpdateStatementDialog = ({
       text: statement.text,
       numberOfLines:
         statement.type === 'question' ? statement.numberOfLines : undefined,
+      mark: statement.type === 'question' ? statement.mark : undefined,
     },
   });
   const { mutate, isPending } = trpc.examStatementUpdate.useMutation({
@@ -69,13 +73,18 @@ export const UpdateStatementDialog = ({
     },
   });
 
-  const onSubmit = ({ text, numberOfLines }: z.infer<typeof formSchema>) => {
+  const onSubmit = ({
+    text,
+    numberOfLines,
+    mark,
+  }: z.infer<typeof formSchema>) => {
     mutate({
       text,
       numberOfLines,
       examId,
       problemId,
       statementId: statement.id,
+      mark,
     });
   };
 
@@ -110,28 +119,53 @@ export const UpdateStatementDialog = ({
                 )}
               />
               {statement.type === 'question' && (
-                <FormField
-                  control={form.control}
-                  name="numberOfLines"
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-2 space-y-0">
-                      <FormLabel
-                        htmlFor="numberOfLines"
-                        className="text-right grow whitespace-nowrap"
-                      >
-                        <FormattedMessage id="exams.problem.statement.numberOfLinesLabel" />
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          max={MAX_NUMBER_OF_LINES}
-                          min={MIN_NUMBER_OF_LINES}
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+                <>
+                  <FormField
+                    control={form.control}
+                    name="numberOfLines"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center gap-2 space-y-0">
+                        <FormLabel
+                          htmlFor="numberOfLines"
+                          className="text-right grow whitespace-nowrap"
+                        >
+                          <FormattedMessage id="exams.problem.statement.numberOfLinesLabel" />
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            max={MAX_NUMBER_OF_LINES}
+                            min={MIN_NUMBER_OF_LINES}
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="mark"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center gap-2 space-y-0">
+                        <FormLabel
+                          htmlFor="mark"
+                          className="text-right grow whitespace-nowrap"
+                        >
+                          <FormattedMessage id="exams.problem.statement.mark" />
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            step={0.25}
+                            type="number"
+                            max={MAX_MARK}
+                            min={MIN_MARK}
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </>
               )}
             </div>
             <DialogFooter>
