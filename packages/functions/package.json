@@ -4,6 +4,7 @@
   "scripts": {
     "test": "sst bind vitest",
     "lint": "eslint .",
+    "build": "tsc -b",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "circular": "pnpm depcruise --validate .dependency-cruiser.js ."
   },

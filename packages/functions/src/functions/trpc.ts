@@ -20,10 +20,6 @@ import { examStatementDelete } from './trpc/examStatementDelete';
 import { examStatementInsert } from './trpc/examStatementInsert';
 import { examStatementUpdate } from './trpc/examStatementUpdate';
 import { examSubjectAnalysisGet } from './trpc/examSubjectAnalysisGet';
-import { examSubjectAnalysisQuestionMethodAdd } from './trpc/examSubjectAnalysisQuestionMethodAdd';
-import { examSubjectAnalysisQuestionMethodDelete } from './trpc/examSubjectAnalysisQuestionMethodDelete';
-import { examSubjectAnalysisQuestionMethodUpdate } from './trpc/examSubjectAnalysisQuestionMethodUpdate';
-import { examSubjectAnalysisQuestionUpdate } from './trpc/examSubjectAnalysisQuestionUpdate';
 import { examSubjectPresignedUrlGet } from './trpc/examSubjectPresignedUrlGet';
 import { examUploadedFileDelete } from './trpc/examUploadedFileDelete';
 import { examUploadedFilePresignedUrlList } from './trpc/examUploadedFilePresignedUrlList';
@@ -32,7 +28,6 @@ import { examUploadedFileStatusList } from './trpc/examUploadedFileStatusList';
 import { organizationList } from './trpc/organizationList';
 import { presignedUrlGet } from './trpc/presignedUrlGet';
 import { presignedUrlPost } from './trpc/presignedUrlPost';
-import { responseCreate } from './trpc/responseCreate';
 import { responseDelete } from './trpc/responseDelete';
 import { responseList } from './trpc/responseList';
 import { studentCreate } from './trpc/studentCreate';
@@ -54,13 +49,8 @@ export const coreRouter = router({
   examSubjectAnalysisGet,
   examResponseList,
   examStatementInsert,
-  responseCreate,
   responseList,
   responseDelete,
-  examSubjectAnalysisQuestionMethodAdd,
-  examSubjectAnalysisQuestionMethodDelete,
-  examSubjectAnalysisQuestionUpdate,
-  examSubjectAnalysisQuestionMethodUpdate,
   examResponseAnalysisGet,
   examUploadedFilePresignedUrlPost,
   examUploadedFilePresignedUrlList,
