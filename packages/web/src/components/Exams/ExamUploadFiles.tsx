@@ -1,5 +1,5 @@
 import { ArrowRight, Loader2, Trash2 } from 'lucide-react';
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { trpc, useOnProblemDrop } from '~/lib';
@@ -15,6 +15,7 @@ export const ExamUploadFiles = ({
   examId,
 }: ExamUploadedFilesProps): ReactElement => {
   const utils = trpc.useUtils();
+  const [analysing, setAnalysing] = useState(false);
   const { onDrop, isLoading: dropLoading } = useOnProblemDrop(async () => {
     await Promise.all([
       utils.examUploadedFileStatusList.invalidate(),
@@ -49,9 +50,10 @@ export const ExamUploadFiles = ({
     });
 
   useEffect(() => {
-    const isAnalysing =
-      fileStatuses?.find(({ status }) => status !== 'analyzed') !== undefined;
-    if (!isAnalysing) {
+    setAnalysing(
+      fileStatuses?.find(({ status }) => status !== 'analyzed') !== undefined,
+    );
+    if (!analysing) {
       return;
     }
 
@@ -66,7 +68,7 @@ export const ExamUploadFiles = ({
       clearInterval(interval);
       clearTimeout(timeout);
     };
-  }, [utils, fileStatuses]);
+  }, [utils, fileStatuses, analysing]);
 
   return (
     <div className="flex flex-col gap-2 h-full">
@@ -108,12 +110,12 @@ export const ExamUploadFiles = ({
       <Button
         className="self-end flex gap-2"
         onClick={() => updateExam({ id: examId })}
-        disabled={
-          fileStatuses === undefined ||
-          fileStatuses.find(({ status }) => status !== 'analyzed') !== undefined
-        }
+        disabled={fileStatuses === undefined || analysing}
       >
-        {updateExamPending || fileUrlsLoading || fileStatusesLoading ? (
+        {updateExamPending ||
+        fileUrlsLoading ||
+        fileStatusesLoading ||
+        analysing ? (
           <Loader2 className="animate-spin" size={16} />
         ) : (
           <ArrowRight size={16} />

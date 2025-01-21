@@ -33,6 +33,7 @@ const questionSchema = map({
 
 const problemSchema = map({
   content: list(anyOf(statementSchema, questionSchema)),
+  id: string(),
 });
 
 const examSchema = schema({
@@ -44,10 +45,10 @@ const examSchema = schema({
   name: string(),
   status: string().enum(...EXAM_STATUSES),
   problems: map({
-    uploadFiles: record(string(), record(string(), problemSchema)),
-    configureProblems: record(string(), problemSchema),
+    uploadFiles: record(string(), list(problemSchema)),
+    configureProblems: list(problemSchema),
   })
-    .default({ uploadFiles: {}, configureProblems: {} })
+    .default({ uploadFiles: {}, configureProblems: [] })
     .required(),
 });
 

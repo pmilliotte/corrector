@@ -86,13 +86,13 @@ export const InsertStatementDialog = ({
       setOpen(false);
     },
   });
-  const onSubmit = ({ type, text }: z.infer<typeof formSchema>) => {
+  const onSubmit = ({ type, ...restOfForm }: z.infer<typeof formSchema>) => {
     mutate({
       type,
-      text,
       position,
       examId,
       problemId,
+      ...restOfForm,
     });
   };
 

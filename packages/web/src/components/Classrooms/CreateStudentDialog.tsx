@@ -7,6 +7,13 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
   Form,
   FormControl,
   FormField,
@@ -15,16 +22,6 @@ import {
   Input,
 } from '~/components/ui';
 import { trpc, useIntl, useUserOrganizations } from '~/lib';
-
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '../ui';
 
 const formSchema = z.object({
   firstName: z.string().min(1),

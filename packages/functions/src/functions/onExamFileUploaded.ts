@@ -95,7 +95,7 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
                   numberOfLines: z
                     .number()
                     .describe(
-                      "Le nombre de lignes dont un élève a besoin pour répondre à la question de manière complète et strucurée, 0 si s'il s'agit d'un texte introductif ou intermédiaire",
+                      "Le nombre de lignes dont un élève qui écrit très gros a besoin pour répondre à la question de manière complète et strucurée, 0 si s'il s'agit d'un texte introductif ou intermédiaire",
                     ),
                 })
                 .strict()
@@ -116,11 +116,8 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
       const { problems } = await chain.invoke({});
 
       const formattedProblems = problems.reduce(
-        (acc, problem) => ({
-          ...acc,
-          ...formatProblem(problem),
-        }),
-        {} as FormattedProblems,
+        (acc, problem) => [...acc, formatProblem(problem)],
+        [] as FormattedProblem[],
       );
 
       await ExamEntity.build(UpdateItemCommand)
@@ -184,10 +181,7 @@ type Problem = {
   }[];
 };
 
-type FormattedProblem = { content: FormattedStatement[] };
-type FormattedProblems = {
-  [key: string]: FormattedProblem | undefined;
-};
+type FormattedProblem = { content: FormattedStatement[]; id: string };
 
 const formatStatement = (
   statement: Statement,
@@ -208,7 +202,7 @@ const formatStatement = (
     index,
   };
 };
-const formatProblem = (problem: Problem): FormattedProblems => {
+const formatProblem = (problem: Problem): FormattedProblem => {
   let questionIndex = 0;
 
   const formattedProblemContent = problem.content.reduce((acc, statement) => {
@@ -222,8 +216,7 @@ const formatProblem = (problem: Problem): FormattedProblems => {
   }, [] as FormattedStatement[]);
 
   return {
-    [randomUUID()]: {
-      content: formattedProblemContent,
-    },
+    content: formattedProblemContent,
+    id: randomUUID(),
   };
 };

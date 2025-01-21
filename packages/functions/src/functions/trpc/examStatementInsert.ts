@@ -14,12 +14,13 @@ export const examStatementInsert = authedProcedure
       text: z.string(),
       type: z.enum(['statement', 'question']),
       examId: z.string(),
+      numberOfLines: z.number().optional(),
     }),
   )
   .mutation(
     async ({
       ctx: { session },
-      input: { position, type, problemId, examId, text },
+      input: { position, type, problemId, examId, text, numberOfLines },
     }) => {
       const { id: userId } = session;
 
@@ -27,8 +28,14 @@ export const examStatementInsert = authedProcedure
         .key({ id: examId, userId })
         .send();
 
-      const problem = exam?.problems.configureProblems[problemId];
+      const problemIndex = exam?.problems.configureProblems.findIndex(
+        ({ id }) => id === problemId,
+      );
+      if (problemIndex === undefined) {
+        throw new TRPCError({ code: 'BAD_REQUEST' });
+      }
 
+      const problem = exam?.problems.configureProblems[problemIndex];
       if (problem === undefined) {
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
@@ -39,7 +46,7 @@ export const examStatementInsert = authedProcedure
         text,
         id: randomUUID(),
         ...(type === 'question'
-          ? { index: 1, type, numberOfLines: 1 }
+          ? { index: 1, type, numberOfLines: numberOfLines ?? 1 }
           : { type }),
       });
 
@@ -51,7 +58,7 @@ export const examStatementInsert = authedProcedure
           userId,
           problems: {
             configureProblems: {
-              [problemId]: {
+              [problemIndex]: {
                 content: $set(indexedProblemContent),
               },
             },

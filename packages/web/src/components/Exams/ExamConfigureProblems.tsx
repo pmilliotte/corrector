@@ -12,7 +12,7 @@ import { ProblemContent, UpdateStatementDialog } from './UpdateStatementDialog';
 
 type ExamConfigureProblemsProps = {
   examId: string;
-  problems: { [key: string]: { content: ProblemContent[] } | undefined };
+  problems: { content: ProblemContent[]; id: string }[];
 };
 
 export const ExamConfigureProblems = ({
@@ -66,75 +66,73 @@ export const ExamConfigureProblems = ({
 
   return (
     <div className="flex flex-col gap-2 h-full">
-      {Object.entries(problems).map(([problemId, problem], problemIndex) =>
-        problem === undefined ? null : (
-          <div key={problemId} className="flex flex-col border p-2 rounded-lg">
-            <div className="flex flex-col font-semibold p-2 gap-2">
-              <div className="flex items-center justify-between">
-                <FormattedMessage
-                  id="exams.problem.path"
-                  values={{ path: problemIndex + 1 }}
-                />
-                <InsertStatementDialog
-                  position={0}
-                  examId={examId}
-                  problemId={problemId}
-                />
-              </div>
-              <Separator />
+      {problems.map(({ id: problemId, content }, problemIndex) => (
+        <div key={problemId} className="flex flex-col border p-2 rounded-lg">
+          <div className="flex flex-col font-semibold p-2 gap-2">
+            <div className="flex items-center justify-between">
+              <FormattedMessage
+                id="exams.problem.path"
+                values={{ path: problemIndex + 1 }}
+              />
+              <InsertStatementDialog
+                position={0}
+                examId={examId}
+                problemId={problemId}
+              />
             </div>
-            <div className="flex flex-col">
-              {problem.content.map((statement, index) =>
-                statement.type === 'statement' ? (
-                  <div
-                    key={statement.id}
-                    className="flex justify-between gap-2 hover:bg-muted rounded-lg p-2"
-                  >
-                    <div className="min-h-[36px]">
-                      <MathJax>{statement.text}</MathJax>
-                    </div>
-                    <div>
-                      <StatementActions
-                        statement={statement}
-                        position={index + 1}
-                        problemId={problemId}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    key={statement.id}
-                    className="flex justify-between gap-2 hover:bg-muted rounded-lg p-2"
-                  >
-                    <div className="flex flex-col gap-1 min-h-[36px]">
-                      <span className="underline text-sm text-muted-foreground">
-                        <FormattedMessage
-                          id="exams.problem.question.title"
-                          values={{ path: statement.index }}
-                        />
-                      </span>
-                      <MathJax>{statement.text}</MathJax>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge className="whitespace-nowrap" variant="secondary">
-                        <FormattedMessage
-                          id="exams.problem.statement.numberOfLines"
-                          values={{ numberOfLines: statement.numberOfLines }}
-                        />
-                      </Badge>
-                      <StatementActions
-                        statement={statement}
-                        position={index + 1}
-                        problemId={problemId}
-                      />
-                    </div>
-                  </div>
-                ),
-              )}
-            </div>
+            <Separator />
           </div>
-        ),
-      )}
+          <div className="flex flex-col">
+            {content.map((statement, index) =>
+              statement.type === 'statement' ? (
+                <div
+                  key={statement.id}
+                  className="flex justify-between gap-2 hover:bg-muted rounded-lg p-2"
+                >
+                  <div className="min-h-[36px]">
+                    <MathJax>{statement.text}</MathJax>
+                  </div>
+                  <div>
+                    <StatementActions
+                      statement={statement}
+                      position={index + 1}
+                      problemId={problemId}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div
+                  key={statement.id}
+                  className="flex justify-between gap-2 hover:bg-muted rounded-lg p-2"
+                >
+                  <div className="flex flex-col gap-1 min-h-[36px]">
+                    <span className="underline text-sm text-muted-foreground">
+                      <FormattedMessage
+                        id="exams.problem.question.title"
+                        values={{ path: statement.index }}
+                      />
+                    </span>
+                    <MathJax>{statement.text}</MathJax>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="whitespace-nowrap" variant="secondary">
+                      <FormattedMessage
+                        id="exams.problem.statement.numberOfLines"
+                        values={{ numberOfLines: statement.numberOfLines }}
+                      />
+                    </Badge>
+                    <StatementActions
+                      statement={statement}
+                      position={index + 1}
+                      problemId={problemId}
+                    />
+                  </div>
+                </div>
+              ),
+            )}
+          </div>
+        </div>
+      ))}
       <Button
         className="self-end flex gap-2"
         onClick={() => updateExam({ id: examId })}

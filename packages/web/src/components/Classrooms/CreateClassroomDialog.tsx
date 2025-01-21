@@ -8,6 +8,13 @@ import { z } from 'zod';
 import { DIVISIONS } from '@corrector/shared';
 
 import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
   Form,
   FormControl,
   FormField,
@@ -21,16 +28,6 @@ import {
   SelectValue,
 } from '~/components/ui';
 import { trpc, useIntl, useUserOrganizations } from '~/lib';
-
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '../ui';
 
 const formSchema = z.object({
   classroomName: z.string().min(1),

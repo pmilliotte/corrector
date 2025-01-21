@@ -32,8 +32,14 @@ export const examStatementUpdate = authedProcedure
         .key({ id: examId, userId })
         .send();
 
-      const problem = exam?.problems.configureProblems[problemId];
+      const problemIndex = exam?.problems.configureProblems.findIndex(
+        ({ id }) => id === problemId,
+      );
+      if (problemIndex === undefined) {
+        throw new TRPCError({ code: 'BAD_REQUEST' });
+      }
 
+      const problem = exam?.problems.configureProblems[problemIndex];
       if (problem === undefined) {
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
@@ -56,7 +62,7 @@ export const examStatementUpdate = authedProcedure
           userId,
           problems: {
             configureProblems: {
-              [problemId]: {
+              [problemIndex]: {
                 content: $set(updatedProblemContent),
               },
             },

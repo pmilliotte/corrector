@@ -10,6 +10,14 @@ import { z } from 'zod';
 import { DIVISIONS, SUBJECTS } from '@corrector/shared';
 
 import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
   Form,
   FormControl,
   FormField,
@@ -23,17 +31,6 @@ import {
   SelectValue,
 } from '~/components/ui';
 import { AppRoute, trpc, useIntl, useUserOrganizations } from '~/lib';
-
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '../ui';
 
 const formSchema = z.object({
   name: z.string(),

@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { $set, GetItemCommand, UpdateItemCommand } from 'dynamodb-toolbox';
 import compact from 'lodash/compact';
+import flatMap from 'lodash/flatMap';
 import { z } from 'zod';
 
 import { ExamEntity } from '~/libs';
@@ -27,13 +28,7 @@ export const examConfigureProblems = authedProcedure
       problems: { uploadFiles },
     } = exam;
 
-    const configureProblems = compact(Object.values(uploadFiles)).reduce(
-      (acc, problems) => ({
-        ...acc,
-        ...problems,
-      }),
-      {},
-    );
+    const configureProblems = flatMap(compact(Object.values(uploadFiles)));
 
     await ExamEntity.build(UpdateItemCommand)
       .item({
