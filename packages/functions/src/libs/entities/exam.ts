@@ -11,7 +11,7 @@ import {
 } from 'dynamodb-toolbox';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
-import { DIVISIONS, EXAM_STATUSES, SUBJECTS } from '@corrector/shared';
+import { EXAM_STATUSES, SUBJECTS } from '@corrector/shared';
 
 import { ExamTable } from '../tables';
 
@@ -40,7 +40,6 @@ const examSchema = schema({
   id: string().key(),
   userId: string().key(),
   subject: string().enum(...SUBJECTS),
-  division: string().enum(...DIVISIONS),
   organizationId: string(),
   name: string(),
   status: string().enum(...EXAM_STATUSES),

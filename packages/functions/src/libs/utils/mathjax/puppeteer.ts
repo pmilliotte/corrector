@@ -63,7 +63,6 @@ type Statement =
   | {
       type: 'statement';
       text: string;
-      numberOfLines: number;
     }
   | {
       type: 'question';

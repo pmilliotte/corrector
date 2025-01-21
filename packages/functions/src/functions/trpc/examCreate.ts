@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { PutItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
-import { DIVISIONS, SUBJECTS } from '@corrector/shared';
+import { SUBJECTS } from '@corrector/shared';
 
 import { ExamEntity, validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
@@ -13,14 +13,10 @@ export const examCreate = authedProcedure
       name: z.string(),
       organizationId: z.string(),
       subject: z.enum(SUBJECTS),
-      division: z.enum(DIVISIONS),
     }),
   )
   .mutation(
-    async ({
-      ctx: { session },
-      input: { name, organizationId, subject, division },
-    }) => {
+    async ({ ctx: { session }, input: { name, organizationId, subject } }) => {
       validateOrganizationAccess(organizationId, session);
 
       const { id: userId } = session;
@@ -33,7 +29,6 @@ export const examCreate = authedProcedure
           name,
           subject,
           userId,
-          division,
           organizationId,
           status: 'uploadFiles',
           problems: { uploadFiles: {}, configureProblems: [] },
