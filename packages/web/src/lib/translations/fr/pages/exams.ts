@@ -89,7 +89,8 @@ export const examsMessages = {
         },
       },
       question: {
-        title: 'Question {path} :',
+        title:
+          'Question {path} ({mark, plural, =1 {# point} other {# points}}) :',
         marks: '{mark, plural, =1 {# point} other {# points}}',
         mark: '{mark} / {total, plural, =1 {# point} other {# points}}',
         points: 'point(s)',

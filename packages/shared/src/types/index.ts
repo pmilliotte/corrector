@@ -2,6 +2,7 @@ export * from './division';
 export * from './examStatus';
 export * from './examUploadedFileStatus';
 export * from './fileType';
+export * from './formattedStatement';
 export * from './removeField';
 export * from './session';
 export * from './subject';

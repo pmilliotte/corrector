@@ -110,7 +110,7 @@ export const ExamUploadFiles = ({
       <Button
         className="self-end flex gap-2"
         onClick={() => updateExam({ id: examId })}
-        disabled={fileStatuses === undefined || analysing}
+        disabled={fileStatuses === undefined || analysing || updateExamPending}
       >
         {updateExamPending ||
         fileUrlsLoading ||

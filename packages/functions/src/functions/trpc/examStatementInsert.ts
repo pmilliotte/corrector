@@ -46,7 +46,7 @@ export const examStatementInsert = authedProcedure
         text,
         id: randomUUID(),
         ...(type === 'question'
-          ? { index: 1, type, numberOfLines: numberOfLines ?? 1 }
+          ? { index: 1, type, numberOfLines: numberOfLines ?? 1, mark: 0 }
           : { type }),
       });
 

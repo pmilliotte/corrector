@@ -4,7 +4,7 @@ import compact from 'lodash/compact';
 import flatMap from 'lodash/flatMap';
 import { z } from 'zod';
 
-import { ExamEntity } from '~/libs';
+import { addMarks, ExamEntity } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
 export const examConfigureProblems = authedProcedure
@@ -30,6 +30,8 @@ export const examConfigureProblems = authedProcedure
 
     const configureProblems = flatMap(compact(Object.values(uploadFiles)));
 
+    const configureProblemsWithMarks = await addMarks(configureProblems);
+
     await ExamEntity.build(UpdateItemCommand)
       .item({
         id,
@@ -37,7 +39,7 @@ export const examConfigureProblems = authedProcedure
         status: 'configureProblems',
         problems: {
           uploadFiles: $set({}),
-          configureProblems: $set(configureProblems),
+          configureProblems: $set(configureProblemsWithMarks),
         },
       })
       .options({

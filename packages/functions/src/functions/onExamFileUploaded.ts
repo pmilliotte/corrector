@@ -15,7 +15,11 @@ import { Resource } from 'sst';
 import { z } from 'zod';
 
 import { s3Client } from '~/clients';
-import { ExamEntity, parseExamUploadedFileKey } from '~/libs';
+import {
+  ExamEntity,
+  FormattedStatement,
+  parseExamUploadedFileKey,
+} from '~/libs';
 
 export const handler = async (event: S3Event): Promise<void> => {
   await Promise.all(
@@ -159,19 +163,6 @@ type Statement = {
   text: string;
   numberOfLines: number;
 };
-type FormattedStatement =
-  | {
-      id: string;
-      type: 'statement';
-      text: string;
-    }
-  | {
-      id: string;
-      type: 'question';
-      text: string;
-      index: number;
-      numberOfLines: number;
-    };
 
 type Problem = {
   content: {

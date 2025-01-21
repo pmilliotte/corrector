@@ -30,9 +30,21 @@ const questionSchema = map({
   index: number(),
   numberOfLines: number(),
 });
+const questionSchemaWithMarks = map({
+  type: string().const('question'),
+  text: string(),
+  id: string(),
+  index: number(),
+  numberOfLines: number(),
+  mark: number(),
+});
 
 const problemSchema = map({
   content: list(anyOf(statementSchema, questionSchema)),
+  id: string(),
+});
+const problemSchemaWithMarks = map({
+  content: list(anyOf(statementSchema, questionSchemaWithMarks)),
   id: string(),
 });
 
@@ -45,7 +57,7 @@ const examSchema = schema({
   status: string().enum(...EXAM_STATUSES),
   problems: map({
     uploadFiles: record(string(), list(problemSchema)),
-    configureProblems: list(problemSchema),
+    configureProblems: list(problemSchemaWithMarks),
   })
     .default({ uploadFiles: {}, configureProblems: [] })
     .required(),

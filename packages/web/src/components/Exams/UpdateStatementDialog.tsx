@@ -5,7 +5,11 @@ import { useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
 import { z } from 'zod';
 
-import { MAX_NUMBER_OF_LINES, MIN_NUMBER_OF_LINES } from '@corrector/shared';
+import {
+  FormattedStatementWithMarks,
+  MAX_NUMBER_OF_LINES,
+  MIN_NUMBER_OF_LINES,
+} from '@corrector/shared';
 
 import { trpc } from '~/lib';
 
@@ -27,18 +31,8 @@ import {
   Textarea,
 } from '../ui';
 
-export type ProblemContent =
-  | { type: 'statement'; text: string; id: string }
-  | {
-      type: 'question';
-      text: string;
-      id: string;
-      index: number;
-      numberOfLines: number;
-    };
-
 type UpdateStatementDialogProps = {
-  statement: ProblemContent;
+  statement: FormattedStatementWithMarks;
   examId: string;
   problemId: string;
 };

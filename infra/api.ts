@@ -1,5 +1,11 @@
 import { userPool, userPoolClient } from './auth';
-import { examBucket, examTable, organizationTable } from './storage';
+import {
+  examBucket,
+  examTable,
+  openAiApiKey,
+  openAiProjectId,
+  organizationTable,
+} from './storage';
 
 enum Route {
   AnyGet = 'GET /{proxy+}',
@@ -26,7 +32,13 @@ const jwtAuthorizer = api.addAuthorizer({
 
 const trpcGet = new sst.aws.Function('trpc-get', {
   handler: 'packages/functions/src/functions/trpc.handler',
-  link: [examBucket, examTable, organizationTable],
+  link: [
+    examBucket,
+    examTable,
+    organizationTable,
+    openAiApiKey,
+    openAiProjectId,
+  ],
 });
 api.route(Route.AnyGet, trpcGet.arn, {
   auth: {
@@ -38,7 +50,13 @@ api.route(Route.AnyGet, trpcGet.arn, {
 
 const trpcPost = new sst.aws.Function('trpc-post', {
   handler: 'packages/functions/src/functions/trpc.handler',
-  link: [examBucket, examTable, organizationTable],
+  link: [
+    examBucket,
+    examTable,
+    organizationTable,
+    openAiApiKey,
+    openAiProjectId,
+  ],
 });
 api.route(Route.AnyPost, trpcPost.arn, {
   auth: {

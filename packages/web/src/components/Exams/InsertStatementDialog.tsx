@@ -33,10 +33,6 @@ import {
   Textarea,
 } from '../ui';
 
-export type ProblemContent =
-  | { type: 'statement'; text: string; id: string }
-  | { type: 'question'; text: string; index: number; id: string };
-
 type InsertStatementDialogProps = {
   position: number;
   examId: string;

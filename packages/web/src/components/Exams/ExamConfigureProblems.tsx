@@ -3,16 +3,18 @@ import { ArrowRight, ExternalLink, Loader2 } from 'lucide-react';
 import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import { FormattedStatementWithMarks } from '@corrector/shared';
+
 import { trpc } from '~/lib';
 
 import { Badge, Button, Separator } from '../ui';
 import { DeleteStatementDialog } from './DeleteStatementDialog';
 import { InsertStatementDialog } from './InsertStatementDialog';
-import { ProblemContent, UpdateStatementDialog } from './UpdateStatementDialog';
+import { UpdateStatementDialog } from './UpdateStatementDialog';
 
 type ExamConfigureProblemsProps = {
   examId: string;
-  problems: { content: ProblemContent[]; id: string }[];
+  problems: { content: FormattedStatementWithMarks[]; id: string }[];
 };
 
 export const ExamConfigureProblems = ({
@@ -50,7 +52,7 @@ export const ExamConfigureProblems = ({
     position,
     problemId,
   }: {
-    statement: ProblemContent;
+    statement: FormattedStatementWithMarks;
     position: number;
     problemId: string;
   }) => (
@@ -118,7 +120,7 @@ export const ExamConfigureProblems = ({
                     <span className="underline text-sm text-muted-foreground">
                       <FormattedMessage
                         id="exams.problem.question.title"
-                        values={{ path: statement.index }}
+                        values={{ path: statement.index, mark: statement.mark }}
                       />
                     </span>
                     <MathJax>{statement.text}</MathJax>
