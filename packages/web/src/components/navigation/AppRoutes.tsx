@@ -20,10 +20,7 @@ import { AuthenticationRequired } from './AuthenticationRequired';
 export const AppRoutes = (): ReactElement => (
   <BrowserRouter>
     <Routes>
-      <Route
-        path={AppRoute.Home}
-        element={<Navigate to={AppRoute.Classrooms} />}
-      />
+      <Route path={AppRoute.Home} element={<Navigate to={AppRoute.Exams} />} />
       <Route element={<AuthenticationRequired />}>
         <Route element={<Layout />}>
           <>
