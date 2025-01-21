@@ -1,5 +1,5 @@
 import { MathJax } from 'better-react-mathjax';
-import { ExternalLink, Loader2 } from 'lucide-react';
+import { ArrowRight, ExternalLink, Loader2 } from 'lucide-react';
 import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -19,22 +19,31 @@ export const ExamConfigureProblems = ({
   examId,
   problems,
 }: ExamConfigureProblemsProps): ReactElement => {
-  const { data: subjectUrl, refetch } =
-    trpc.examSubjectPresignedUrlGet.useQuery(
-      {
-        examId,
-      },
-      { enabled: false },
-    );
-  const { mutate: updateExam, isPending: updateExamPending } =
+  const utils = trpc.useUtils();
+  const { mutate: checkPdf, isPending: checkPdfPending } =
     trpc.examGeneratePdf.useMutation({
       onSuccess: async () => {
-        await refetch();
-        console.log('subjectUrl', subjectUrl);
-        subjectUrl !== undefined &&
-          window.open(subjectUrl, '_blank', 'noopener,noreferrer');
+        const subjectUrl = await utils.examSubjectPresignedUrlGet.fetch({
+          examId,
+        });
+
+        window.open(subjectUrl, '_blank', 'noopener,noreferrer');
       },
     });
+
+  const { mutateAsync: setReady } = trpc.examSetReady.useMutation({
+    onSuccess: async () => {
+      await utils.examGet.invalidate();
+    },
+  });
+  const {
+    mutate: generatePdfAndSetReady,
+    isPending: generatePdfAndSetReadyPending,
+  } = trpc.examGeneratePdf.useMutation({
+    onSuccess: async () => {
+      await setReady({ id: examId });
+    },
+  });
 
   const StatementActions = ({
     statement,
@@ -133,17 +142,33 @@ export const ExamConfigureProblems = ({
           </div>
         </div>
       ))}
-      <Button
-        className="self-end flex gap-2"
-        onClick={() => updateExam({ id: examId })}
-      >
-        {updateExamPending ? (
-          <Loader2 className="animate-spin" size={16} />
-        ) : (
-          <ExternalLink size={16} />
-        )}
-        <FormattedMessage id="exams.generatePdf" />
-      </Button>
+      <div className="flex items-center gap-2 self-end">
+        <Button
+          className="self-end flex gap-2"
+          onClick={() => checkPdf({ id: examId })}
+          variant="outline"
+        >
+          {checkPdfPending ? (
+            <Loader2 className="animate-spin" size={16} />
+          ) : (
+            <ExternalLink size={16} />
+          )}
+          <FormattedMessage id="exams.generatePdf" />
+        </Button>
+        <Button
+          className="self-end flex gap-2"
+          onClick={() => {
+            generatePdfAndSetReady({ id: examId });
+          }}
+        >
+          {generatePdfAndSetReadyPending ? (
+            <Loader2 className="animate-spin" size={16} />
+          ) : (
+            <ArrowRight size={16} />
+          )}
+          <FormattedMessage id="exams.setReady" />
+        </Button>
+      </div>
     </div>
   );
 };

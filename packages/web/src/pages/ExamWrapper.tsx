@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
 import { ExamConfigureProblems } from '~/components/Exams/ExamConfigureProblems';
+import { ExamReady } from '~/components/Exams/ExamReady';
 import { ExamUploadFiles } from '~/components/Exams/ExamUploadFiles';
 import { Badge, Separator } from '~/components/ui';
 import { trpc } from '~/lib';
@@ -35,6 +36,8 @@ export const ExamWrapper = (): ReactElement => {
     switch (status) {
       case 'uploadFiles':
         return <ExamUploadFiles examId={examId} />;
+      case 'ready':
+        return <ExamReady examId={examId} />;
       case 'configureProblems':
         return (
           // @ts-ignore Type instantiation is excessively deep and possibly infinite

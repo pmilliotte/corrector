@@ -59,5 +59,6 @@ export const commonMessages = {
     lastName: 'Nom',
     error: 'Erreur',
     step: 'Étape {step}',
+    status: 'Statut',
   },
 };

@@ -46,6 +46,18 @@ export const ExamTable = ({ exams }: ExamTableProps): ReactElement => {
         </Badge>
       ),
     },
+    {
+      id: 'status',
+      header: () => <FormattedMessage id="common.status" />,
+      cell: (exam: Exam) => (
+        <Badge
+          variant="secondary"
+          className="whitespace-nowrap border-solid border-4 cursor-pointer"
+        >
+          <FormattedMessage id={`exams.status.${exam.status}`} />
+        </Badge>
+      ),
+    },
   ];
 
   return (

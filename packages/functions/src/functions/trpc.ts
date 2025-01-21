@@ -15,6 +15,7 @@ import { examGet } from './trpc/examGet';
 import { examList } from './trpc/examList';
 import { examResponseAnalysisGet } from './trpc/examResponseAnalysisGet';
 import { examResponseList } from './trpc/examResponseList';
+import { examSetReady } from './trpc/examSetReady';
 import { examStatementDelete } from './trpc/examStatementDelete';
 import { examStatementInsert } from './trpc/examStatementInsert';
 import { examStatementUpdate } from './trpc/examStatementUpdate';
@@ -70,6 +71,7 @@ export const coreRouter = router({
   examGeneratePdf,
   examUploadedFileStatusList,
   examSubjectPresignedUrlGet,
+  examSetReady,
 });
 
 export const handler = awsLambdaRequestHandler({

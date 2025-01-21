@@ -56,16 +56,14 @@ export const examsMessages = {
       'exam-blank': 'Télécharger le sujet',
       'exam-response': 'Télécharger la copie à corriger',
     },
-    status: {
-      subject: {
-        title: 'Sujet',
-        next: 'Étape suivante',
-      },
-      marks: { title: 'Notation' },
-      responses: { title: 'Réponses' },
-      correction: { title: 'Correction' },
-    },
     generatePdf: 'Vérifier le pdf',
+    status: {
+      configureProblems: 'Configuration',
+      uploadFiles: 'Téléchargement',
+      ready: 'Prêt',
+    },
+    setReady: "Valider l'examen",
+    ready: { open: 'Ouvrir le sujet' },
     problem: {
       title: 'Problème {path} : {title}',
       path: 'Problème {path}',
