@@ -167,7 +167,6 @@ type FormattedStatement =
       id: string;
       type: 'statement';
       text: string;
-      numberOfLines: number;
     }
   | {
       id: string;
@@ -196,7 +195,7 @@ const formatStatement = (
 ): FormattedStatement => {
   if (statement.type === 'statement') {
     return {
-      ...statement,
+      text: statement.text,
       type: 'statement',
       id: randomUUID(),
     };

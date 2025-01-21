@@ -70,6 +70,7 @@ export const examsMessages = {
       title: 'Problème {path} : {title}',
       path: 'Problème {path}',
       statement: {
+        numberOfLines: '{numberOfLines, plural, =1 {# ligne} other {# lignes}}',
         modify: {
           title: "Modifier l'énoncé",
           description: "Vérifier l'affichage avant de valider",

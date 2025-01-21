@@ -21,7 +21,6 @@ const statementSchema = map({
   type: string().const('statement'),
   text: string(),
   id: string(),
-  numberOfLines: number(),
 });
 
 const questionSchema = map({

@@ -37,6 +37,7 @@ export const ExamWrapper = (): ReactElement => {
         return <ExamUploadFiles examId={examId} />;
       case 'configureProblems':
         return (
+          // @ts-ignore Type instantiation is excessively deep and possibly infinite
           <ExamConfigureProblems
             examId={examId}
             problems={problems.configureProblems}

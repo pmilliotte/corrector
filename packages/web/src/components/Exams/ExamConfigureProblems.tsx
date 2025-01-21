@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { trpc } from '~/lib';
 
-import { Button, Separator } from '../ui';
+import { Badge, Button, Separator } from '../ui';
 import { DeleteStatementDialog } from './DeleteStatementDialog';
 import { InsertStatementDialog } from './InsertStatementDialog';
 import { ProblemContent, UpdateStatementDialog } from './UpdateStatementDialog';
@@ -93,11 +93,13 @@ export const ExamConfigureProblems = ({
                     <div className="min-h-[36px]">
                       <MathJax>{statement.text}</MathJax>
                     </div>
-                    <StatementActions
-                      statement={statement}
-                      position={index + 1}
-                      problemId={problemId}
-                    />
+                    <div>
+                      <StatementActions
+                        statement={statement}
+                        position={index + 1}
+                        problemId={problemId}
+                      />
+                    </div>
                   </div>
                 ) : (
                   <div
@@ -113,11 +115,19 @@ export const ExamConfigureProblems = ({
                       </span>
                       <MathJax>{statement.text}</MathJax>
                     </div>
-                    <StatementActions
-                      statement={statement}
-                      position={index + 1}
-                      problemId={problemId}
-                    />
+                    <div className="flex items-center gap-2">
+                      <Badge className="whitespace-nowrap">
+                        <FormattedMessage
+                          id="exams.problem.statement.numberOfLines"
+                          values={{ numberOfLines: statement.numberOfLines }}
+                        />
+                      </Badge>
+                      <StatementActions
+                        statement={statement}
+                        position={index + 1}
+                        problemId={problemId}
+                      />
+                    </div>
                   </div>
                 ),
               )}
