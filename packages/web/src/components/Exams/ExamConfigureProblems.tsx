@@ -116,7 +116,7 @@ export const ExamConfigureProblems = ({
                       <MathJax>{statement.text}</MathJax>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge className="whitespace-nowrap">
+                      <Badge className="whitespace-nowrap" variant="secondary">
                         <FormattedMessage
                           id="exams.problem.statement.numberOfLines"
                           values={{ numberOfLines: statement.numberOfLines }}

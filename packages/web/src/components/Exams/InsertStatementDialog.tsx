@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
 import { z } from 'zod';
 
+import { MAX_NUMBER_OF_LINES, MIN_NUMBER_OF_LINES } from '@corrector/shared';
+
 import { trpc, useIntl } from '~/lib';
 
 import {
@@ -41,9 +43,6 @@ type InsertStatementDialogProps = {
   problemId: string;
 };
 
-const MAX_LINES = 10;
-const MIN_LINES = 1;
-
 const formSchema = z
   .object({
     text: z.string().min(1),
@@ -56,7 +55,10 @@ const formSchema = z
       .or(
         z.object({
           type: z.literal('question'),
-          numberOfLines: z.coerce.number().min(MIN_LINES).max(MAX_LINES),
+          numberOfLines: z.coerce
+            .number()
+            .min(MIN_NUMBER_OF_LINES)
+            .max(MAX_NUMBER_OF_LINES),
         }),
       ),
   );
@@ -93,8 +95,6 @@ export const InsertStatementDialog = ({
       problemId,
     });
   };
-
-  console.log(form.formState.errors);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -182,8 +182,8 @@ export const InsertStatementDialog = ({
                       <Input
                         disabled={form.getValues('type') !== 'question'}
                         type="number"
-                        max={MAX_LINES}
-                        min={MIN_LINES}
+                        max={MAX_NUMBER_OF_LINES}
+                        min={MIN_NUMBER_OF_LINES}
                         {...field}
                       />
                     </FormControl>

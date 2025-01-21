@@ -2,6 +2,8 @@ import { TRPCError } from '@trpc/server';
 import { $set, GetItemCommand, UpdateItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
+import { MAX_NUMBER_OF_LINES, MIN_NUMBER_OF_LINES } from '@corrector/shared';
+
 import { ExamEntity } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
@@ -12,12 +14,17 @@ export const examStatementUpdate = authedProcedure
       statementId: z.string(),
       examId: z.string(),
       text: z.string(),
+      numberOfLines: z.coerce
+        .number()
+        .min(MIN_NUMBER_OF_LINES)
+        .max(MAX_NUMBER_OF_LINES)
+        .optional(),
     }),
   )
   .mutation(
     async ({
       ctx: { session },
-      input: { statementId, problemId, examId, text },
+      input: { statementId, problemId, examId, text, numberOfLines },
     }) => {
       const { id: userId } = session;
 
@@ -32,9 +39,16 @@ export const examStatementUpdate = authedProcedure
       }
 
       const problemContent = problem.content;
-      const updatedProblemContent = problemContent.map(statement =>
-        statement.id !== statementId ? statement : { ...statement, text },
-      );
+      const updatedProblemContent = problemContent.map(statement => {
+        if (statement.id !== statementId) {
+          return statement;
+        }
+        if (statement.type === 'statement' || numberOfLines === undefined) {
+          return { ...statement, text };
+        }
+
+        return { ...statement, text, numberOfLines };
+      });
 
       await ExamEntity.build(UpdateItemCommand)
         .item({
