@@ -33,6 +33,7 @@ export const Exams = (): ReactElement => {
         </div>
         <CreateExamDialog />
       </div>
+      {/* @ts-ignore Type instantiation is excessively deep and possibly infinite */}
       <ExamTable exams={exams} />
     </div>
   );
