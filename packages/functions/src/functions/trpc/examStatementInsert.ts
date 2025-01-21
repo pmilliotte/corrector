@@ -38,8 +38,9 @@ export const examStatementInsert = authedProcedure
       problemContent.splice(position, 0, {
         text,
         id: randomUUID(),
-        ...(type === 'question' ? { index: 1, type } : { type }),
-        numberOfLines: 1,
+        ...(type === 'question'
+          ? { index: 1, type, numberOfLines: 1 }
+          : { type }),
       });
 
       const indexedProblemContent = reindexStatements(problemContent);

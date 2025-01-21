@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BetweenHorizonalEnd, Loader2, Save } from 'lucide-react';
 import { ReactElement, useState } from 'react';
@@ -20,6 +21,8 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
+  Input,
   Select,
   SelectContent,
   SelectItem,
@@ -38,10 +41,25 @@ type InsertStatementDialogProps = {
   problemId: string;
 };
 
-const formSchema = z.object({
-  type: z.enum(['statement', 'question']),
-  text: z.string().min(1),
-});
+const MAX_LINES = 10;
+const MIN_LINES = 1;
+
+const formSchema = z
+  .object({
+    text: z.string().min(1),
+  })
+  .and(
+    z
+      .object({
+        type: z.literal('statement'),
+      })
+      .or(
+        z.object({
+          type: z.literal('question'),
+          numberOfLines: z.coerce.number().min(MIN_LINES).max(MAX_LINES),
+        }),
+      ),
+  );
 
 export const InsertStatementDialog = ({
   position,
@@ -56,6 +74,7 @@ export const InsertStatementDialog = ({
     defaultValues: {
       type: undefined,
       text: '',
+      numberOfLines: 1,
     },
   });
   const { mutate, isPending } = trpc.examStatementInsert.useMutation({
@@ -74,6 +93,8 @@ export const InsertStatementDialog = ({
       problemId,
     });
   };
+
+  console.log(form.formState.errors);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -142,6 +163,29 @@ export const InsertStatementDialog = ({
                   <FormItem className="">
                     <FormControl>
                       <Textarea className="mt-0" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="numberOfLines"
+                render={({ field }) => (
+                  <FormItem className="flex items-center gap-2 space-y-0">
+                    <FormLabel
+                      htmlFor="numberOfLines"
+                      className="text-right grow whitespace-nowrap"
+                    >
+                      <FormattedMessage id="exams.problem.statement.numberOfLinesLabel" />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={form.getValues('type') !== 'question'}
+                        type="number"
+                        max={MAX_LINES}
+                        min={MIN_LINES}
+                        {...field}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
