@@ -173,7 +173,7 @@ Important : L'utilisation du langage LaTeX (ou MathJax) doit systématiquement e
                   text: z
                     .string()
                     .describe(
-                      "L'énoncé de la question ou le contenu du texte introductif ou intermédiaire, sans inclure les numéros de question. Le langage LaTeX doit être délimité.",
+                      "L'énoncé de la question ou le contenu du texte introductif ou intermédiaire, sans inclure les numéros de question. Le langage LaTeX doit être délimité avec un ou deux symboles dollar '$' !",
                     ),
                   type: z
                     .enum(['statement', 'question'])
