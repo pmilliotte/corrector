@@ -22,9 +22,9 @@ import { examStatementUpdate } from './trpc/examStatementUpdate';
 import { examSubjectAnalysisGet } from './trpc/examSubjectAnalysisGet';
 import { examSubjectPresignedUrlGet } from './trpc/examSubjectPresignedUrlGet';
 import { examUploadedFileDelete } from './trpc/examUploadedFileDelete';
+import { examUploadedFilePresignedUrlGet } from './trpc/examUploadedFilePresignedUrlGet';
 import { examUploadedFilePresignedUrlList } from './trpc/examUploadedFilePresignedUrlList';
 import { examUploadedFilePresignedUrlPost } from './trpc/examUploadedFilePresignedUrlPost';
-import { examUploadedFileStatusList } from './trpc/examUploadedFileStatusList';
 import { organizationList } from './trpc/organizationList';
 import { presignedUrlGet } from './trpc/presignedUrlGet';
 import { presignedUrlPost } from './trpc/presignedUrlPost';
@@ -59,8 +59,8 @@ export const coreRouter = router({
   examStatementDelete,
   examStatementUpdate,
   examGeneratePdf,
-  examUploadedFileStatusList,
   examSubjectPresignedUrlGet,
+  examUploadedFilePresignedUrlGet,
   examSetReady,
 });
 

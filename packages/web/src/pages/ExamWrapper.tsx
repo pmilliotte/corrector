@@ -35,7 +35,7 @@ export const ExamWrapper = (): ReactElement => {
   const ExamContent = () => {
     switch (status) {
       case 'uploadFiles':
-        return <ExamUploadFiles examId={examId} />;
+        return <ExamUploadFiles exam={exam} />;
       case 'ready':
         return <ExamReady examId={examId} />;
       case 'configureProblems':

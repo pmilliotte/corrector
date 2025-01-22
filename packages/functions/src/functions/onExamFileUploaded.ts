@@ -1,9 +1,5 @@
 /* eslint-disable max-lines */
-import {
-  CopyObjectCommand,
-  GetObjectCommand,
-  HeadObjectCommand,
-} from '@aws-sdk/client-s3';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { HumanMessage } from '@langchain/core/messages';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
@@ -32,27 +28,22 @@ export const handler = async (event: S3Event): Promise<void> => {
         return;
       }
 
-      const bucketName = Resource['exam-bucket'].name;
-
-      const { Metadata } = await s3Client.send(
-        new HeadObjectCommand({
-          Bucket: bucketName,
-          Key: objectKey,
-        }),
-      );
-
-      // Avoid recursive loop
-      if (Metadata?.['file-status'] !== 'uploaded') {
-        return;
-      }
-
       const { examId, fileName, userId } = match;
 
-      const context = `Ton objectif est de retranscrire fidèlement les énoncés des problèmes que je vais te fournir sous forme d'une image. Tu dois découper chaque problème en autant de questions ou texte introductif ou intermédiaire qu'il contient.
-
-Important : Toute utilisation du langage LaTeX doit systématiquement être délimitée par les délimiteurs suivants :
-- Un seul symbole dollar '$' pour du rendu inline ;
-- Deux symboles dollar '$$' pour du rendu en bloc.`;
+      await ExamEntity.build(UpdateItemCommand)
+        .item({
+          id: examId,
+          userId,
+          problems: {
+            uploadFiles: {
+              [fileName]: $set({
+                status: 'uploaded',
+                problem: undefined,
+              }),
+            },
+          },
+        })
+        .send();
 
       const { Body: rawData } = await s3Client.send(
         new GetObjectCommand({
@@ -67,11 +58,13 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
 
       const base64 = await rawData.transformToString('base64');
 
-      const humanProblemImageMessage = new HumanMessage({
+      const formatContext = `Tu dois me dire si l'image que je vais te fournir représente un et un seul exercice de mathématiques. Un exercice peut contenir plusieurs questions distinctes au premier abord, mais qui ont en fait du sens entre elles dans des questions ultérieures : ne pas les confondre avec des exercices distincts.`;
+
+      const formatHumanMessage = new HumanMessage({
         content: [
           {
             type: 'text' as const,
-            text: "Voici l'image contenant un ou plusieurs exercices :",
+            text: "Voici l'image :",
           },
           {
             type: 'image_url' as const,
@@ -81,7 +74,84 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
           },
           {
             type: 'text' as const,
-            text: 'Donne moi la transcription fidèle des énoncés.',
+            text: 'Dis-moi si cette image représente un exercice de mathématiques.',
+          },
+        ],
+      });
+
+      const formatChat = new ChatOpenAI({
+        apiKey: Resource.OpenaiApiKey.value,
+        temperature: 0,
+        modelName: 'gpt-4o-mini',
+        configuration: {
+          project: Resource.OpenaiProjectId.value,
+        },
+        verbose: process.env.STAGE === 'local',
+      }).withStructuredOutput(
+        z.object({
+          isOneProblem: z
+            .boolean()
+            .describe(
+              "Vrai si l'image correspond à un exercice de mathématiques",
+            ),
+          explanantion: z
+            .string()
+            .describe(
+              "Explication de pourquoi l'image n'est pas un exercice de mathématiques",
+            ),
+        }),
+      );
+
+      const formatPrompt = ChatPromptTemplate.fromMessages([
+        ['system', formatContext],
+        formatHumanMessage,
+      ]);
+
+      const formatChain = RunnableSequence.from([formatPrompt, formatChat]);
+
+      const { isOneProblem, explanantion } = await formatChain.invoke({});
+      console.log(explanantion);
+
+      if (!isOneProblem) {
+        await ExamEntity.build(UpdateItemCommand)
+          .item({
+            id: examId,
+            userId,
+            problems: {
+              uploadFiles: {
+                [fileName]: $set({
+                  status: 'error',
+                  problem: undefined,
+                }),
+              },
+            },
+          })
+          .send();
+
+        return;
+      }
+
+      const context = `Je vais te fournir un exercice (qui peut contenir une ou plusieurs questions) sous la forme d'une image. Ton objectif est de retranscrire fidèlement l'énoncé. Tu dois découper l'exercice en autant de questions ou texte introductif ou intermédiaire qu'il contient.
+
+Important : L'utilisation du langage LaTeX (ou MathJax) doit systématiquement et impérativement inclure les délimiteurs suivants :
+- Un seul symbole dollar '$' pour du rendu inline ;
+- Deux symboles dollar '$$' pour du rendu en bloc.`;
+
+      const humanProblemImageMessage = new HumanMessage({
+        content: [
+          {
+            type: 'text' as const,
+            text: "Voici l'image contenant un exercice :",
+          },
+          {
+            type: 'image_url' as const,
+            image_url: {
+              url: `data:image/jpeg;base64,${base64}`,
+            },
+          },
+          {
+            type: 'text' as const,
+            text: "Donne moi la transcription fidèle de l'énoncé, sans le titre éventuel.",
           },
         ],
       });
@@ -96,14 +166,14 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
         verbose: process.env.STAGE === 'local',
       }).withStructuredOutput(
         z.object({
-          problems: z
+          problem: z
             .object({
               content: z
                 .object({
                   text: z
                     .string()
                     .describe(
-                      "L'énoncé de la question ou le contenu du texte introductif ou intermédiaire, sans inclure les numéros de question.",
+                      "L'énoncé de la question ou le contenu du texte introductif ou intermédiaire, sans inclure les numéros de question. Le langage LaTeX doit être délimité.",
                     ),
                   type: z
                     .enum(['statement', 'question'])
@@ -119,8 +189,7 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
                 .strict()
                 .array(),
             })
-            .strict()
-            .array(),
+            .strict(),
         }),
       );
 
@@ -131,12 +200,7 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
 
       const chain = RunnableSequence.from([prompt, chat]);
 
-      const { problems } = await chain.invoke({});
-
-      const formattedProblems = problems.reduce(
-        (acc, problem) => [...acc, formatProblem(problem)],
-        [] as FormattedProblem[],
-      );
+      const { problem } = await chain.invoke({});
 
       await ExamEntity.build(UpdateItemCommand)
         .item({
@@ -144,21 +208,14 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
           userId,
           problems: {
             uploadFiles: {
-              [fileName]: $set(formattedProblems),
+              [fileName]: $set({
+                status: 'analyzed',
+                problem: formatProblem(problem),
+              }),
             },
           },
         })
         .send();
-
-      await s3Client.send(
-        new CopyObjectCommand({
-          Bucket: bucketName,
-          Key: objectKey,
-          CopySource: `${bucketName}/${objectKey}`,
-          MetadataDirective: 'REPLACE',
-          Metadata: { ...Metadata, 'file-status': 'analyzed' },
-        }),
-      );
     }),
   );
 };

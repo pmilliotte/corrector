@@ -27,8 +27,6 @@ export const addMarks = async (
     ],
   });
 
-  console.log('before chat');
-
   const chat = new ChatOpenAI({
     apiKey: Resource.OpenaiApiKey.value,
     temperature: 0,

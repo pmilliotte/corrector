@@ -1,7 +1,7 @@
 export const examsMessages = {
   exams: {
     importExam: 'Télécharger le sujet',
-    dragAndDrop: 'Cliquer ou déposer le fichier ici',
+    dragAndDrop: "Cliquer ou déposer l'exercice (.png, .jpg, .jpeg)",
     name: 'Nom',
     statement: 'Énoncé',
     solution: 'Solution',
@@ -21,6 +21,7 @@ export const examsMessages = {
       correction: 'Correction',
       marks: 'barème',
     },
+    file: { error: "L'image ne semble pas correspondre à un unique exercice" },
     files: {
       confirmDeletion: 'Supprimer définitivement le fichier et ses données ?',
       upload: 'Télécharger le fichier.',
@@ -63,6 +64,7 @@ export const examsMessages = {
       ready: 'Prêt',
     },
     setReady: "Valider l'examen",
+    configureProblems: 'Configurer les exercices',
     ready: { open: 'Ouvrir le sujet' },
     problem: {
       title: 'Problème {path} : {title}',

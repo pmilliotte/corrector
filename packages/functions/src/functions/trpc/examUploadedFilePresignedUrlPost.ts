@@ -1,8 +1,10 @@
 import { TRPCError } from '@trpc/server';
+import { $set, UpdateItemCommand } from 'dynamodb-toolbox';
 import { Resource } from 'sst';
 import { z } from 'zod';
 
 import {
+  ExamEntity,
   getFileExtension,
   getFileSUpposedContentType,
   Metadata,
@@ -32,11 +34,12 @@ export const examUploadedFilePresignedUrlPost = authedProcedure
       throw new TRPCError({ code: 'BAD_REQUEST' });
     }
 
-    const fileKey = `users/${userId}/exams/${examId}/uploadedFiles/${Date.now()}.${fileExtension}`;
+    const fileDateWithExtension = `${Date.now()}.${fileExtension}`;
+
+    const fileKey = `users/${userId}/exams/${examId}/uploadedFiles/${fileDateWithExtension}`;
     // Metadata arguments must start with x-amz-meta and be written in kebab case
     const metadata: Metadata = {
       'x-amz-meta-original-file-name': encodeURIComponent(fileName),
-      'x-amz-meta-file-status': 'uploaded',
     };
 
     const { url, fields } = await requestSignedUrlPost({
@@ -45,6 +48,35 @@ export const examUploadedFilePresignedUrlPost = authedProcedure
       metadata,
       bucketName: Resource['exam-bucket'].name,
     });
+
+    await ExamEntity.build(UpdateItemCommand)
+      .item({
+        id: examId,
+        userId,
+        problems: {
+          uploadFiles: {
+            [fileDateWithExtension]: $set({
+              status: 'uploadRequested',
+              problem: undefined,
+            }),
+          },
+        },
+      })
+      .options({
+        condition: {
+          and: [
+            {
+              attr: 'id',
+              exists: true,
+            },
+            {
+              attr: 'status',
+              eq: 'uploadFiles',
+            },
+          ],
+        },
+      })
+      .send();
 
     return {
       url,

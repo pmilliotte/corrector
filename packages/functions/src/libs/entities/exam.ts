@@ -11,7 +11,11 @@ import {
 } from 'dynamodb-toolbox';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
-import { EXAM_STATUSES, SUBJECTS } from '@corrector/shared';
+import {
+  EXAM_STATUSES,
+  EXAM_UPLOADED_FILE_STATUSES,
+  SUBJECTS,
+} from '@corrector/shared';
 
 import { ExamTable } from '../tables';
 
@@ -56,7 +60,13 @@ const examSchema = schema({
   name: string(),
   status: string().enum(...EXAM_STATUSES),
   problems: map({
-    uploadFiles: record(string(), list(problemSchema)),
+    uploadFiles: record(
+      string(),
+      map({
+        status: string().enum(...EXAM_UPLOADED_FILE_STATUSES),
+        problem: problemSchema.optional(),
+      }),
+    ),
     configureProblems: list(problemSchemaWithMarks),
   })
     .default({ uploadFiles: {}, configureProblems: [] })
