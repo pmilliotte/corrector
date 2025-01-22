@@ -1,5 +1,6 @@
 import { fetchAuthSession, signOut } from '@aws-amplify/auth';
 import { QueryClientContext, useQuery } from '@tanstack/react-query';
+import posthog from 'posthog-js';
 import { ReactElement, useContext, useEffect } from 'react';
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 
@@ -64,6 +65,10 @@ export const AuthenticationRequired = (): ReactElement => {
 
     return <Navigate to={AppRoute.Error} />;
   }
+
+  posthog.identify(session.id, {
+    email: session.email,
+  });
 
   return (
     <SessionContext.Provider value={session}>

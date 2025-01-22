@@ -34,6 +34,8 @@
     "packages/*"
   ],
   "dependencies": {
+    "@pulumi/aws": "^6.66.3",
+    "@pulumi/pulumi": "^3.147.0",
     "sst": "3.5.5"
   }
 }
