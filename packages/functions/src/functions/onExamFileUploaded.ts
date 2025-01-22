@@ -32,6 +32,20 @@ export const handler = async (event: S3Event): Promise<void> => {
         return;
       }
 
+      const bucketName = Resource['exam-bucket'].name;
+
+      const { Metadata } = await s3Client.send(
+        new HeadObjectCommand({
+          Bucket: bucketName,
+          Key: objectKey,
+        }),
+      );
+
+      // Avoid recursive loop
+      if (Metadata?.['file-status'] !== 'uploaded') {
+        return;
+      }
+
       const { examId, fileName, userId } = match;
 
       const context = `Ton objectif est de retranscrire fidèlement les énoncés des problèmes que je vais te fournir sous forme d'une image. Tu dois découper chaque problème en autant de questions ou texte introductif ou intermédiaire qu'il contient.
@@ -136,22 +150,13 @@ Important : Toute utilisation du langage LaTeX doit systématiquement être dél
         })
         .send();
 
-      const bucketName = Resource['exam-bucket'].name;
-
-      const { Metadata } = await s3Client.send(
-        new HeadObjectCommand({
-          Bucket: bucketName,
-          Key: objectKey,
-        }),
-      );
-
       await s3Client.send(
         new CopyObjectCommand({
           Bucket: bucketName,
           Key: objectKey,
           CopySource: `${bucketName}/${objectKey}`,
           MetadataDirective: 'REPLACE',
-          Metadata: { ...(Metadata ?? {}), 'file-status': 'analyzed' },
+          Metadata: { ...Metadata, 'file-status': 'analyzed' },
         }),
       );
     }),
