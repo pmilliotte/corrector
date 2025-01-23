@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import chromium from '@sparticuz/chromium';
 import { LiteElement } from 'mathjax-full/js/adaptors/lite/Element';
 import { liteAdaptor } from 'mathjax-full/js/adaptors/liteAdaptor.js';
 import { RegisterHTMLHandler } from 'mathjax-full/js/handlers/html.js';
@@ -6,8 +7,11 @@ import { TeX } from 'mathjax-full/js/input/tex.js';
 import { AllPackages } from 'mathjax-full/js/input/tex/AllPackages.js';
 import { mathjax } from 'mathjax-full/js/mathjax.js';
 import { SVG } from 'mathjax-full/js/output/svg.js';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 import sanitizeHtml from 'sanitize-html';
+
+const YOUR_LOCAL_CHROMIUM_PATH =
+  '/tmp/localChromium/chromium/mac_arm-1410147/chrome-mac/Chromium.app/Contents/MacOS/Chromium';
 
 const LATEX_REGEX = /\$([^$]+)\$/g; // Inline math $...$
 const BLOCK_LATEX_REGEX = /\$\$([^$]+)\$\$/g; // Block math $$...$$
@@ -18,46 +22,6 @@ const CONTENT_MARGIN_TOP_IN_PX = HEADER_HEIGHT_IN_PX + 16;
 const FOOTER_HEIGHT_IN_PX = 56;
 const FONT_FAMILY = 'font-family: Arial, sans-serif;';
 const FONT_SIZE_IN_PX = '16px';
-
-const PUPPETEER_ARGS = [
-  '--disable-features=IsolateOrigins',
-  '--disable-site-isolation-trials',
-  '--autoplay-policy=user-gesture-required',
-  '--disable-background-networking',
-  '--disable-background-timer-throttling',
-  '--disable-backgrounding-occluded-windows',
-  '--disable-breakpad',
-  '--disable-client-side-phishing-detection',
-  '--disable-component-update',
-  '--disable-default-apps',
-  '--disable-dev-shm-usage',
-  '--disable-domain-reliability',
-  '--disable-extensions',
-  '--disable-features=AudioServiceOutOfProcess',
-  '--disable-hang-monitor',
-  '--disable-ipc-flooding-protection',
-  '--disable-notifications',
-  '--disable-offer-store-unmasked-wallet-cards',
-  '--disable-popup-blocking',
-  '--disable-print-preview',
-  '--disable-prompt-on-repost',
-  '--disable-renderer-backgrounding',
-  '--disable-setuid-sandbox',
-  '--disable-speech-api',
-  '--disable-sync',
-  '--hide-scrollbars',
-  '--ignore-gpu-blacklist',
-  '--metrics-recording-only',
-  '--mute-audio',
-  '--no-default-browser-check',
-  '--no-first-run',
-  '--no-pings',
-  '--no-sandbox',
-  '--no-zygote',
-  '--password-store=basic',
-  '--use-gl=swiftshader',
-  '--use-mock-keychain',
-];
 
 type Statement =
   | {
@@ -105,8 +69,13 @@ export const generatePdfWithPuppeteer = async (
     .join('');
 
   const browser = await puppeteer.launch({
-    headless: true,
-    args: PUPPETEER_ARGS,
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath:
+      process.env.SST_DEV === 'true'
+        ? YOUR_LOCAL_CHROMIUM_PATH
+        : await chromium.executablePath(),
+    headless: chromium.headless,
   });
   const page = await browser.newPage();
 

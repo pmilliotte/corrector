@@ -25,23 +25,23 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Function"
     }
+    "exam-generate-pdf": {
+      "name": string
+      "type": "sst.aws.Function"
+    }
     "exam-table": {
       "name": string
       "type": "sst.aws.Dynamo"
+    }
+    "main-get": {
+      "name": string
+      "type": "sst.aws.Function"
     }
     "organization-table": {
       "name": string
       "type": "sst.aws.Dynamo"
     }
     "pre-token-generation": {
-      "name": string
-      "type": "sst.aws.Function"
-    }
-    "trpc-get": {
-      "name": string
-      "type": "sst.aws.Function"
-    }
-    "trpc-post": {
       "name": string
       "type": "sst.aws.Function"
     }

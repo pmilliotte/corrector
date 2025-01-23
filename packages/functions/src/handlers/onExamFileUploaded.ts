@@ -109,8 +109,7 @@ export const handler = async (event: S3Event): Promise<void> => {
 
       const formatChain = RunnableSequence.from([formatPrompt, formatChat]);
 
-      const { isOneProblem, explanantion } = await formatChain.invoke({});
-      console.log(explanantion);
+      const { isOneProblem } = await formatChain.invoke({});
 
       if (!isOneProblem) {
         await ExamEntity.build(UpdateItemCommand)

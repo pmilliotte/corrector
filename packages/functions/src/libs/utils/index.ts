@@ -2,7 +2,6 @@ export * from './getAnalysis';
 export * from './getFileExtension';
 export * from './getFileKeyPrefix';
 export * from './i18n';
-export * from './mathjax';
 export * from './parseExamUploadedFileKey';
 export * from './reindexProblemStatements';
 export * from './requestSignedUrl';

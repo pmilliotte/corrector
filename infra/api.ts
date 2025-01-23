@@ -8,8 +8,9 @@ import {
 } from './storage';
 
 enum Route {
-  AnyGet = 'GET /{proxy+}',
-  AnyPost = 'POST /{proxy+}',
+  MainGet = 'GET /{proxy+}',
+  MainPost = 'POST /{proxy+}',
+  ExamGeneratePdf = 'POST /examGeneratePdf',
 }
 
 export const api = new sst.aws.ApiGatewayV2('api', {
@@ -30,17 +31,27 @@ const jwtAuthorizer = api.addAuthorizer({
   },
 });
 
-const trpcGet = new sst.aws.Function('trpc-get', {
-  handler: 'packages/functions/src/functions/trpc.handler',
-  link: [
-    examBucket,
-    examTable,
-    organizationTable,
-    openAiApiKey,
-    openAiProjectId,
-  ],
+const resources = [
+  organizationTable,
+  examBucket,
+  examTable,
+  openAiApiKey,
+  openAiProjectId,
+];
+
+const main = new sst.aws.Function('main-get', {
+  handler: 'packages/functions/src/handlers/main.handler',
+  link: resources,
+  architecture: 'arm64',
 });
-api.route(Route.AnyGet, trpcGet.arn, {
+api.route(Route.MainGet, main.arn, {
+  auth: {
+    jwt: {
+      authorizer: jwtAuthorizer.id,
+    },
+  },
+});
+api.route(Route.MainPost, main.arn, {
   auth: {
     jwt: {
       authorizer: jwtAuthorizer.id,
@@ -48,17 +59,13 @@ api.route(Route.AnyGet, trpcGet.arn, {
   },
 });
 
-const trpcPost = new sst.aws.Function('trpc-post', {
-  handler: 'packages/functions/src/functions/trpc.handler',
-  link: [
-    examBucket,
-    examTable,
-    organizationTable,
-    openAiApiKey,
-    openAiProjectId,
-  ],
+const generatePdf = new sst.aws.Function('exam-generate-pdf', {
+  handler: 'packages/functions/src/handlers/examGeneratePdf.handler',
+  link: resources,
+  architecture: 'x86_64',
+  nodejs: { install: ['@sparticuz/chromium'] },
 });
-api.route(Route.AnyPost, trpcPost.arn, {
+api.route(Route.ExamGeneratePdf, generatePdf.arn, {
   auth: {
     jwt: {
       authorizer: jwtAuthorizer.id,

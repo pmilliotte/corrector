@@ -6,8 +6,7 @@ import { Resource } from 'sst';
 import { z } from 'zod';
 
 import { s3Client } from '~/clients';
-import { ExamEntity } from '~/libs';
-import { generatePdfWithPuppeteer } from '~/libs/utils/mathjax/puppeteer';
+import { ExamEntity, generatePdfWithPuppeteer } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
 export const examGeneratePdf = authedProcedure
