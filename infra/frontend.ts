@@ -59,6 +59,7 @@ const reverseProxy = new aws.cloudfront.Distribution('reverse-proxy', {
     ],
     cachedMethods: ['GET', 'HEAD', 'OPTIONS'],
     cachePolicyId: cachePolicy.id,
+    responseHeadersPolicyId: '67f7725c-6f97-4210-82d7-5512b31e9d03',
   },
   orderedCacheBehaviors: [
     {
@@ -76,6 +77,7 @@ const reverseProxy = new aws.cloudfront.Distribution('reverse-proxy', {
       ],
       cachedMethods: ['GET', 'HEAD', 'OPTIONS'],
       cachePolicyId: cachePolicy.id,
+      responseHeadersPolicyId: '67f7725c-6f97-4210-82d7-5512b31e9d03',
     },
   ],
   restrictions: {

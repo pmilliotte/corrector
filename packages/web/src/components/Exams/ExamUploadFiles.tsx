@@ -29,6 +29,8 @@ export const ExamUploadFiles = ({
       },
     });
 
+  const files = compact(Object.values(exam.problems.uploadFiles));
+
   return (
     <div className="flex flex-col gap-2 h-full">
       <div className="font-semibold">
@@ -59,9 +61,11 @@ export const ExamUploadFiles = ({
         className="self-end flex gap-2"
         onClick={() => updateExam({ id: exam.id })}
         disabled={
-          compact(Object.values(exam.problems.uploadFiles))
+          files.length === 0 ||
+          files
             .map(({ status }) => status)
-            .some(status => status !== 'analyzed') || updateExamPending
+            .some(status => status !== 'analyzed') ||
+          updateExamPending
         }
       >
         <FormattedMessage id="exams.configureProblems" values={{ step: 2 }} />
