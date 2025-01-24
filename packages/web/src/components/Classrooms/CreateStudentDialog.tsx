@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Plus, Save } from 'lucide-react';
-import { ReactElement, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
 import { toast } from 'sonner';
@@ -41,8 +41,9 @@ export const CreateStudentDialog = ({
   const { selectedOrganization } = useUserOrganizations();
   const { mutate, isPending } = trpc.studentCreate.useMutation({
     onSuccess: async () => {
-      await utils.classroomStudentList.invalidate();
+      await utils.classroomStudentList.refetch();
       setOpen(false);
+      form.reset();
     },
     onError: () => {
       toast(t.formatMessage({ id: 'classrooms.createStudentError.title' }), {
@@ -65,6 +66,15 @@ export const CreateStudentDialog = ({
     },
   });
 
+  const {
+    formState: { errors },
+    setValue,
+  } = form;
+
+  useEffect(() => {
+    setValue('identifier', maxIdentifier + 1);
+  }, [maxIdentifier, setValue]);
+
   const onSubmit = ({
     firstName,
     lastName,
@@ -78,10 +88,6 @@ export const CreateStudentDialog = ({
       organizationId: selectedOrganization.id,
     });
   };
-
-  const {
-    formState: { errors },
-  } = form;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
