@@ -65,7 +65,18 @@ export const examsMessages = {
     },
     setReady: "Valider l'examen",
     configureProblems: 'Configurer les exercices',
-    ready: { open: 'Ouvrir le sujet' },
+    ready: {
+      open: 'Ouvrir le sujet',
+      assignToClass: 'Distribuer à une classe',
+      assign: "Distribuer l'examen",
+      assignDescription:
+        "Assigner l'examen à une classe pour télécharger les copies.",
+      selectClassroom: {
+        class: 'Classe',
+        date: "Date de l'examen",
+      },
+      distribute: 'Distribuer',
+    },
     problem: {
       title: 'Problème {path} : {title}',
       path: 'Problème {path} ({mark, plural, =1 {# point} other {# points}})',

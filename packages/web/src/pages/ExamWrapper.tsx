@@ -36,8 +36,6 @@ export const ExamWrapper = (): ReactElement => {
     switch (status) {
       case 'uploadFiles':
         return <ExamUploadFiles exam={exam} />;
-      case 'ready':
-        return <ExamReady examId={examId} />;
       case 'configureProblems':
         return (
           // @ts-ignore Type instantiation is excessively deep and possibly infinite
@@ -46,6 +44,8 @@ export const ExamWrapper = (): ReactElement => {
             problems={problems.configureProblems}
           />
         );
+      case 'ready':
+        return <ExamReady examId={examId} />;
       default:
         return <></>;
     }

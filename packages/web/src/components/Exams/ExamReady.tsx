@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { trpc } from '~/lib';
 
 import { Button } from '../ui';
+import { AssignExamDialog } from './AssignExamDialog';
 
 type ExamReadyProps = {
   examId: string;
@@ -27,6 +28,9 @@ export const ExamReady = ({ examId }: ExamReadyProps): ReactElement => {
           <ExternalLink size={16} />
           <FormattedMessage id="exams.ready.open" />
         </Button>
+      </div>
+      <div>
+        <AssignExamDialog />
       </div>
     </div>
   );
