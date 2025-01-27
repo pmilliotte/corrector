@@ -17,6 +17,33 @@ import {
   parseExamUploadedFileKey,
 } from '~/libs';
 
+const outputSchema = z.object({
+  problem: z
+    .object({
+      content: z
+        .object({
+          text: z
+            .string()
+            .describe(
+              "L'énoncé de la question ou le contenu du texte introductif ou intermédiaire, sans inclure les numéros de question. Le langage LaTeX doit être délimité avec un ou deux symboles dollar '$' !",
+            ),
+          type: z
+            .enum(['statement', 'question'])
+            .describe(
+              "Si le texte correspond à un texte introductif ou intermédiaire, ou s'il s'agit d'une question.",
+            ),
+          numberOfLines: z
+            .number()
+            .describe(
+              "Le nombre de lignes dont un élève qui écrit très gros a besoin pour répondre à la question de manière complète et strucurée, 0 si s'il s'agit d'un texte introductif ou intermédiaire",
+            ),
+        })
+        .strict()
+        .array(),
+    })
+    .strict(),
+});
+
 export const handler = async (event: S3Event): Promise<void> => {
   await Promise.all(
     event.Records.map(async record => {
@@ -163,34 +190,7 @@ Important : L'utilisation du langage LaTeX (ou MathJax) doit systématiquement e
           project: Resource.OpenaiProjectId.value,
         },
         verbose: process.env.STAGE === 'local',
-      }).withStructuredOutput(
-        z.object({
-          problem: z
-            .object({
-              content: z
-                .object({
-                  text: z
-                    .string()
-                    .describe(
-                      "L'énoncé de la question ou le contenu du texte introductif ou intermédiaire, sans inclure les numéros de question. Le langage LaTeX doit être délimité avec un ou deux symboles dollar '$' !",
-                    ),
-                  type: z
-                    .enum(['statement', 'question'])
-                    .describe(
-                      "Si le texte correspond à un texte introductif ou intermédiaire, ou s'il s'agit d'une question.",
-                    ),
-                  numberOfLines: z
-                    .number()
-                    .describe(
-                      "Le nombre de lignes dont un élève qui écrit très gros a besoin pour répondre à la question de manière complète et strucurée, 0 si s'il s'agit d'un texte introductif ou intermédiaire",
-                    ),
-                })
-                .strict()
-                .array(),
-            })
-            .strict(),
-        }),
-      );
+      }).withStructuredOutput(outputSchema);
 
       const prompt = ChatPromptTemplate.fromMessages([
         ['system', context],
