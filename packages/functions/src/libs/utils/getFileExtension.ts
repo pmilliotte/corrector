@@ -20,6 +20,9 @@ export const getFileSUpposedContentType = (
   if (extension === 'png') {
     return 'image/png';
   }
+  if (extension === 'pdf') {
+    return 'application/pdf';
+  }
 
   return;
 };

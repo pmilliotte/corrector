@@ -18,6 +18,7 @@ import { examSubjectPresignedUrlGet } from './trpc/examSubjectPresignedUrlGet';
 import { examUploadedFileDelete } from './trpc/examUploadedFileDelete';
 import { examUploadedFilePresignedUrlGet } from './trpc/examUploadedFilePresignedUrlGet';
 import { examUploadedFilePresignedUrlPost } from './trpc/examUploadedFilePresignedUrlPost';
+import { examUploadFiles } from './trpc/examUploadFiles';
 import { organizationList } from './trpc/organizationList';
 import { studentCreate } from './trpc/studentCreate';
 
@@ -40,6 +41,7 @@ export const mainRouter = router({
   examSubjectPresignedUrlGet,
   examUploadedFilePresignedUrlGet,
   examSetReady,
+  examUploadFiles,
 });
 
 export const handler = awsLambdaRequestHandler({

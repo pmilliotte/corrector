@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { ExamConfigureProblems } from '~/components/Exams/ExamConfigureProblems';
 import { ExamReady } from '~/components/Exams/ExamReady';
 import { ExamUploadFiles } from '~/components/Exams/ExamUploadFiles';
+import { UploadSelect } from '~/components/Exams/UploadSelect';
 import { Badge, Separator } from '~/components/ui';
 import { trpc } from '~/lib';
 
@@ -34,6 +35,8 @@ export const ExamWrapper = (): ReactElement => {
 
   const ExamContent = () => {
     switch (status) {
+      case 'created':
+        return <UploadSelect exam={exam} />;
       case 'uploadFiles':
         return <ExamUploadFiles exam={exam} />;
       case 'configureProblems':

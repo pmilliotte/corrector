@@ -30,7 +30,7 @@ export const examCreate = authedProcedure
           subject,
           userId,
           organizationId,
-          status: 'uploadFiles',
+          status: 'created',
           problems: { uploadFiles: {}, configureProblems: [] },
         })
         .options({

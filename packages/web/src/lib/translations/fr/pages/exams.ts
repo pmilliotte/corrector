@@ -62,6 +62,8 @@ export const examsMessages = {
       configureProblems: 'Configuration',
       uploadFiles: 'Téléchargement',
       ready: 'Prêt',
+      uploadSubject: 'Téléchargement',
+      created: 'Téléchargement',
     },
     setReady: "Valider l'examen",
     configureProblems: 'Configurer les exercices',
