@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { trpc } from '~/lib';
 
 import { Button } from '../ui';
-import { AssignExamDialog } from './AssignExamDialog';
+import { AssignExamForm } from './AssignExamForm';
 
 type ExamReadyProps = {
   examId: string;
@@ -32,7 +32,7 @@ export const ExamReady = ({ examId }: ExamReadyProps): ReactElement => {
         </Button>
       </div>
       <div>
-        <AssignExamDialog />
+        <AssignExamForm />
       </div>
     </div>
   );
