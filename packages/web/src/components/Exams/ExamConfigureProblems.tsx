@@ -25,11 +25,11 @@ export const ExamConfigureProblems = ({
   const { mutate: checkPdf, isPending: checkPdfPending } =
     trpc.examGeneratePdf.useMutation({
       onSuccess: async () => {
-        const subjectUrl = await utils.examSubjectPresignedUrlGet.fetch({
+        const data = await utils.examSubjectPresignedUrlGet.fetch({
           examId,
         });
 
-        window.open(subjectUrl, '_blank', 'noopener,noreferrer');
+        data.exists && window.open(data.url, '_blank', 'noopener,noreferrer');
       },
     });
 

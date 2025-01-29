@@ -12,7 +12,7 @@ type ExamReadyProps = {
 };
 
 export const ExamReady = ({ examId }: ExamReadyProps): ReactElement => {
-  const { data: url } = trpc.examSubjectPresignedUrlGet.useQuery({
+  const { data } = trpc.examSubjectPresignedUrlGet.useQuery({
     examId,
   });
 
@@ -22,8 +22,10 @@ export const ExamReady = ({ examId }: ExamReadyProps): ReactElement => {
         <Button
           variant="outline"
           className="flex items-center gap-2"
-          onClick={() => window.open(url, '_blank')}
-          disabled={url === undefined}
+          onClick={() =>
+            data?.exists === true && window.open(data.url, '_blank')
+          }
+          disabled={data?.exists !== true}
         >
           <ExternalLink size={16} />
           <FormattedMessage id="exams.ready.open" />

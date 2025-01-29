@@ -18,20 +18,44 @@ export const examUploadedFilePresignedUrlPost = authedProcedure
     z.object({
       fileName: z.string(),
       examId: z.string(),
+      type: z.enum(['uploadFiles', 'uploadSubject']),
     }),
   )
-  .mutation(async ({ ctx: { session }, input: { fileName, examId } }) => {
+  .mutation(async ({ ctx: { session }, input: { fileName, examId, type } }) => {
     await validateExamOwnership({ examId }, session);
 
     const { id: userId } = session;
     const fileExtension = getFileExtension(fileName);
-    const contentType =
-      fileExtension !== undefined
-        ? getFileSUpposedContentType(fileExtension)
-        : undefined;
 
-    if (contentType === undefined) {
+    if (fileExtension === undefined) {
       throw new TRPCError({ code: 'BAD_REQUEST' });
+    }
+
+    const contentType = getFileSUpposedContentType(fileExtension);
+
+    if (
+      contentType === undefined ||
+      (type === 'uploadSubject' && fileExtension !== 'pdf') ||
+      (type === 'uploadFiles' && !['jpg', 'png'].includes(fileExtension))
+    ) {
+      throw new TRPCError({ code: 'BAD_REQUEST' });
+    }
+
+    if (type === 'uploadSubject') {
+      const fileKey = `users/${userId}/exams/${examId}/subject.pdf`;
+      // Metadata arguments must start with x-amz-meta and be written in kebab case
+      const metadata: Metadata = {
+        'x-amz-meta-original-file-name': encodeURIComponent(fileName),
+      };
+
+      const { url, fields } = await requestSignedUrlPost({
+        contentType,
+        fileKey,
+        metadata,
+        bucketName: Resource['exam-bucket'].name,
+      });
+
+      return { url, fields };
     }
 
     const fileDateWithExtension = `${Date.now()}.${fileExtension}`;

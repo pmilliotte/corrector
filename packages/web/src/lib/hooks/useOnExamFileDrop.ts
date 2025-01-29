@@ -3,7 +3,8 @@ import { toast } from 'sonner';
 
 import { trpc, uploadFileOnS3, useIntl } from '../utils';
 
-export const useOnProblemDrop = (
+export const useOnExamFileDrop = (
+  type: 'uploadFiles' | 'uploadSubject',
   callback?: () => PromiseLike<void>,
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 ) => {
@@ -18,7 +19,7 @@ export const useOnProblemDrop = (
       }),
       {
         description: t.formatMessage({
-          id: 'exams.upload.problem.error',
+          id: 'exams.upload.fileError',
         }),
         action: {
           label: t.formatMessage({ id: 'common.close' }),
@@ -38,6 +39,7 @@ export const useOnProblemDrop = (
           {
             fileName: uploadedFile.name,
             examId,
+            type,
           },
           {
             onSuccess: ({ url, fields }) => {
@@ -54,7 +56,7 @@ export const useOnProblemDrop = (
           },
         );
       },
-    [mutate, onError, callback],
+    [mutate, onError, callback, type],
   );
 
   return { onDrop, isLoading };

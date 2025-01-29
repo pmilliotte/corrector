@@ -14,7 +14,7 @@ type ExamUploadedFileProps = {
   examId: string;
 };
 
-export const ExamUploadedFile = ({
+export const ExamUploadedImage = ({
   fileName,
   examId,
   fileStatus,
@@ -53,7 +53,7 @@ export const ExamUploadedFile = ({
   }, [utils, fileStatus]);
 
   return (
-    <div className="relative" key={fileName}>
+    <div className="relative">
       <div className="w-[250px] aspect-[3/4] border rounded-lg overflow-hidden relative">
         <div
           style={{ backgroundImage: `url(${url})` }}

@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { ExamConfigureProblems } from '~/components/Exams/ExamConfigureProblems';
 import { ExamReady } from '~/components/Exams/ExamReady';
 import { ExamUploadFiles } from '~/components/Exams/ExamUploadFiles';
+import { ExamUploadSubject } from '~/components/Exams/ExamUploadSubject';
 import { UploadSelect } from '~/components/Exams/UploadSelect';
 import { Badge, Separator } from '~/components/ui';
 import { trpc } from '~/lib';
@@ -39,6 +40,8 @@ export const ExamWrapper = (): ReactElement => {
         return <UploadSelect exam={exam} />;
       case 'uploadFiles':
         return <ExamUploadFiles exam={exam} />;
+      case 'uploadSubject':
+        return <ExamUploadSubject exam={exam} />;
       case 'configureProblems':
         return (
           // @ts-ignore Type instantiation is excessively deep and possibly infinite

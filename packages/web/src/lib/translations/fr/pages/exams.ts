@@ -1,7 +1,10 @@
 export const examsMessages = {
   exams: {
     importExam: 'Télécharger le sujet',
-    dragAndDrop: "Cliquer ou déposer l'exercice (.png, .jpg, .jpeg)",
+    dragAndDrop: {
+      problem: "Cliquer ou déposer l'exercice (.png, .jpg, .jpeg)",
+      subject: 'Cliquer ou déposer le sujet (.pdf)',
+    },
     name: 'Nom',
     statement: 'Énoncé',
     solution: 'Solution',
@@ -50,6 +53,7 @@ export const examsMessages = {
     },
     exam: { title: '{subject} - {name}' },
     upload: {
+      fileError: "Le fichier n'a pas été téléchargé",
       problem: {
         label: "Télécharger les exercices sous forme d'images",
         error: "Le fichier n'a pas été téléchargé",

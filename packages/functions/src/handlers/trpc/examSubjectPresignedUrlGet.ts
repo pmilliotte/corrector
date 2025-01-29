@@ -1,4 +1,4 @@
-import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { GetObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Resource } from 'sst';
 import { z } from 'zod';
@@ -20,6 +20,14 @@ export const examSubjectPresignedUrlGet = authedProcedure
 
     const Key = `users/${userId}/exams/${examId}/subject.pdf`;
 
+    try {
+      await s3Client.send(
+        new HeadObjectCommand({ Bucket: Resource['exam-bucket'].name, Key }),
+      );
+    } catch {
+      return { exists: false as const };
+    }
+
     const url = await getSignedUrl(
       s3Client,
       new GetObjectCommand({
@@ -29,5 +37,5 @@ export const examSubjectPresignedUrlGet = authedProcedure
       { expiresIn: 300 },
     );
 
-    return url;
+    return { exists: true as const, url };
   });

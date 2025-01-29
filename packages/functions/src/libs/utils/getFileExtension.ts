@@ -1,4 +1,6 @@
-export const getFileExtension = (fileName: string): string | undefined => {
+export const getFileExtension = (
+  fileName: string,
+): 'jpg' | 'png' | 'pdf' | undefined => {
   const [extension] = fileName.split('.').slice(-1);
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -8,7 +10,16 @@ export const getFileExtension = (fileName: string): string | undefined => {
 
   const extensionLowerCase = extension.toLowerCase();
 
-  return extensionLowerCase === 'jpeg' ? 'jpg' : extensionLowerCase;
+  if (extensionLowerCase === 'jpeg') {
+    return 'jpg';
+  }
+
+  if (!['pdf', 'png'].includes(extensionLowerCase)) {
+    return undefined;
+  }
+
+  // @ts-expect-error Should cast return type
+  return extensionLowerCase;
 };
 
 export const getFileSUpposedContentType = (

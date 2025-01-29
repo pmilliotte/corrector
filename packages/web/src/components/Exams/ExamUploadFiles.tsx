@@ -5,11 +5,11 @@ import { FormattedMessage } from 'react-intl';
 
 import { Exam } from '@corrector/functions';
 
-import { trpc, useOnProblemDrop } from '~/lib';
+import { trpc, useIntl, useOnExamFileDrop } from '~/lib';
 
 import { Button, ScrollArea, ScrollBar } from '../ui';
 import { Upload } from '../Upload';
-import { ExamUploadedFile } from './ExamUploadedFile';
+import { ExamUploadedImage } from './ExamUploadedImage';
 
 type ExamUploadedFilesProps = {
   exam: Exam;
@@ -19,9 +19,13 @@ export const ExamUploadFiles = ({
   exam,
 }: ExamUploadedFilesProps): ReactElement => {
   const utils = trpc.useUtils();
-  const { onDrop, isLoading: dropLoading } = useOnProblemDrop(async () => {
-    await utils.examGet.invalidate();
-  });
+  const t = useIntl();
+  const { onDrop, isLoading: dropLoading } = useOnExamFileDrop(
+    'uploadFiles',
+    async () => {
+      await utils.examGet.invalidate();
+    },
+  );
   const { mutate: updateExam, isPending: updateExamPending } =
     trpc.examConfigureProblems.useMutation({
       onSuccess: async () => {
@@ -38,14 +42,19 @@ export const ExamUploadFiles = ({
         <FormattedMessage id="common.step" values={{ step: 1 }} /> :{' '}
         <FormattedMessage id="exams.upload.problem.label" />
       </div>
-      <Upload onDrop={onDrop({ examId: exam.id })} loading={dropLoading} />
+      <Upload
+        onDrop={onDrop({ examId: exam.id })}
+        loading={dropLoading}
+        label={t.formatMessage({ id: 'exams.dragAndDrop.problem' })}
+        accept="image"
+      />
       <div className="relative h-full">
         <ScrollArea>
           <div className="flex space-x-4 py-2 pb-2">
             {compact(Object.entries(exam.problems.uploadFiles)).map(
               ([fileName, file]) =>
                 file !== undefined && (
-                  <ExamUploadedFile
+                  <ExamUploadedImage
                     key={fileName}
                     examId={exam.id}
                     fileName={fileName}

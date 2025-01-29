@@ -1,7 +1,6 @@
 import { Loader2, Upload as UploadIcon } from 'lucide-react';
 import { ReactElement } from 'react';
 import Dropzone from 'react-dropzone';
-import { FormattedMessage } from 'react-intl';
 
 import { MAX_FILE_SIZE_BYTES } from '@corrector/shared';
 
@@ -10,12 +9,23 @@ import { cn } from '~/lib';
 type UploadProps = {
   onDrop: (acceptedFiles: File[]) => void;
   loading: boolean;
+  label: string;
+  accept: 'image' | 'pdf';
 };
 
-export const Upload = ({ onDrop, loading }: UploadProps): ReactElement => (
+export const Upload = ({
+  onDrop,
+  loading,
+  label,
+  accept,
+}: UploadProps): ReactElement => (
   <Dropzone
     onDrop={onDrop}
-    accept={{ 'image/png': ['.png'], 'image/jpeg': ['.jpg', '.jpeg'] }}
+    accept={
+      accept === 'image'
+        ? { 'image/png': ['.png'], 'image/jpeg': ['.jpg', '.jpeg'] }
+        : { 'application/pdf': ['.pdf'] }
+    }
     multiple={false}
     maxFiles={1}
     maxSize={MAX_FILE_SIZE_BYTES}
@@ -45,9 +55,7 @@ export const Upload = ({ onDrop, loading }: UploadProps): ReactElement => (
               />
             )}
           </div>
-          <p className="text-muted-foreground">
-            <FormattedMessage id="exams.dragAndDrop" />
-          </p>
+          <p className="text-muted-foreground">{label}</p>
         </div>
       </div>
     )}

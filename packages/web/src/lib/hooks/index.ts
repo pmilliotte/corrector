@@ -1,5 +1,5 @@
 export * from './useBreakpoint';
 export * from './useMobile';
-export * from './useOnProblemDrop';
+export * from './useOnExamFileDrop';
 export * from './useOrganizations';
 export * from './useSidebarItems';
