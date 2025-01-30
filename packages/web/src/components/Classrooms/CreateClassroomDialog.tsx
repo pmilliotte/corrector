@@ -3,6 +3,7 @@ import { Loader2, Plus, Save } from 'lucide-react';
 import { ReactElement, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import { DIVISIONS } from '@corrector/shared';
@@ -27,7 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui';
-import { trpc, useIntl, useUserOrganizations } from '~/lib';
+import { AppRoute, trpc, useIntl, useUserOrganizations } from '~/lib';
 
 const formSchema = z.object({
   classroomName: z.string().min(1),
@@ -37,13 +38,12 @@ const formSchema = z.object({
 
 export const CreateClassroomDialog = (): ReactElement => {
   const t = useIntl();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const utils = trpc.useUtils();
   const { selectedOrganization } = useUserOrganizations();
   const { mutate, isPending } = trpc.classroomCreate.useMutation({
-    onSuccess: async () => {
-      await utils.classroomList.invalidate();
-      setOpen(false);
+    onSuccess: ({ id }) => {
+      navigate(`${AppRoute.Classrooms}/${id}`);
     },
   });
   const form = useForm<z.infer<typeof formSchema>>({

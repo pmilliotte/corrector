@@ -1,3 +1,4 @@
+export * from './classroomExam';
 export * from './classrooms';
 export * from './error';
 export * from './exams';

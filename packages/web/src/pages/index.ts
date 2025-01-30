@@ -1,4 +1,6 @@
+export * from './ClassroomExam';
 export * from './Classrooms';
+export * from './ClassroomWrapper';
 export * from './Error';
 export * from './Exams';
 export * from './ExamWrapper';

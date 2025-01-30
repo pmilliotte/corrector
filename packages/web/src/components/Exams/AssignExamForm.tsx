@@ -6,6 +6,7 @@ import { BookUser, CalendarIcon } from 'lucide-react';
 import { ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import {
@@ -27,29 +28,55 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui';
-import { cn, trpc, useIntl, useSession, useUserOrganizations } from '~/lib';
+import {
+  AppRoute,
+  cn,
+  trpc,
+  useIntl,
+  useSession,
+  useUserOrganizations,
+} from '~/lib';
 
 import { LoadingButton } from '../shared';
 
+type AssignExamFormProps = {
+  examId: string;
+};
+
 const formSchema = z.object({
-  classId: z.string(),
-  date: z.date(),
+  classroomId: z.string(),
+  examDate: z.date(),
 });
 
-export const AssignExamForm = (): ReactElement => {
+export const AssignExamForm = ({
+  examId,
+}: AssignExamFormProps): ReactElement => {
   const t = useIntl();
+  const navigate = useNavigate();
   const { selectedOrganization } = useUserOrganizations();
   const { id: userId } = useSession();
   const { data: classrooms } = trpc.classroomList.useQuery({
     organizationId: selectedOrganization.id,
     userId,
   });
+  const { mutate, isPending } = trpc.examAssignToClassroom.useMutation({
+    onSuccess: (_, { classroomId }) => {
+      navigate(
+        `${AppRoute.Classrooms}/${classroomId}/${AppRoute.Exams}/${examId}`,
+      );
+    },
+  });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = ({ classId, date }: z.infer<typeof formSchema>) => {
-    console.log({ classId, date });
+  const onSubmit = ({ classroomId, examDate }: z.infer<typeof formSchema>) => {
+    mutate({
+      classroomId,
+      examDate: examDate.toISOString(),
+      examId,
+      organizationId: selectedOrganization.id,
+    });
   };
 
   const classroomByDivision = groupBy(classrooms, 'division');
@@ -65,11 +92,11 @@ export const AssignExamForm = (): ReactElement => {
         </p>
         <FormField
           control={form.control}
-          name="classId"
+          name="classroomId"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormLabel htmlFor="classId">
+                <FormLabel htmlFor="classroomId">
                   <FormattedMessage id="exams.ready.selectClassroom.class" />
                 </FormLabel>
                 <FormControl>
@@ -110,7 +137,7 @@ export const AssignExamForm = (): ReactElement => {
         />
         <FormField
           control={form.control}
-          name="date"
+          name="examDate"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>
@@ -150,9 +177,9 @@ export const AssignExamForm = (): ReactElement => {
           )}
         />
         <LoadingButton
-          onClick={() => console.log('save')}
+          type="submit"
+          loading={isPending}
           label={t.formatMessage({ id: 'exams.ready.distribute' })}
-          loading={false}
           Icon={BookUser}
         >
           <FormattedMessage id="exams.ready.distribute" />

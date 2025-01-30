@@ -32,7 +32,7 @@ export const ExamReady = ({ examId }: ExamReadyProps): ReactElement => {
         </Button>
       </div>
       <div>
-        <AssignExamForm />
+        <AssignExamForm examId={examId} />
       </div>
     </div>
   );

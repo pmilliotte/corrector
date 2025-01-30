@@ -3,7 +3,9 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { AppRoute } from '~/lib';
 import {
+  ClassroomExam,
   Classrooms,
+  ClassroomWrapper,
   Error,
   Exams,
   ExamWrapper,
@@ -12,7 +14,6 @@ import {
   People,
   Settings,
 } from '~/pages';
-import { ClassroomWrapper } from '~/pages/ClassroomWrapper';
 
 import { Layout } from '../Layout';
 import { AuthenticationRequired } from './AuthenticationRequired';
@@ -25,6 +26,10 @@ export const AppRoutes = (): ReactElement => (
         <Route element={<Layout />}>
           <>
             <Route path={AppRoute.People} element={<People />} />
+            <Route
+              path={`${AppRoute.Classrooms}/:classroomId/${AppRoute.Exams}/:examId`}
+              element={<ClassroomExam />}
+            />
             <Route
               path={`${AppRoute.Classrooms}/:classroomId`}
               element={<ClassroomWrapper />}

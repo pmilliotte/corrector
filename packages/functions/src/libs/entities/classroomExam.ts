@@ -2,7 +2,7 @@ import { Entity, FormattedItem, schema, string } from 'dynamodb-toolbox';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
 
-import { OrganizationTable } from '../tables';
+import { ExamTable } from '../tables';
 
 export const CLASSROOM_EXAM_ENTITY_NAME = 'ClassroomExam';
 
@@ -10,6 +10,7 @@ const classroomExamSchema = schema({
   classroomId: string().key(),
   organizationId: string().key(),
   examId: string().key(),
+  examDate: string(),
 });
 
 export const computeClassroomExamEntityPartitionKey = ({
@@ -30,7 +31,7 @@ export const computeClassroomExamEntitySortKey = ({
 export const ClassroomExamEntity = new Entity({
   name: CLASSROOM_EXAM_ENTITY_NAME,
   schema: classroomExamSchema,
-  table: OrganizationTable,
+  table: ExamTable,
   entityAttributeHidden: false,
   computeKey: ({ classroomId, examId, organizationId }) => ({
     [PARTITION_KEY]: computeClassroomExamEntityPartitionKey({

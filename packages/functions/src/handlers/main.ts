@@ -6,6 +6,7 @@ import { classroomCreate } from './trpc/classroomCreate';
 import { classroomGet } from './trpc/classroomGet';
 import { classroomList } from './trpc/classroomList';
 import { classroomStudentList } from './trpc/classroomStudentList';
+import { examAssignToClassroom } from './trpc/examAssignToClassroom';
 import { examConfigureProblems } from './trpc/examConfigureProblems';
 import { examCreate } from './trpc/examCreate';
 import { examGet } from './trpc/examGet';
@@ -44,6 +45,7 @@ export const mainRouter = router({
   examUploadedFilePresignedUrlGet,
   examSetReady,
   examUploadFiles,
+  examAssignToClassroom,
 });
 
 export const handler = awsLambdaRequestHandler({
