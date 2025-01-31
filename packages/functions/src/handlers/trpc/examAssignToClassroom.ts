@@ -1,7 +1,11 @@
 import { PutItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
-import { ClassroomExamEntity, validateOrganizationAccess } from '~/libs';
+import {
+  ClassroomExamEntity,
+  validateExamOwnership,
+  validateOrganizationAccess,
+} from '~/libs';
 import { authedProcedure } from '~/trpc';
 
 export const examAssignToClassroom = authedProcedure
@@ -19,6 +23,11 @@ export const examAssignToClassroom = authedProcedure
       input: { organizationId, classroomId, examId, examDate },
     }) => {
       validateOrganizationAccess(organizationId, session);
+      const { name, subject } = await validateExamOwnership(
+        { examId },
+        session,
+      );
+      const { id: userId } = session;
 
       await ClassroomExamEntity.build(PutItemCommand)
         .item({
@@ -26,6 +35,9 @@ export const examAssignToClassroom = authedProcedure
           classroomId,
           organizationId,
           examDate,
+          userId,
+          name,
+          subject,
         })
         .options({
           condition: {

@@ -3,6 +3,7 @@ import { ReactElement, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
+import { ClassroomExams } from '~/components/Classrooms/ClassroomExams';
 import { Students } from '~/components/Classrooms/Students';
 import {
   Separator,
@@ -83,7 +84,7 @@ export const ClassroomWrapper = (): ReactElement => {
           <Students classroomId={classroomId} />
         </TabsContent>
         <TabsContent value="exams" className="h-full">
-          <></>
+          <ClassroomExams classroomId={classroomId} />
         </TabsContent>
       </Tabs>
     </div>

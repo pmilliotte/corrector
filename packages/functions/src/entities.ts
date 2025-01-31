@@ -1,1 +1,1 @@
-export type { Classroom, Exam } from './libs';
+export type { Classroom, ClassroomExam, Exam } from './libs';
