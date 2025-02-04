@@ -30,7 +30,6 @@ import {
   FormItem,
   FormLabel,
   Input,
-  Textarea,
 } from '../ui';
 
 type UpdateStatementDialogProps = {
@@ -107,7 +106,7 @@ export const UpdateStatementDialog = ({
               </DialogDescription>
             </DialogHeader>
             <div className="my-2 flex flex-col gap-2">
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="text"
                 render={({ field }) => (
@@ -117,7 +116,7 @@ export const UpdateStatementDialog = ({
                     </FormControl>
                   </FormItem>
                 )}
-              />
+              /> */}
               {statement.type === 'question' && (
                 <>
                   <FormField

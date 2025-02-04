@@ -8,8 +8,6 @@ import { FormattedStatementWithMarks } from '@corrector/shared';
 import { trpc } from '~/lib';
 
 import { Badge, Button, Separator } from '../ui';
-import { DeleteStatementDialog } from './DeleteStatementDialog';
-import { InsertStatementDialog } from './InsertStatementDialog';
 import { UpdateStatementDialog } from './UpdateStatementDialog';
 
 type ExamConfigureProblemsProps = {
@@ -49,11 +47,11 @@ export const ExamConfigureProblems = ({
 
   const StatementActions = ({
     statement,
-    position,
+    // position,
     problemId,
   }: {
     statement: FormattedStatementWithMarks;
-    position: number;
+    // position: number;
     problemId: string;
   }) => (
     <div className="flex items-center gap-1">
@@ -62,16 +60,16 @@ export const ExamConfigureProblems = ({
         examId={examId}
         problemId={problemId}
       />
-      <DeleteStatementDialog
+      {/* <DeleteStatementDialog
         examId={examId}
         statementId={statement.id}
         problemId={problemId}
-      />
-      <InsertStatementDialog
+      /> */}
+      {/* <InsertStatementDialog
         position={position}
         examId={examId}
         problemId={problemId}
-      />
+      /> */}
     </div>
   );
 
@@ -94,31 +92,33 @@ export const ExamConfigureProblems = ({
                   }, 0),
                 }}
               />
-              <InsertStatementDialog
+              {/* <InsertStatementDialog
                 position={0}
                 examId={examId}
                 problemId={problemId}
-              />
+              /> */}
             </div>
             <Separator />
           </div>
           <div className="flex flex-col">
-            {content.map((statement, index) =>
+            {content.map((statement, _index) =>
               statement.type === 'statement' ? (
                 <div
                   key={statement.id}
                   className="flex justify-between gap-2 hover:bg-muted rounded-lg p-2"
                 >
-                  <div className="min-h-[36px]">
+                  <div
+                  // className="min-h-[36px]"
+                  >
                     <MathJax>{statement.text}</MathJax>
                   </div>
-                  <div>
+                  {/* <div>
                     <StatementActions
                       statement={statement}
                       position={index + 1}
                       problemId={problemId}
                     />
-                  </div>
+                  </div> */}
                 </div>
               ) : (
                 <div
@@ -143,7 +143,7 @@ export const ExamConfigureProblems = ({
                     </Badge>
                     <StatementActions
                       statement={statement}
-                      position={index + 1}
+                      // position={index + 1}
                       problemId={problemId}
                     />
                   </div>
