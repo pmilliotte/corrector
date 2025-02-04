@@ -41,6 +41,10 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Dynamo"
     }
+    "pdf-split-to-images": {
+      "name": string
+      "type": "sst.aws.Function"
+    }
     "pre-token-generation": {
       "name": string
       "type": "sst.aws.Function"
