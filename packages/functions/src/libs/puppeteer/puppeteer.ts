@@ -11,7 +11,7 @@ import puppeteer from 'puppeteer-core';
 import sanitizeHtml from 'sanitize-html';
 
 const YOUR_LOCAL_CHROMIUM_PATH =
-  '/tmp/localChromium/chromium/mac_arm-1410147/chrome-mac/Chromium.app/Contents/MacOS/Chromium';
+  '/tmp/localChromium/chromium/mac_arm-1415564/chrome-mac/Chromium.app/Contents/MacOS/Chromium';
 
 const LATEX_REGEX = /\$([^$]+)\$/g; // Inline math $...$
 const BLOCK_LATEX_REGEX = /\$\$([^$]+)\$\$/g; // Block math $$...$$
@@ -68,6 +68,7 @@ export const generatePdfWithPuppeteer = async (
     })
     .join('');
 
+  // npx @puppeteer/browsers install chromium@latest --path /tmp/localChromium à la racine
   const browser = await puppeteer.launch({
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
