@@ -41,7 +41,9 @@ Important : Tous les nombres, variables ou expressions mathématiques doivent ê
 
 Par exemple : 
 - une expression mathématique de la forme "A = ..." doit systématiquement être délimitée : "$A = \\ldots$" ;
-- une suite de nombres de la forme "17 + 5" doit systématiquement être délimitée : "$17 + 5$" ;`;
+- une suite de nombres de la forme "17 + 5" doit systématiquement être délimitée : "$17 + 5$" ;
+
+Pour chaque question tu dois aussi renvoyer le nombre de lignes nécessaires à un élève qui écrit gros pour répondre de manière détaillée.`;
 
   const humanProblemImageMessage = new HumanMessage({
     content: [
