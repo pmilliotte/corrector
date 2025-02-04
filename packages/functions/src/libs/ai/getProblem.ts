@@ -35,11 +35,13 @@ Un exemple d'output est le suivant :
 }} 
 </output>
 
-Important : Tous les nombres, variables ou expressions mathématiques doivent être exprimés en langage LaTeX (ou KaTeX ou MathJax).
-
-L'utilisation du langage LaTeX (ou MathJax) doit systématiquement et impérativement inclure les délimiteurs suivants :
+Important : Tous les nombres, variables ou expressions mathématiques doivent être exprimés en langage LaTeX (ou KaTeX ou MathJax) et délimités comme suit :
 - Un seul symbole dollar '$' pour du rendu inline ;
-- Deux symboles dollar '$$' pour du rendu en bloc.`;
+- Deux symboles dollar '$$' pour du rendu en bloc.
+
+Par exemple : 
+- une expression mathématique de la forme "A = ..." doit systématiquement être délimitée : "$A = \\ldots$" ;
+- une suite de nombres de la forme "17 + 5" doit systématiquement être délimitée : "$17 + 5$" ;`;
 
   const humanProblemImageMessage = new HumanMessage({
     content: [
