@@ -11,6 +11,7 @@ enum Route {
   MainGet = 'GET /{proxy+}',
   MainPost = 'POST /{proxy+}',
   ExamGeneratePdf = 'POST /examGeneratePdf',
+  PdfSplitToImages = 'POST /pdfSplitToImages',
 }
 
 export const api = new sst.aws.ApiGatewayV2('api', {
@@ -66,6 +67,33 @@ const generatePdf = new sst.aws.Function('exam-generate-pdf', {
   nodejs: { install: ['@sparticuz/chromium'] },
 });
 api.route(Route.ExamGeneratePdf, generatePdf.arn, {
+  auth: {
+    jwt: {
+      authorizer: jwtAuthorizer.id,
+    },
+  },
+});
+
+// const graphicsmagickLayer = new LayerVersion('graphicsmagick-layer', {
+//   layerName: 'arn:aws:lambda:eu-west-1:175033217214:layer:graphicsmagick:2',
+// });
+// const ghostscriptLayer = new LayerVersion('ghostscript-layer', {
+//   layerName: 'arn:aws:lambda:eu-west-1:764866452798:layer:ghostscript:15',
+// });
+const pdfSplitToImages = new sst.aws.Function('pdf-split-to-images', {
+  handler: 'packages/functions/src/handlers/pdfSplitToImages.handler',
+  link: resources,
+  timeout: '3 minutes',
+  architecture: 'x86_64',
+  environment: {
+    GM_PATH: process.env.GM_PATH ?? '',
+  },
+  layers: [
+    'arn:aws:lambda:eu-west-1:175033217214:layer:graphicsmagick:2',
+    'arn:aws:lambda:eu-west-1:764866452798:layer:ghostscript:15',
+  ],
+});
+api.route(Route.PdfSplitToImages, pdfSplitToImages.arn, {
   auth: {
     jwt: {
       authorizer: jwtAuthorizer.id,

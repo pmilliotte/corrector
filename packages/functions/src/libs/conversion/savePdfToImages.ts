@@ -2,28 +2,20 @@ import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { fromBuffer } from 'pdf2pic';
 import { Readable } from 'stream';
 
-import { PDF_FILE_NAME } from '@corrector/shared';
-
 import { s3Client } from '~/clients/s3';
 
 export const savePdfToImages = async ({
   bucketName,
-  prefix,
+  key,
+  destination,
 }: {
   bucketName: string;
-  prefix: string;
-}): Promise<{
-  id?: string;
-  originalFileName?: string;
-  uploadedAt?: string;
-}> => {
-  const {
-    Body: rawData,
-    Metadata,
-    LastModified,
-  } = await s3Client.send(
+  key: string;
+  destination: string;
+}): Promise<void> => {
+  const { Body: rawData } = await s3Client.send(
     new GetObjectCommand({
-      Key: `${prefix}/${PDF_FILE_NAME}.pdf`,
+      Key: key,
       Bucket: bucketName,
     }),
   );
@@ -45,7 +37,7 @@ export const savePdfToImages = async ({
     quality: 100,
   });
 
-  convert.setGMClass(process.env.GM_PATH ?? '');
+  convert.setGMClass('/opt/homebrew/Cellar/graphicsmagick/1.3.45_1/bin/');
 
   const response = await convert.bulk(-1, {
     responseType: 'buffer',
@@ -55,7 +47,7 @@ export const savePdfToImages = async ({
     response.map(({ buffer }, index) =>
       s3Client.send(
         new PutObjectCommand({
-          Key: `${prefix}/images/page-${index}.jpeg`,
+          Key: `${destination}/page-${index}.jpeg`,
           Bucket: bucketName,
           ContentType: 'image/jpeg',
           Body: buffer,
@@ -63,13 +55,4 @@ export const savePdfToImages = async ({
       ),
     ),
   );
-
-  return {
-    id: Metadata?.['created-uuid'],
-    originalFileName:
-      Metadata?.['original-file-name'] !== undefined
-        ? decodeURIComponent(Metadata['original-file-name'])
-        : undefined,
-    uploadedAt: LastModified?.toISOString(),
-  };
 };
