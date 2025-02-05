@@ -21,6 +21,10 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Bucket"
     }
+    "exam-configure-problems": {
+      "name": string
+      "type": "sst.aws.Function"
+    }
     "exam-file-problem-uploaded": {
       "name": string
       "type": "sst.aws.Function"
@@ -33,7 +37,7 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Dynamo"
     }
-    "main-get": {
+    "main": {
       "name": string
       "type": "sst.aws.Function"
     }

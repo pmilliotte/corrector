@@ -11,6 +11,7 @@ enum Route {
   MainGet = 'GET /{proxy+}',
   MainPost = 'POST /{proxy+}',
   ExamGeneratePdf = 'POST /examGeneratePdf',
+  ExamConfigureProblems = 'POST /examConfigureProblems',
   PdfSplitToImages = 'POST /pdfSplitToImages',
 }
 
@@ -40,7 +41,7 @@ const resources = [
   openAiProjectId,
 ];
 
-const main = new sst.aws.Function('main-get', {
+const main = new sst.aws.Function('main', {
   handler: 'packages/functions/src/handlers/main.handler',
   link: resources,
   architecture: 'arm64',
@@ -53,6 +54,20 @@ api.route(Route.MainGet, main.arn, {
   },
 });
 api.route(Route.MainPost, main.arn, {
+  auth: {
+    jwt: {
+      authorizer: jwtAuthorizer.id,
+    },
+  },
+});
+
+const examConfigureProblems = new sst.aws.Function('exam-configure-problems', {
+  handler: 'packages/functions/src/handlers/examConfigureProblems.handler',
+  link: resources,
+  timeout: '29 seconds',
+  architecture: 'arm64',
+});
+api.route(Route.ExamConfigureProblems, examConfigureProblems.arn, {
   auth: {
     jwt: {
       authorizer: jwtAuthorizer.id,

@@ -8,7 +8,6 @@ import { classroomGet } from './trpc/classroomGet';
 import { classroomList } from './trpc/classroomList';
 import { classroomStudentList } from './trpc/classroomStudentList';
 import { examAssignToClassroom } from './trpc/examAssignToClassroom';
-import { examConfigureProblems } from './trpc/examConfigureProblems';
 import { examCreate } from './trpc/examCreate';
 import { examGet } from './trpc/examGet';
 import { examList } from './trpc/examList';
@@ -39,7 +38,6 @@ export const mainRouter = router({
   examUploadedFilePresignedUrlPost,
   examUploadedFileDelete,
   examUploadedSubjectDelete,
-  examConfigureProblems,
   examStatementDelete,
   examStatementUpdate,
   examSubjectPresignedUrlGet,
