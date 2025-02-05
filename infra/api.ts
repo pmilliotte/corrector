@@ -79,7 +79,9 @@ const generatePdf = new sst.aws.Function('exam-generate-pdf', {
   handler: 'packages/functions/src/handlers/examGeneratePdf.handler',
   link: resources,
   architecture: 'x86_64',
-  nodejs: { install: ['@sparticuz/chromium'] },
+  nodejs: {
+    install: ['@sparticuz/chromium'],
+  },
 });
 api.route(Route.ExamGeneratePdf, generatePdf.arn, {
   auth: {

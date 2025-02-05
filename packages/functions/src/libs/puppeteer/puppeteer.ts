@@ -39,9 +39,11 @@ export const generatePdfWithPuppeteer = async (
   {
     problems,
     mark,
+    src,
   }: {
     problems: { content: Statement[] }[];
     mark: number;
+    src: string;
   },
   // outputPath: string,
 ): Promise<Buffer> => {
@@ -180,6 +182,8 @@ export const generatePdfWithPuppeteer = async (
         width: 48px;
         border: 1px solid;
         box-sizing: border-box;
+        padding: 1px;
+        content: url("${src}");
     }
     .mark {
         height: 48px;
@@ -209,7 +213,6 @@ export const generatePdfWithPuppeteer = async (
       <div class="mark">
         <div>/ ${mark}</div>
       </div>
-      <div class="qr-code"></div>
     </div>
   </div>`;
 

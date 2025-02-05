@@ -1,11 +1,13 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { TRPCError } from '@trpc/server';
 import { GetItemCommand } from 'dynamodb-toolbox';
+import { toDataURL } from 'qrcode';
 import { Resource } from 'sst';
 import { z } from 'zod';
 
 import { s3Client } from '~/clients';
-import { ExamEntity, generatePdfWithPuppeteer } from '~/libs';
+import { ExamEntity } from '~/libs';
+import { generatePdfWithPuppeteer } from '~/libs/puppeteer';
 import { authedProcedure } from '~/trpc';
 
 export const examGeneratePdf = authedProcedure
@@ -42,9 +44,12 @@ export const examGeneratePdf = authedProcedure
       0,
     );
 
+    const src = await toDataURL(exam.name);
+
     const pdfBuffer = await generatePdfWithPuppeteer({
       problems: configureProblems,
       mark,
+      src,
     });
 
     const fileKey = `users/${userId}/exams/${exam.id}/subject.pdf`;
