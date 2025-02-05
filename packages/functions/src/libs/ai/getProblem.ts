@@ -41,7 +41,8 @@ Important : Tous les nombres, variables ou expressions mathématiques doivent ê
 
 Par exemple : 
 - une expression mathématique de la forme "A = ..." doit systématiquement être délimitée : "$A = \\ldots$" ;
-- une suite de nombres de la forme "17 + 5" doit systématiquement être délimitée : "$17 + 5$" ;
+- une suite de nombres de la forme "17 + 5" même sans symbole LaTeX, doit systématiquement être délimitée : "$17 + 5$" ;
+- une expression mathématique avec des nombres, même sans symbole LaTeX, de la forme "B = 48,5 + (-8)" doit systématiquement être délimitée : "$B = 48,5 + (-8)$" ;
 
 Pour chaque question tu dois aussi renvoyer le nombre de lignes nécessaires à un élève qui écrit gros pour répondre de manière détaillée.`;
 
