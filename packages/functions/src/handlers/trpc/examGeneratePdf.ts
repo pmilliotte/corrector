@@ -1,7 +1,6 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { TRPCError } from '@trpc/server';
 import { GetItemCommand } from 'dynamodb-toolbox';
-import flatMap from 'lodash/flatMap';
 import { Resource } from 'sst';
 import { z } from 'zod';
 
@@ -30,14 +29,7 @@ export const examGeneratePdf = authedProcedure
       problems: { configureProblems },
     } = exam;
 
-    const pdfBuffer = await generatePdfWithPuppeteer(
-      flatMap(
-        configureProblems.map((problem, index) => [
-          { type: 'problem' as const, index: index + 1 },
-          ...problem.content,
-        ]),
-      ),
-    );
+    const pdfBuffer = await generatePdfWithPuppeteer(configureProblems);
 
     const fileKey = `users/${userId}/exams/${exam.id}/subject.pdf`;
 

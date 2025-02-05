@@ -17,10 +17,10 @@ const LATEX_REGEX = /\$([^$]+)\$/g; // Inline math $...$
 const BLOCK_LATEX_REGEX = /\$\$([^$]+)\$\$/g; // Block math $$...$$
 const HTML_TAGS_REGEX = /<[^>]*>/g;
 
-const HEADER_HEIGHT_IN_PX = 64;
-const CONTENT_MARGIN_TOP_IN_PX = HEADER_HEIGHT_IN_PX + 16;
+const HEADER_HEIGHT_IN_PX = 80;
+const CONTENT_MARGIN_TOP_IN_PX = HEADER_HEIGHT_IN_PX + 8;
 const FOOTER_HEIGHT_IN_PX = 56;
-const FONT_FAMILY = 'font-family: Arial, sans-serif;';
+const FONT_FAMILY = 'Arial, sans-serif';
 const FONT_SIZE_IN_PX = '16px';
 
 type Statement =
@@ -33,26 +33,25 @@ type Statement =
       text: string;
       index: number;
       numberOfLines: number;
-    }
-  | {
-      type: 'problem';
-      index: number;
     };
 
 export const generatePdfWithPuppeteer = async (
-  inputStatements: Statement[],
+  problems: { content: Statement[] }[],
   // outputPath: string,
 ): Promise<Buffer> => {
-  const innerHtml = inputStatements
+  const innerHtml = problems
+    .map(
+      (problem, index) =>
+        `
+<div class="problem">
+  <h4 class="title">Exercice ${index + 1}</h4>
+  ${problem.content
     .map(statement => {
-      if (statement.type === 'problem') {
-        return `<h4 class="problem-title">Exercice ${statement.index}</h4>`;
-      }
       const sanitizedInput = getSanitizedInputString(statement.text);
       const htmlString = getStringAsHtml(sanitizedInput);
       switch (statement.type) {
         case 'statement':
-          return `<div class="statement">${htmlString}</div>`;
+          return `<div class="text statement">${htmlString}</div>`;
         case 'question': {
           const numberOfLines = statement.numberOfLines;
           let htmlLines = '';
@@ -60,12 +59,15 @@ export const generatePdfWithPuppeteer = async (
             htmlLines += '<div class="line"></div>';
           }
 
-          return `<div class="statement">${statement.index}) ${htmlString}<div class="answer-container">${htmlLines}</div></div>`;
+          return `<div class="statement"><div class="text">${statement.index}) ${htmlString}</div><div class="answer-container">${htmlLines}</div></div>`;
         }
       }
 
       return `<div>${htmlString}</div>`;
     })
+    .join('')}
+</div>`,
+    )
     .join('');
 
   // npx @puppeteer/browsers install chromium@latest --path /tmp/localChromium à la racine
@@ -100,6 +102,8 @@ export const generatePdfWithPuppeteer = async (
                 .inline-math { display: inline; }
                 .block-math { display: block; text-align: center; }
                 .statement { margin-bottom: 8px; page-break-inside: avoid; }
+                .text { padding: 2px 0; }
+                .title { text-decoration: underline; margin-bottom: 16px; }
 
                 .line {
                   height: 1rem;
@@ -118,7 +122,8 @@ export const generatePdfWithPuppeteer = async (
                   padding: 8px;
                 }
 
-                .problem-title { text-decoration: underline; margin-top: 32px; margin-bottom: 8px; }
+                .problem { margin-bottom: 8px; }
+                .problem:not(:first-child) { margin-top: 32px; }
             </style>
         </head>
         <body>
