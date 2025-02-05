@@ -64,7 +64,7 @@ api.route(Route.MainPost, main.arn, {
 const examConfigureProblems = new sst.aws.Function('exam-configure-problems', {
   handler: 'packages/functions/src/handlers/examConfigureProblems.handler',
   link: resources,
-  timeout: '29 seconds',
+  timeout: '2 minutes',
   architecture: 'arm64',
 });
 api.route(Route.ExamConfigureProblems, examConfigureProblems.arn, {

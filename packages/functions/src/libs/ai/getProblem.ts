@@ -35,7 +35,7 @@ Un exemple d'output est le suivant :
 }} 
 </output>
 
-Important : Tous les nombres, variables ou expressions mathématiques doivent être exprimés en langage LaTeX (ou KaTeX ou MathJax) et délimités comme suit :
+Important : Tous les nombres, variables ou expressions mathématiques doivent être exprimés en langage LaTeX (ou KaTeX ou MathJax) valide et délimités comme suit :
 - Un seul symbole dollar '$' pour du rendu inline ;
 - Deux symboles dollar '$$' pour du rendu en bloc.
 
@@ -43,6 +43,7 @@ Par exemple :
 - une expression mathématique de la forme "A = ..." doit systématiquement être délimitée : "$A = \\ldots$" ;
 - une suite de nombres de la forme "17 + 5" même sans symbole LaTeX, doit systématiquement être délimitée : "$17 + 5$" ;
 - une expression mathématique avec des nombres, même sans symbole LaTeX, de la forme "B = 48,5 + (-8)" doit systématiquement être délimitée : "$B = 48,5 + (-8)$" ;
+- les symboles texte comme "€" à l'intérieur des délimiteurs "$" doivent être exprimés comme : "\\text{{€}}". Donc "920 €" doit être délimité comme suit : "$920 \\text{{€}}$ ;
 
 Pour chaque question tu dois aussi renvoyer le nombre de lignes nécessaires à un élève qui écrit gros pour répondre de manière détaillée.`;
 

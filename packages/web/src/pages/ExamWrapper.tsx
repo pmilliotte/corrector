@@ -39,6 +39,7 @@ export const ExamWrapper = (): ReactElement => {
       case 'created':
         return <UploadSelect exam={exam} />;
       case 'uploadFiles':
+      case 'configureProblemsRequested':
         return <ExamUploadFiles exam={exam} />;
       case 'uploadSubject':
         return <ExamUploadSubject exam={exam} />;

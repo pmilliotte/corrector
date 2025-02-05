@@ -1,6 +1,6 @@
 import compact from 'lodash/compact';
 import { ArrowRight, Loader2 } from 'lucide-react';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { Exam } from '@corrector/functions';
@@ -28,10 +28,28 @@ export const ExamUploadFiles = ({
   );
   const { mutate: updateExam, isPending: updateExamPending } =
     trpc.examConfigureProblems.useMutation({
-      onSuccess: async () => {
+      onSettled: async () => {
         await utils.examGet.invalidate();
       },
     });
+
+  useEffect(() => {
+    if (exam.status !== 'configureProblemsRequested') {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      void utils.examGet.invalidate();
+    }, 2000);
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+    }, 50000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [exam.status, utils.examGet]);
 
   const files = compact(Object.values(exam.problems.uploadFiles));
 
@@ -74,14 +92,13 @@ export const ExamUploadFiles = ({
         onClick={() => updateExam({ id: exam.id })}
         disabled={
           files.length === 0 ||
-          files
-            .map(({ status }) => status)
-            .some(status => status !== 'analyzed') ||
-          updateExamPending
+          files.some(({ status }) => status !== 'analyzed') ||
+          updateExamPending ||
+          exam.status === 'configureProblemsRequested'
         }
       >
         <FormattedMessage id="exams.configureProblems" values={{ step: 2 }} />
-        {updateExamPending ? (
+        {updateExamPending || exam.status === 'configureProblemsRequested' ? (
           <Loader2 className="animate-spin" size={16} />
         ) : (
           <ArrowRight size={16} />

@@ -23,25 +23,11 @@ export const examConfigureProblems = authedProcedure
       throw new TRPCError({ code: 'BAD_REQUEST' });
     }
 
-    const {
-      problems: { uploadFiles },
-    } = exam;
-
-    const configureProblems = compact(
-      Object.values(uploadFiles).map(file => file?.problem),
-    );
-
-    const configureProblemsWithMarks = await addMarks(configureProblems);
-
     await ExamEntity.build(UpdateItemCommand)
       .item({
         id,
         userId,
-        status: 'configureProblems',
-        problems: {
-          uploadFiles: $set({}),
-          configureProblems: $set(configureProblemsWithMarks),
-        },
+        status: 'configureProblemsRequested',
       })
       .options({
         condition: {
@@ -51,11 +37,81 @@ export const examConfigureProblems = authedProcedure
               exists: true,
             },
             {
-              attr: 'status',
-              eq: 'uploadFiles',
+              or: [
+                {
+                  attr: 'status',
+                  eq: 'uploadFiles',
+                },
+                {
+                  attr: 'status',
+                  eq: 'configureProblemsRequested',
+                },
+              ],
             },
           ],
         },
       })
       .send();
+
+    const {
+      problems: { uploadFiles },
+    } = exam;
+
+    const configureProblems = compact(
+      Object.values(uploadFiles).map(file => file?.problem),
+    );
+
+    try {
+      const configureProblemsWithMarks = await addMarks(configureProblems);
+
+      await ExamEntity.build(UpdateItemCommand)
+        .item({
+          id,
+          userId,
+          status: 'configureProblems',
+          problems: {
+            uploadFiles: $set({}),
+            configureProblems: $set(configureProblemsWithMarks),
+          },
+        })
+        .options({
+          condition: {
+            and: [
+              {
+                attr: 'id',
+                exists: true,
+              },
+              {
+                attr: 'status',
+                eq: 'configureProblemsRequested',
+              },
+            ],
+          },
+        })
+        .send();
+    } catch (e) {
+      console.log(e);
+
+      await ExamEntity.build(UpdateItemCommand)
+        .item({
+          id,
+          userId,
+          status: 'uploadFiles',
+        })
+        .options({
+          condition: {
+            and: [
+              {
+                attr: 'id',
+                exists: true,
+              },
+              {
+                attr: 'status',
+                eq: 'configureProblemsRequested',
+              },
+            ],
+          },
+        })
+        .send();
+    }
   });
