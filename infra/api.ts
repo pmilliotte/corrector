@@ -95,13 +95,14 @@ api.route(Route.ExamGeneratePdf, generatePdf.arn, {
 // const ghostscriptLayer = new LayerVersion('ghostscript-layer', {
 //   layerName: 'arn:aws:lambda:eu-west-1:764866452798:layer:ghostscript:15',
 // });
+const GM_PATH = $dev ? '/opt/homebrew/Cellar/graphicsmagick/1.3.45_1/bin/' : '';
 const pdfSplitToImages = new sst.aws.Function('pdf-split-to-images', {
   handler: 'packages/functions/src/handlers/pdfSplitToImages.handler',
   link: resources,
   timeout: '3 minutes',
   architecture: 'x86_64',
   environment: {
-    GM_PATH: process.env.GM_PATH ?? '',
+    GM_PATH,
   },
   layers: [
     'arn:aws:lambda:eu-west-1:175033217214:layer:graphicsmagick:2',

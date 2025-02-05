@@ -37,7 +37,7 @@ export const savePdfToImages = async ({
     quality: 100,
   });
 
-  convert.setGMClass('/opt/homebrew/Cellar/graphicsmagick/1.3.45_1/bin/');
+  convert.setGMClass(process.env.GM_PATH ?? '');
 
   const response = await convert.bulk(-1, {
     responseType: 'buffer',
