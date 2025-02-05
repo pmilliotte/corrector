@@ -37,6 +37,10 @@ export const addMarks = async (
         type: 'text' as const,
         text: JSON.stringify({ problems }),
       },
+      {
+        type: 'text' as const,
+        text: 'Vérifie bien que la somme des notes de toutes les questions de tous les problèmes vaut 20.',
+      },
     ],
   });
 
