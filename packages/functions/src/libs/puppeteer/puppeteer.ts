@@ -18,7 +18,7 @@ const BLOCK_LATEX_REGEX = /\$\$([^$]+)\$\$/g; // Block math $$...$$
 const HTML_TAGS_REGEX = /<[^>]*>/g;
 
 const HEADER_HEIGHT_IN_PX = 80;
-const CONTENT_MARGIN_TOP_IN_PX = HEADER_HEIGHT_IN_PX + 8;
+const CONTENT_MARGIN_TOP_IN_PX = HEADER_HEIGHT_IN_PX + 16;
 const FOOTER_HEIGHT_IN_PX = 56;
 const FONT_FAMILY = 'Arial, sans-serif';
 const FONT_SIZE_IN_PX = '16px';
@@ -36,7 +36,13 @@ type Statement =
     };
 
 export const generatePdfWithPuppeteer = async (
-  problems: { content: Statement[] }[],
+  {
+    problems,
+    mark,
+  }: {
+    problems: { content: Statement[] }[];
+    mark: number;
+  },
   // outputPath: string,
 ): Promise<Buffer> => {
   const innerHtml = problems
@@ -136,35 +142,76 @@ export const generatePdfWithPuppeteer = async (
   await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
   const headerTemplate = `
-    <style>
-      #header { padding: 0 !important; }
-      .header {
-          display: flex;
-          align-items: center;
-          height: ${HEADER_HEIGHT_IN_PX}px;
-          box-sizing: border-box;
-          padding-left: 32px; 
-          margin: 0; 
-          -webkit-print-color-adjust: exact; 
-          background-color: ghostwhite; 
-          width: 100%; 
-          font-size: ${FONT_SIZE_IN_PX};
-          font-family: ${FONT_FAMILY};
-      }
-      .header label {
-          margin-right: 10px;
-      }
-      .header .box {
-          width: 50px;
-          height: 25px;
-          border: 1px solid;
-          display: inline-flex;
-      }
-    </style>
-    <div class="header">
-        <label for="identifiant-box">Identifiant :</label>
-        <div class="box" id="identifiant-box"></div>
-    </div>`;
+  <style>
+    #header { padding: 0 !important; }
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: ${HEADER_HEIGHT_IN_PX}px;
+        box-sizing: border-box;
+        padding: 0 32px; 
+        margin: 0; 
+        -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact;
+        border-bottom: 1px solid;
+        width: 100%; 
+        font-size: ${FONT_SIZE_IN_PX};
+        font-family: ${FONT_FAMILY};
+    }
+    .left-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .right-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .name {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        text-align: end;
+    }
+    .qr-code {
+        height: 48px;
+        width: 48px;
+        border: 1px solid;
+        box-sizing: border-box;
+    }
+    .mark {
+        height: 48px;
+        width: 96px;
+        box-sizing: border-box;
+        border: 1px solid;
+        text-align: end;
+        display: flex;
+        align-items: end;
+        justify-content: flex-end;
+        padding: 8px;
+    }
+  </style>
+  <div class="header">
+    <div class="left-content">
+      <div class="qr-code"></div>
+      <div class="exam">
+        <div>Nom de l'établissement</div>
+        <div>Nom de l'examen</div>
+      </div>
+    </div>
+    <div class="right-content">
+      <div class="name">
+        <div>Prénom</div>
+        <div>Nom</div>
+      </div>
+      <div class="mark">
+        <div>/ ${mark}</div>
+      </div>
+      <div class="qr-code"></div>
+    </div>
+  </div>`;
 
   const footerTemplate = `
     <style>

@@ -29,7 +29,23 @@ export const examGeneratePdf = authedProcedure
       problems: { configureProblems },
     } = exam;
 
-    const pdfBuffer = await generatePdfWithPuppeteer(configureProblems);
+    const mark = configureProblems.reduce(
+      (accProblem, { content }) =>
+        accProblem +
+        content.reduce(
+          (accStatement, statement) =>
+            statement.type === 'question'
+              ? accStatement + statement.mark
+              : accStatement,
+          0,
+        ),
+      0,
+    );
+
+    const pdfBuffer = await generatePdfWithPuppeteer({
+      problems: configureProblems,
+      mark,
+    });
 
     const fileKey = `users/${userId}/exams/${exam.id}/subject.pdf`;
 
