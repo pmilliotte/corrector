@@ -47,6 +47,9 @@ export const ExamUploadFiles = ({
         loading={dropLoading}
         label={t.formatMessage({ id: 'exams.dragAndDrop.problem' })}
         accept="image"
+        disabled={
+          updateExamPending || files.some(({ status }) => status !== 'analyzed')
+        }
       />
       <div className="relative h-full">
         <ScrollArea>

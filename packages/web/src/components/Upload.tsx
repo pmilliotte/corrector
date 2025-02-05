@@ -1,4 +1,4 @@
-import { Loader2, Upload as UploadIcon } from 'lucide-react';
+import { Ban, Loader2, Upload as UploadIcon } from 'lucide-react';
 import { ReactElement } from 'react';
 import Dropzone from 'react-dropzone';
 
@@ -11,6 +11,7 @@ type UploadProps = {
   loading: boolean;
   label: string;
   accept: 'image' | 'pdf';
+  disabled: boolean;
 };
 
 export const Upload = ({
@@ -18,6 +19,7 @@ export const Upload = ({
   loading,
   label,
   accept,
+  disabled,
 }: UploadProps): ReactElement => (
   <Dropzone
     onDrop={onDrop}
@@ -29,15 +31,17 @@ export const Upload = ({
     multiple={false}
     maxFiles={1}
     maxSize={MAX_FILE_SIZE_BYTES}
+    disabled={disabled}
   >
     {({ getRootProps, getInputProps, isDragActive }) => (
       <div
         {...getRootProps()}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
         className={cn(
-          'group relative grid h-52 w-full cursor-pointer place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-5 py-2.5 text-center transition hover:bg-muted/25',
+          'group relative grid h-52 w-full place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-5 py-2.5 text-center transition',
           'ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-secondary',
           isDragActive && 'border-muted-foreground/50',
+          !disabled && 'hover:bg-muted/25 cursor-pointer',
         )}
       >
         <input {...getInputProps()} />
@@ -48,6 +52,8 @@ export const Upload = ({
                 className="text-muted-foreground animate-spin"
                 aria-hidden="true"
               />
+            ) : disabled ? (
+              <Ban className="text-muted-foreground" aria-hidden="true" />
             ) : (
               <UploadIcon
                 className="text-muted-foreground"

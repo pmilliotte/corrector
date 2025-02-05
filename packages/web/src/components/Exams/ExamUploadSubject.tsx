@@ -43,6 +43,7 @@ export const ExamUploadSubject = ({
         loading={dropLoading}
         label={t.formatMessage({ id: 'exams.dragAndDrop.subject' })}
         accept="pdf"
+        disabled={isPending}
       />
       <div className="relative h-full">
         <ExamUploadedPdf examId={exam.id} />
