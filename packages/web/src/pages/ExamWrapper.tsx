@@ -21,12 +21,14 @@ export const ExamWrapper = (): ReactElement => {
   useEffect(() => {
     if (exam === undefined) {
       setBreadcrumb([]);
+
       return;
     }
 
     setBreadcrumb([{ label: exam.name }]);
 
     return () => setBreadcrumb([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exam]);
 
   if (isLoading) {

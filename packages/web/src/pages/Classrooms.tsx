@@ -17,6 +17,7 @@ export const Classrooms = (): ReactElement => {
     setBreadcrumb([{ label: 'Liste des classes' }]);
 
     return () => setBreadcrumb([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) {

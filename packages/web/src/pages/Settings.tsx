@@ -8,6 +8,7 @@ export const Settings = (): ReactElement => {
     setBreadcrumb([{ label: 'Paramètres du compte' }]);
 
     return () => setBreadcrumb([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <div className="h-full flex items-center justify-around" />;

@@ -14,6 +14,7 @@ export const Exams = (): ReactElement => {
     setBreadcrumb([{ label: 'Liste des examens' }]);
 
     return () => setBreadcrumb([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) {

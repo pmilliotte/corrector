@@ -23,7 +23,7 @@ const TABS = ['students', 'exams'];
 
 export const ClassroomWrapper = (): ReactElement => {
   const { classroomId } = useParams() as { classroomId: string };
-  const [tabValue, setTabValue] = useState<'students' | 'exams'>('students');
+  const [tabValue, setTabValue] = useState<'students' | 'exams'>('exams');
   const { selectedOrganization } = useUserOrganizations();
   const { data: classroom, isLoading } = trpc.classroomGet.useQuery({
     classroomId,
@@ -35,6 +35,7 @@ export const ClassroomWrapper = (): ReactElement => {
   useEffect(() => {
     if (classroom === undefined) {
       setBreadcrumb([]);
+
       return;
     }
 
@@ -43,6 +44,7 @@ export const ClassroomWrapper = (): ReactElement => {
     ]);
 
     return () => setBreadcrumb([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classroom]);
 
   if (isLoading) {
@@ -66,7 +68,6 @@ export const ClassroomWrapper = (): ReactElement => {
     <div className="p-4 w-full h-full flex flex-col gap-2">
       <div className="flex items-baseline justify-between gap-2">
         <span className="font-semibold text-xl whitespace-nowrap overflow-hidden text-ellipsis">
-          {/* eslint-disable-next-line formatjs/no-literal-string-in-jsx */}
           {`${schoolName} - ${classroomName}`}
         </span>
         <div className="text-muted-foreground text-sm whitespace-nowrap shrink-0">
