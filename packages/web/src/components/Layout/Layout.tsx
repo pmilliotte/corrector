@@ -47,7 +47,7 @@ export const Layout = ({ children }: LayoutProps): ReactElement => {
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
               <BreadcrumbList>
-                {(breadcrumb ?? []).map(({ label, linkTo }, index) => (
+                {breadcrumb.map(({ label, linkTo }, index) => (
                   <Fragment key={index}>
                     {index !== 0 && (
                       <BreadcrumbSeparator className="hidden md:block" />
