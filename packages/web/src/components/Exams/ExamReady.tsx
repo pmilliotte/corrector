@@ -18,7 +18,15 @@ export const ExamReady = ({ examId }: ExamReadyProps): ReactElement => {
 
   return (
     <div className="flex flex-col gap-2 h-full">
-      <div>
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="text-lg font-semibold">
+            <FormattedMessage id="exams.ready.assign" />
+          </div>
+          <p className="text-muted-foreground text-sm">
+            <FormattedMessage id="exams.ready.assignDescription" />
+          </p>
+        </div>
         <Button
           variant="outline"
           className="flex items-center gap-2"
@@ -31,7 +39,7 @@ export const ExamReady = ({ examId }: ExamReadyProps): ReactElement => {
           <FormattedMessage id="exams.ready.open" />
         </Button>
       </div>
-      <div>
+      <div className="flex items-center justify-around h-full">
         <AssignExamForm examId={examId} />
       </div>
     </div>

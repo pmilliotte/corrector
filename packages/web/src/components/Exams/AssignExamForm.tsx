@@ -84,12 +84,6 @@ export const AssignExamForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-        <div className="text-lg font-semibold">
-          <FormattedMessage id="exams.ready.assign" />
-        </div>
-        <p className="text-muted-foreground text-sm">
-          <FormattedMessage id="exams.ready.assignDescription" />
-        </p>
         <FormField
           control={form.control}
           name="classroomId"
@@ -175,14 +169,16 @@ export const AssignExamForm = ({
             </FormItem>
           )}
         />
-        <LoadingButton
-          type="submit"
-          loading={isPending}
-          label={t.formatMessage({ id: 'exams.ready.distribute' })}
-          Icon={BookUser}
-        >
-          <FormattedMessage id="exams.ready.distribute" />
-        </LoadingButton>
+        <div className="flex justify-end">
+          <LoadingButton
+            type="submit"
+            loading={isPending}
+            label={t.formatMessage({ id: 'exams.ready.distribute' })}
+            Icon={BookUser}
+          >
+            <FormattedMessage id="exams.ready.distribute" />
+          </LoadingButton>
+        </div>
       </form>
     </Form>
   );
