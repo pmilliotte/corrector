@@ -22,6 +22,7 @@ const CONTENT_MARGIN_TOP_IN_PX = HEADER_HEIGHT_IN_PX + 16;
 const FOOTER_HEIGHT_IN_PX = 56;
 const FONT_FAMILY = 'Arial, sans-serif';
 const FONT_SIZE_IN_PX = '16px';
+const LINE_CONTAINER_HEIGHT_IN_PX = 20;
 
 type Statement =
   | {
@@ -64,10 +65,21 @@ export const generatePdfWithPuppeteer = async (
           const numberOfLines = statement.numberOfLines;
           let htmlLines = '';
           for (let i = 0; i < numberOfLines; i++) {
-            htmlLines += '<div class="line"></div>';
+            htmlLines += `<div class="line-container">
+              <div class="line"></div>
+              <div class="line"></div>
+              <div class="line"></div>
+              <div style="height: calc(${LINE_CONTAINER_HEIGHT_IN_PX}px / 4 - 1px)"></div>
+            </div>`;
           }
 
-          return `<div class="statement"><div class="text">${statement.index}) ${htmlString}</div><div class="answer-container">${htmlLines}</div></div>`;
+          return `<div class="statement">
+            <div class="text">${statement.index}) ${htmlString}</div>
+            <div class="answer-container">
+              ${htmlLines}
+              <div class="line"></div>
+            </div>
+          </div>`;
         }
       }
 
@@ -99,14 +111,12 @@ export const generatePdfWithPuppeteer = async (
                 html {
                   -webkit-print-color-adjust: exact;
                 }
-
                 body {
                     font-family: ${FONT_FAMILY};
                     line-height: 1.6;
                     font-size: ${FONT_SIZE_IN_PX};
                     padding: 0px;
                 }
-
                 .inline-math { display: inline; }
                 .block-math { display: block; text-align: center; }
                 .statement { margin-bottom: 8px; page-break-inside: avoid; }
@@ -114,12 +124,14 @@ export const generatePdfWithPuppeteer = async (
                 .title { text-decoration: underline; margin-bottom: 16px; }
 
                 .line {
-                  height: 1rem;
                   box-sizing: border-box;
-                  padding-top: 24px;
-                  width: 100%;
-                  position: relative;
-                  border-bottom: solid 1px #eeeeee;
+                  border-bottom: 1px solid #f5f5f5;
+                  height: calc(${LINE_CONTAINER_HEIGHT_IN_PX}px / 4)
+                }
+                .line-container {
+                  box-sizing: border-box;
+                  border-bottom: 1px solid #bebebe;
+                  height: ${LINE_CONTAINER_HEIGHT_IN_PX}px;
                 }
                 
                 .answer-container {
@@ -127,7 +139,7 @@ export const generatePdfWithPuppeteer = async (
                   border: solid 1px black;
                   width: 100%;
                   box-sizing: border-box;
-                  padding: 8px;
+                  padding: 8px 8px 4px;
                 }
 
                 .problem { margin-bottom: 8px; }
