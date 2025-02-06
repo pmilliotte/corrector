@@ -5,13 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { ClassroomExams } from '~/components/Classrooms/ClassroomExams';
 import { Students } from '~/components/Classrooms/Students';
-import {
-  Separator,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '~/components/ui';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui';
 import {
   CLASSROOM_CREATE_DOM_NODE_ID,
   trpc,
@@ -62,24 +56,8 @@ export const ClassroomWrapper = (): ReactElement => {
     );
   }
 
-  const { classroomName, created, schoolName } = classroom;
-
   return (
     <div className="p-4 w-full h-full flex flex-col gap-2">
-      <div className="flex items-baseline justify-between gap-2">
-        <span className="font-semibold text-xl whitespace-nowrap overflow-hidden text-ellipsis">
-          {`${schoolName} - ${classroomName}`}
-        </span>
-        <div className="text-muted-foreground text-sm whitespace-nowrap shrink-0">
-          <FormattedMessage
-            id="classrooms.createdOn"
-            values={{
-              date: new Date(created).toLocaleDateString('fr'),
-            }}
-          />
-        </div>
-      </div>
-      <Separator />
       <Tabs
         defaultValue={tabValue}
         // @ts-expect-error tab values are defined
