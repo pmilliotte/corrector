@@ -37,7 +37,7 @@ export const examSetReady = authedProcedure
             },
             {
               attr: 'status',
-              eq: 'uploadSubject',
+              eq: 'configureProblems',
             },
           ],
         },
