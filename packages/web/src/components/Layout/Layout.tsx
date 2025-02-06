@@ -1,8 +1,10 @@
-import { Fragment, ReactElement } from 'react';
+import { Fragment, ReactElement, useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
 import {
   AppRoute,
+  BreadcrumbContext,
+  Breadcrumb as BreadcrumbType,
   useOrganizations,
   UserOrganizationsContext,
   useSidebarItems,
@@ -19,7 +21,6 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-  Skeleton,
 } from '../ui';
 import { AppSidebar } from './AppSidebar';
 
@@ -28,8 +29,9 @@ interface LayoutProps {
 }
 
 export const Layout = ({ children }: LayoutProps): ReactElement => {
-  const { groups, selectedItemTitle } = useSidebarItems();
+  const { groups } = useSidebarItems();
   const { setSelectedOrganizationId, userOrganizations } = useOrganizations();
+  const [breadcrumb, setBreadcrumb] = useState<BreadcrumbType>([]);
 
   return (
     <SidebarProvider>
@@ -38,42 +40,41 @@ export const Layout = ({ children }: LayoutProps): ReactElement => {
         setSelectedOrganizationId={setSelectedOrganizationId}
         userOrganizations={userOrganizations}
       />
-      <SidebarInset className="min-w-0">
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              {userOrganizations !== undefined ? (
-                <BreadcrumbItem className="hidden md:block text-muted-foreground">
-                  <BreadcrumbLink asChild>
-                    <Link to={AppRoute.Home}>
-                      {userOrganizations.selectedOrganization.name}
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-              ) : (
-                <Skeleton className="h-4 w-[100px]" />
-              )}
-              {selectedItemTitle?.map(title => (
-                <Fragment key={title}>
-                  <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>{title}</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </Fragment>
-              ))}
-            </BreadcrumbList>
-          </Breadcrumb>
-        </header>
-        {userOrganizations === undefined ? (
-          <></>
-        ) : (
-          <UserOrganizationsContext.Provider value={userOrganizations}>
-            {children ?? <Outlet />}
-          </UserOrganizationsContext.Provider>
-        )}
-      </SidebarInset>
+      <BreadcrumbContext.Provider value={{ breadcrumb, setBreadcrumb }}>
+        <SidebarInset className="min-w-0">
+          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <Breadcrumb>
+              <BreadcrumbList>
+                {(breadcrumb ?? []).map(({ label, linkTo }, index) => (
+                  <Fragment key={index}>
+                    {index !== 0 && (
+                      <BreadcrumbSeparator className="hidden md:block" />
+                    )}
+                    <BreadcrumbItem>
+                      {linkTo === undefined ? (
+                        <BreadcrumbPage>{label}</BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink asChild>
+                          <Link to={AppRoute.Home}>{label}</Link>
+                        </BreadcrumbLink>
+                      )}
+                    </BreadcrumbItem>
+                  </Fragment>
+                ))}
+              </BreadcrumbList>
+            </Breadcrumb>
+          </header>
+          {userOrganizations === undefined ? (
+            <></>
+          ) : (
+            <UserOrganizationsContext.Provider value={userOrganizations}>
+              {children ?? <Outlet />}
+            </UserOrganizationsContext.Provider>
+          )}
+        </SidebarInset>
+      </BreadcrumbContext.Provider>
     </SidebarProvider>
   );
 };

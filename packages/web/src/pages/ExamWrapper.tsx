@@ -1,5 +1,5 @@
 import { Loader2, TriangleAlert } from 'lucide-react';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
@@ -9,13 +9,25 @@ import { ExamUploadFiles } from '~/components/Exams/ExamUploadFiles';
 import { ExamUploadSubject } from '~/components/Exams/ExamUploadSubject';
 import { UploadSelect } from '~/components/Exams/UploadSelect';
 import { Badge, Separator } from '~/components/ui';
-import { trpc } from '~/lib';
+import { trpc, useBreadcrumb } from '~/lib';
 
 export const ExamWrapper = (): ReactElement => {
   const { examId } = useParams() as { examId: string };
   const { data: exam, isLoading } = trpc.examGet.useQuery({
     id: examId,
   });
+
+  const { setBreadcrumb } = useBreadcrumb();
+  useEffect(() => {
+    if (exam === undefined) {
+      setBreadcrumb([]);
+      return;
+    }
+
+    setBreadcrumb([{ label: exam.name }]);
+
+    return () => setBreadcrumb([]);
+  }, [exam]);
 
   if (isLoading) {
     return (

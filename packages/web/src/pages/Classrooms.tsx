@@ -1,9 +1,9 @@
 import { Loader2, TriangleAlert } from 'lucide-react';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { ClassroomTable, CreateClassroomDialog } from '~/components/Classrooms';
-import { trpc, useSession, useUserOrganizations } from '~/lib';
+import { trpc, useBreadcrumb, useSession, useUserOrganizations } from '~/lib';
 
 export const Classrooms = (): ReactElement => {
   const { selectedOrganization } = useUserOrganizations();
@@ -12,6 +12,12 @@ export const Classrooms = (): ReactElement => {
     organizationId: selectedOrganization.id,
     userId,
   });
+  const { setBreadcrumb } = useBreadcrumb();
+  useEffect(() => {
+    setBreadcrumb([{ label: 'Liste des classes' }]);
+
+    return () => setBreadcrumb([]);
+  }, []);
 
   if (isLoading) {
     return (

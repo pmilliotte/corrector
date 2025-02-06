@@ -1,14 +1,20 @@
 import { Loader2, TriangleAlert } from 'lucide-react';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { CreateExamDialog } from '~/components/Exams/CreateExamDialog';
-import { trpc } from '~/lib';
+import { trpc, useBreadcrumb } from '~/lib';
 
 import { ExamTable } from '../components/Exams/ExamTable';
 
 export const Exams = (): ReactElement => {
   const { data: exams, isLoading } = trpc.examList.useQuery();
+  const { setBreadcrumb } = useBreadcrumb();
+  useEffect(() => {
+    setBreadcrumb([{ label: 'Liste des examens' }]);
+
+    return () => setBreadcrumb([]);
+  }, []);
 
   if (isLoading) {
     return (

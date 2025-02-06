@@ -1,5 +1,5 @@
 import { Loader2, TriangleAlert } from 'lucide-react';
-import { ReactElement, useRef, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
@@ -15,6 +15,7 @@ import {
 import {
   CLASSROOM_CREATE_DOM_NODE_ID,
   trpc,
+  useBreadcrumb,
   useUserOrganizations,
 } from '~/lib';
 
@@ -29,6 +30,20 @@ export const ClassroomWrapper = (): ReactElement => {
     organizationId: selectedOrganization.id,
   });
   const createRef = useRef<HTMLDivElement | null>(null);
+
+  const { setBreadcrumb } = useBreadcrumb();
+  useEffect(() => {
+    if (classroom === undefined) {
+      setBreadcrumb([]);
+      return;
+    }
+
+    setBreadcrumb([
+      { label: `${classroom.schoolName} - ${classroom.classroomName}` },
+    ]);
+
+    return () => setBreadcrumb([]);
+  }, [classroom]);
 
   if (isLoading) {
     return (

@@ -1,5 +1,14 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 
-export const Settings = (): ReactElement => (
-  <div className="h-full flex items-center justify-around" />
-);
+import { useBreadcrumb } from '~/lib';
+
+export const Settings = (): ReactElement => {
+  const { setBreadcrumb } = useBreadcrumb();
+  useEffect(() => {
+    setBreadcrumb([{ label: 'Paramètres du compte' }]);
+
+    return () => setBreadcrumb([]);
+  }, []);
+
+  return <div className="h-full flex items-center justify-around" />;
+};
