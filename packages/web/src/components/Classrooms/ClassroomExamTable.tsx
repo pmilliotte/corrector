@@ -29,7 +29,7 @@ export const ClassroomExamTable = ({
     {
       id: 'name',
       header: () => <FormattedMessage id="exams.name" />,
-      cell: (exam: ClassroomExam) => exam.name,
+      cell: (exam: ClassroomExam) => exam.examName,
     },
     {
       id: 'examDate',

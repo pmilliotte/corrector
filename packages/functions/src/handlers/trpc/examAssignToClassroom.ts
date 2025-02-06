@@ -1,7 +1,9 @@
-import { PutItemCommand } from 'dynamodb-toolbox';
+import { TRPCError } from '@trpc/server';
+import { GetItemCommand, PutItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
 import {
+  ClassroomEntity,
   ClassroomExamEntity,
   validateExamOwnership,
   validateOrganizationAccess,
@@ -29,6 +31,17 @@ export const examAssignToClassroom = authedProcedure
       );
       const { id: userId } = session;
 
+      const { Item: classroom } = await ClassroomEntity.build(GetItemCommand)
+        .key({
+          id: classroomId,
+          organizationId,
+        })
+        .send();
+
+      if (classroom === undefined) {
+        throw new TRPCError({ code: 'BAD_REQUEST' });
+      }
+
       await ClassroomExamEntity.build(PutItemCommand)
         .item({
           examId,
@@ -36,7 +49,9 @@ export const examAssignToClassroom = authedProcedure
           organizationId,
           examDate,
           userId,
-          name,
+          examName: name,
+          classroomName: classroom.classroomName,
+          schoolName: classroom.schoolName,
           subject,
         })
         .options({

@@ -11,10 +11,12 @@ const classroomExamSchema = schema({
   classroomId: string().key(),
   organizationId: string().key(),
   examId: string().key(),
-  examDate: string(),
   userId: string().key(),
+  examDate: string(),
   subject: string().enum(...SUBJECTS),
-  name: string(),
+  examName: string(),
+  schoolName: string(),
+  classroomName: string(),
 });
 
 export const computeClassroomExamEntityPartitionKey = ({

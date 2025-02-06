@@ -2,7 +2,6 @@ import { Fragment, ReactElement, useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
 import {
-  AppRoute,
   BreadcrumbContext,
   Breadcrumb as BreadcrumbType,
   useOrganizations,
@@ -57,7 +56,7 @@ export const Layout = ({ children }: LayoutProps): ReactElement => {
                         <BreadcrumbPage>{label}</BreadcrumbPage>
                       ) : (
                         <BreadcrumbLink asChild>
-                          <Link to={AppRoute.Home}>{label}</Link>
+                          <Link to={linkTo}>{label}</Link>
                         </BreadcrumbLink>
                       )}
                     </BreadcrumbItem>
