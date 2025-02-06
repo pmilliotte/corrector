@@ -123,7 +123,6 @@ export const AssignExamForm = ({
                         {classroomByDivision[division].map(
                           ({ id, schoolName, classroomName }) => (
                             <SelectItem value={id} key={id}>
-                              {/* eslint-disable-next-line formatjs/no-literal-string-in-jsx */}
                               {schoolName} - {classroomName}
                             </SelectItem>
                           ),

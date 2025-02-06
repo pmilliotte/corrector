@@ -9,7 +9,6 @@ const Breadcrumb = React.forwardRef<
   React.ComponentPropsWithoutRef<'nav'> & {
     separator?: React.ReactNode;
   }
-  // eslint-disable-next-line formatjs/no-literal-string-in-jsx
 >(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />);
 Breadcrumb.displayName = 'Breadcrumb';
 
@@ -100,7 +99,6 @@ const BreadcrumbEllipsis = ({
     {...props}
   >
     <DotsHorizontalIcon className="h-4 w-4" />
-    {/* eslint-disable-next-line formatjs/no-literal-string-in-jsx */}
     <span className="sr-only">More</span>
   </span>
 );

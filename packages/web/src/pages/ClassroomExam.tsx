@@ -14,7 +14,6 @@ export const ClassroomExam = (): ReactElement => {
         <div className="font-semibold">
           <FormattedMessage id="classroomExam.title" />
         </div>
-        {/* eslint-disable-next-line formatjs/no-literal-string-in-jsx */}
         {classroomId} - {examId}
       </div>
     </div>

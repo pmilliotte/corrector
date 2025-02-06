@@ -289,7 +289,6 @@ const SidebarTrigger = React.forwardRef<
       {...props}
     >
       <ViewVerticalIcon />
-      {/* eslint-disable-next-line formatjs/no-literal-string-in-jsx */}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
@@ -306,11 +305,9 @@ const SidebarRail = React.forwardRef<
     <button
       ref={ref}
       data-sidebar="rail"
-      // eslint-disable-next-line formatjs/no-literal-string-in-jsx
       aria-label="Toggle Sidebar"
       tabIndex={-1}
       onClick={toggleSidebar}
-      // eslint-disable-next-line formatjs/no-literal-string-in-jsx
       title="Toggle Sidebar"
       className={cn(
         'absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex',

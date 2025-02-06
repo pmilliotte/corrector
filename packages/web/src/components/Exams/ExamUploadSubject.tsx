@@ -34,7 +34,6 @@ export const ExamUploadSubject = ({
   return (
     <div className="flex flex-col gap-2 h-full">
       <div className="font-semibold">
-        {/* eslint-disable-next-line formatjs/no-literal-string-in-jsx */}
         <FormattedMessage id="common.step" values={{ step: 1 }} /> :{' '}
         <FormattedMessage id="exams.upload.problem.label" />
       </div>

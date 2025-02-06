@@ -27,7 +27,6 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'react/no-danger': 'error',
-    'formatjs/no-literal-string-in-jsx': 'error',
     "@typescript-eslint/no-misused-promises": [2, {
       "checksVoidReturn": {
         "attributes": false

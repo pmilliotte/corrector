@@ -1,4 +1,3 @@
-/* eslint-disable formatjs/no-literal-string-in-jsx */
 import { ArrowRight, FileStack, FileText } from 'lucide-react';
 import { ReactElement } from 'react';
 

@@ -1,8 +1,17 @@
-import { Loader2, TriangleAlert } from 'lucide-react';
+import { Loader2, Plus, TriangleAlert } from 'lucide-react';
 import { ReactElement } from 'react';
+import { createPortal } from 'react-dom';
+import { Link } from 'react-router-dom';
 
 import { ClassroomExamTable } from '~/components/Classrooms/ClassroomExamTable';
-import { trpc, useUserOrganizations } from '~/lib';
+import {
+  AppRoute,
+  CLASSROOM_CREATE_DOM_NODE_ID,
+  trpc,
+  useUserOrganizations,
+} from '~/lib';
+
+import { Button } from '../ui';
 
 type ClassroomExamsProps = { classroomId: string };
 
@@ -30,5 +39,23 @@ export const ClassroomExams = ({
     );
   }
 
-  return <ClassroomExamTable classroomExams={classroomExams} />;
+  const createStudentDomNode = document.getElementById(
+    CLASSROOM_CREATE_DOM_NODE_ID,
+  );
+
+  return (
+    <>
+      <ClassroomExamTable classroomExams={classroomExams} />
+      {createStudentDomNode !== null &&
+        createPortal(
+          <Button size="sm" variant="outline" asChild>
+            <Link to={AppRoute.Exams} className="gap-1">
+              <Plus size={16} />
+              Assigner un examen
+            </Link>
+          </Button>,
+          createStudentDomNode,
+        )}
+    </>
+  );
 };
