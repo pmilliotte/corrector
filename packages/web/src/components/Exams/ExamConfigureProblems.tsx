@@ -7,6 +7,7 @@ import { FormattedStatementWithMarks } from '@corrector/shared';
 
 import { trpc } from '~/lib';
 
+import { LoadingButton } from '../shared';
 import { Badge, Button, Separator } from '../ui';
 import { UpdateStatementDialog } from './UpdateStatementDialog';
 
@@ -74,8 +75,30 @@ export const ExamConfigureProblems = ({
     </div>
   );
 
+  const globalMark = problems.reduce(
+    (accProblem, { content }) =>
+      content.reduce(
+        (accStatement, statement) =>
+          statement.type === 'question'
+            ? statement.mark + accStatement
+            : accStatement,
+        0,
+      ) + accProblem,
+    0,
+  );
+
   return (
     <div className="flex flex-col gap-2 h-full">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-semibold">{`Note sur ${globalMark}`}</h1>
+        <LoadingButton
+          variant="outline"
+          Icon={ExternalLink}
+          loading={checkPdfPending}
+          label="Vérifier le pdf"
+          onClick={() => checkPdf({ id: examId })}
+        />
+      </div>
       {problems.map(({ id: problemId, content }, problemIndex) => (
         <div key={problemId} className="flex flex-col border p-2 rounded-lg">
           <div className="flex flex-col font-semibold p-2 gap-2">
@@ -155,18 +178,6 @@ export const ExamConfigureProblems = ({
         </div>
       ))}
       <div className="flex items-center gap-2 self-end">
-        <Button
-          className="self-end flex gap-2"
-          onClick={() => checkPdf({ id: examId })}
-          variant="outline"
-        >
-          {checkPdfPending ? (
-            <Loader2 className="animate-spin" size={16} />
-          ) : (
-            <ExternalLink size={16} />
-          )}
-          <FormattedMessage id="exams.generatePdf" />
-        </Button>
         <Button
           className="self-end flex gap-2"
           onClick={() => {
