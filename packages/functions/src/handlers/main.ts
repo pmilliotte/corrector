@@ -16,7 +16,6 @@ import { examSetReady } from './trpc/examSetReady';
 import { examStatementDelete } from './trpc/examStatementDelete';
 import { examStatementInsert } from './trpc/examStatementInsert';
 import { examStatementUpdate } from './trpc/examStatementUpdate';
-import { examSubjectPresignedUrlGet } from './trpc/examSubjectPresignedUrlGet';
 import { examUploadedFileDelete } from './trpc/examUploadedFileDelete';
 import { examUploadedFilePresignedUrlGet } from './trpc/examUploadedFilePresignedUrlGet';
 import { examUploadedFilePresignedUrlPost } from './trpc/examUploadedFilePresignedUrlPost';
@@ -24,6 +23,7 @@ import { examUploadedSubjectDelete } from './trpc/examUploadedSubjectDelete';
 import { examUploadFiles } from './trpc/examUploadFiles';
 import { organizationList } from './trpc/organizationList';
 import { studentCreate } from './trpc/studentCreate';
+import { subjectPresignedUrlGet } from './trpc/subjectPresignedUrlGet';
 
 export const mainRouter = router({
   organizationList,
@@ -41,7 +41,7 @@ export const mainRouter = router({
   examUploadedSubjectDelete,
   examStatementDelete,
   examStatementUpdate,
-  examSubjectPresignedUrlGet,
+  subjectPresignedUrlGet,
   examUploadedFilePresignedUrlGet,
   examSetReady,
   examUploadFiles,

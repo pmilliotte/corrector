@@ -1,7 +1,8 @@
+import { ExternalLink } from 'lucide-react';
 import { ReactElement, useEffect } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
+import { LoadingButton } from '~/components/shared';
 import { AppRoute, trpc, useBreadcrumb, useUserOrganizations } from '~/lib';
 
 export const ClassroomExam = (): ReactElement => {
@@ -10,6 +11,21 @@ export const ClassroomExam = (): ReactElement => {
     examId: string;
   };
   const { selectedOrganization } = useUserOrganizations();
+  const utils = trpc.useUtils();
+
+  const { mutate: generatePdf, isPending: generatePdfPending } =
+    trpc.classroomExamGeneratePdf.useMutation({
+      onSuccess: async () => {
+        const data = await utils.subjectPresignedUrlGet.fetch({
+          examId,
+          entity: 'classroomExam',
+          classroomId,
+          organizationId: selectedOrganization.id,
+        });
+
+        data.exists && window.open(data.url, '_blank', 'noopener,noreferrer');
+      },
+    });
 
   const { data: classroomExam } = trpc.classroomExamGet.useQuery({
     examId,
@@ -40,10 +56,20 @@ export const ClassroomExam = (): ReactElement => {
   return (
     <div className="flex flex-col gap-2 p-4">
       <div className="flex items-center justify-between">
-        <div className="font-semibold">
-          <FormattedMessage id="classroomExam.title" />
-        </div>
-        {classroomId} - {examId}
+        <LoadingButton
+          Icon={ExternalLink}
+          className="self-end flex gap-2"
+          onClick={() =>
+            generatePdf({
+              examId,
+              classroomId,
+              organizationId: selectedOrganization.id,
+            })
+          }
+          variant="outline"
+          loading={generatePdfPending}
+          label="Ouvrir les sujets"
+        />
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ enum Route {
   MainGet = 'GET /{proxy+}',
   MainPost = 'POST /{proxy+}',
   ExamGeneratePdf = 'POST /examGeneratePdf',
+  ClassroomExamGeneratePdf = 'POST /classroomExamGeneratePdf',
   ExamConfigureProblems = 'POST /examConfigureProblems',
   PdfSplitToImages = 'POST /pdfSplitToImages',
 }
@@ -75,8 +76,8 @@ api.route(Route.ExamConfigureProblems, examConfigureProblems.arn, {
   },
 });
 
-const generatePdf = new sst.aws.Function('exam-generate-pdf', {
-  handler: 'packages/functions/src/handlers/examGeneratePdf.handler',
+const generatePdf = new sst.aws.Function('generate-pdf', {
+  handler: 'packages/functions/src/handlers/generatePdf.handler',
   link: resources,
   architecture: 'x86_64',
   nodejs: {
@@ -84,6 +85,13 @@ const generatePdf = new sst.aws.Function('exam-generate-pdf', {
   },
 });
 api.route(Route.ExamGeneratePdf, generatePdf.arn, {
+  auth: {
+    jwt: {
+      authorizer: jwtAuthorizer.id,
+    },
+  },
+});
+api.route(Route.ClassroomExamGeneratePdf, generatePdf.arn, {
   auth: {
     jwt: {
       authorizer: jwtAuthorizer.id,

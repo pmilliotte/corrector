@@ -29,13 +29,13 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Function"
     }
-    "exam-generate-pdf": {
-      "name": string
-      "type": "sst.aws.Function"
-    }
     "exam-table": {
       "name": string
       "type": "sst.aws.Dynamo"
+    }
+    "generate-pdf": {
+      "name": string
+      "type": "sst.aws.Function"
     }
     "main": {
       "name": string

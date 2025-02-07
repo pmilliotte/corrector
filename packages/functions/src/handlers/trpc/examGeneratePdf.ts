@@ -50,6 +50,10 @@ export const examGeneratePdf = authedProcedure
       problems: configureProblems,
       mark,
       src,
+      firstName: 'Prénom',
+      lastName: 'Nom',
+      schoolName: "Nom de l'établissement",
+      examName: "Nom de l'examen",
     });
 
     const fileKey = `users/${userId}/exams/${exam.id}/subject.pdf`;

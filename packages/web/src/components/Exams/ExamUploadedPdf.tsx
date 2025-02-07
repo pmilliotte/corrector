@@ -14,16 +14,17 @@ export const ExamUploadedPdf = ({
   examId,
 }: ExamUploadedPdfProps): ReactElement => {
   const utils = trpc.useUtils();
-  const { data } = trpc.examSubjectPresignedUrlGet.useQuery(
+  const { data } = trpc.subjectPresignedUrlGet.useQuery(
     {
       examId,
+      entity: 'exam',
     },
     { refetchOnMount: false },
   );
   const { mutate: removeFile, isPending: removeFilePending } =
     trpc.examUploadedSubjectDelete.useMutation({
       onSuccess: async () => {
-        await utils.examSubjectPresignedUrlGet.invalidate();
+        await utils.subjectPresignedUrlGet.invalidate();
       },
     });
 
