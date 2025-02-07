@@ -23,7 +23,6 @@ export const ClassroomExamUploadAnswers = ({
 
   return (
     <div className="flex flex-col gap-2 h-full">
-      <div className="font-semibold">Télécharger les copies</div>
       <Upload
         onDrop={onDrop({
           examId: classroomExam.examId,
