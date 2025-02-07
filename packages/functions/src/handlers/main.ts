@@ -5,6 +5,7 @@ import { createContext, router } from '~/trpc';
 import { classroomCreate } from './trpc/classroomCreate';
 import { classroomExamGet } from './trpc/classroomExamGet';
 import { classroomExamList } from './trpc/classroomExamList';
+import { classroomExamUploadedFilePresignedUrlPost } from './trpc/classroomExamUploadedFilePresignedUrlPost';
 import { classroomGet } from './trpc/classroomGet';
 import { classroomList } from './trpc/classroomList';
 import { classroomStudentList } from './trpc/classroomStudentList';
@@ -22,8 +23,8 @@ import { examUploadedFilePresignedUrlPost } from './trpc/examUploadedFilePresign
 import { examUploadedSubjectDelete } from './trpc/examUploadedSubjectDelete';
 import { examUploadFiles } from './trpc/examUploadFiles';
 import { organizationList } from './trpc/organizationList';
+import { pdfPresignedUrlGet } from './trpc/pdfPresignedUrlGet';
 import { studentCreate } from './trpc/studentCreate';
-import { subjectPresignedUrlGet } from './trpc/subjectPresignedUrlGet';
 
 export const mainRouter = router({
   organizationList,
@@ -41,13 +42,14 @@ export const mainRouter = router({
   examUploadedSubjectDelete,
   examStatementDelete,
   examStatementUpdate,
-  subjectPresignedUrlGet,
+  pdfPresignedUrlGet,
   examUploadedFilePresignedUrlGet,
   examSetReady,
   examUploadFiles,
   examAssignToClassroom,
   classroomExamList,
   classroomExamGet,
+  classroomExamUploadedFilePresignedUrlPost,
 });
 
 export const handler = awsLambdaRequestHandler({

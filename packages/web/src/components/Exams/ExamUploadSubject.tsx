@@ -22,7 +22,7 @@ export const ExamUploadSubject = ({
   const { onDrop, isLoading: dropLoading } = useOnExamFileDrop(
     'uploadSubject',
     async () => {
-      await utils.subjectPresignedUrlGet.invalidate();
+      await utils.pdfPresignedUrlGet.invalidate();
     },
   );
   const { mutate: setReady, isPending } = trpc.examSetReady.useMutation({

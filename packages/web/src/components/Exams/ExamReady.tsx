@@ -12,7 +12,7 @@ type ExamReadyProps = {
 };
 
 export const ExamReady = ({ examId }: ExamReadyProps): ReactElement => {
-  const { data } = trpc.subjectPresignedUrlGet.useQuery({
+  const { data } = trpc.pdfPresignedUrlGet.useQuery({
     examId,
     entity: 'exam',
   });

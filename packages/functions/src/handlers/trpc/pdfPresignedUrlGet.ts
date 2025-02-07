@@ -7,7 +7,7 @@ import { s3Client } from '~/clients';
 import { validateExamOwnership, validateOrganizationAccess } from '~/libs';
 import { authedProcedure } from '~/trpc';
 
-export const subjectPresignedUrlGet = authedProcedure
+export const pdfPresignedUrlGet = authedProcedure
   .input(
     z.discriminatedUnion('entity', [
       z.object({
@@ -19,6 +19,7 @@ export const subjectPresignedUrlGet = authedProcedure
         classroomId: z.string(),
         entity: z.literal('classroomExam'),
         examId: z.string(),
+        type: z.enum(['subject', 'answers']),
       }),
     ]),
   )
@@ -37,7 +38,7 @@ export const subjectPresignedUrlGet = authedProcedure
       case 'classroomExam': {
         const { organizationId, classroomId, examId } = input;
         validateOrganizationAccess(organizationId, session);
-        Key = `organizations/${organizationId}/classrooms/${classroomId}/exams/${examId}/subject.pdf`;
+        Key = `organizations/${organizationId}/classrooms/${classroomId}/exams/${examId}/${input.type}.pdf`;
         break;
       }
     }

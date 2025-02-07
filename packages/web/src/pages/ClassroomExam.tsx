@@ -2,6 +2,7 @@ import { ExternalLink } from 'lucide-react';
 import { ReactElement, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { ClassroomExamUploadAnswers } from '~/components/ClassroomExam/ClassroomExamUploadAnswers';
 import { LoadingButton } from '~/components/shared';
 import { AppRoute, trpc, useBreadcrumb, useUserOrganizations } from '~/lib';
 
@@ -16,11 +17,12 @@ export const ClassroomExam = (): ReactElement => {
   const { mutate: generatePdf, isPending: generatePdfPending } =
     trpc.classroomExamGeneratePdf.useMutation({
       onSuccess: async () => {
-        const data = await utils.subjectPresignedUrlGet.fetch({
+        const data = await utils.pdfPresignedUrlGet.fetch({
           examId,
           entity: 'classroomExam',
           classroomId,
           organizationId: selectedOrganization.id,
+          type: 'subject',
         });
 
         data.exists && window.open(data.url, '_blank', 'noopener,noreferrer');
@@ -71,6 +73,9 @@ export const ClassroomExam = (): ReactElement => {
           label="Ouvrir les sujets"
         />
       </div>
+      {classroomExam !== undefined && (
+        <ClassroomExamUploadAnswers classroomExam={classroomExam} />
+      )}
     </div>
   );
 };
