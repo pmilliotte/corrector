@@ -5,6 +5,7 @@ import { ClassroomExam } from '@corrector/functions';
 import { trpc, useOnClassroomExamFileDrop } from '~/lib';
 
 import { Upload } from '../Upload';
+import { ClassroomExamAnswers } from './ClassroomExamAnswers';
 
 type ClassroomExamUploadAnswersProps = {
   classroomExam: ClassroomExam;
@@ -32,6 +33,10 @@ export const ClassroomExamUploadAnswers = ({
         label="Télécharger les réponses (.pdf)"
         accept="pdf"
         disabled={false}
+      />
+      <ClassroomExamAnswers
+        examId={classroomExam.examId}
+        classroomId={classroomExam.classroomId}
       />
     </div>
   );

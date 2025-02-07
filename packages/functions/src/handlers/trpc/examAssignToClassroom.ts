@@ -1,10 +1,26 @@
 import { TRPCError } from '@trpc/server';
-import { GetItemCommand, PutItemCommand } from 'dynamodb-toolbox';
+import {
+  BatchPutRequest,
+  BatchWriteCommand,
+  executeBatchWrite,
+  GetItemCommand,
+  PutItemCommand,
+  Query,
+  QueryCommand,
+} from 'dynamodb-toolbox';
 import { z } from 'zod';
+
+import { LSI1 } from '@corrector/backend-shared';
 
 import {
   ClassroomEntity,
+  ClassroomExamAnswerEntity,
   ClassroomExamEntity,
+  computeUserClassroomEntityLSI1Key,
+  computeUserClassroomEntityPartitionKey,
+  ExamTable,
+  OrganizationTable,
+  UserClassroomEntity,
   validateExamOwnership,
   validateOrganizationAccess,
 } from '~/libs';
@@ -41,6 +57,44 @@ export const examAssignToClassroom = authedProcedure
       if (classroom === undefined) {
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
+
+      const query: Query<typeof OrganizationTable> = {
+        partition: computeUserClassroomEntityPartitionKey({ organizationId }),
+        index: LSI1,
+        range: {
+          beginsWith: computeUserClassroomEntityLSI1Key({
+            classroomId,
+            userType: 'student',
+          }),
+        },
+      };
+
+      const { Items: classroomStudents } = await OrganizationTable.build(
+        QueryCommand,
+      )
+        .query(query)
+        .entities(UserClassroomEntity)
+        .send();
+
+      if (classroomStudents === undefined) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+      }
+
+      const command = ExamTable.build(BatchWriteCommand).requests(
+        ...classroomStudents.map(({ userId: studentId, lastName, firstName }) =>
+          ClassroomExamAnswerEntity.build(BatchPutRequest).item({
+            classroomId,
+            organizationId,
+            userId: studentId,
+            lastName,
+            firstName,
+            examId,
+            status: 'created',
+          }),
+        ),
+      );
+
+      await executeBatchWrite(command);
 
       await ClassroomExamEntity.build(PutItemCommand)
         .item({

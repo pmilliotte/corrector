@@ -1,3 +1,4 @@
+export * from './classroomExamAnswerStatuses';
 export * from './correctionOutput';
 export * from './divisions';
 export * from './examOutput';

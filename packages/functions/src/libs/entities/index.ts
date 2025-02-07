@@ -1,5 +1,6 @@
 export * from './classroom';
 export * from './classroomExam';
+export * from './classroomExamAnswer';
 export * from './exam';
 export * from './organization';
 export * from './response';

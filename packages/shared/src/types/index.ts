@@ -1,3 +1,4 @@
+export * from './classroomExamAnswerStatus';
 export * from './division';
 export * from './examStatus';
 export * from './examUploadedFileStatus';
