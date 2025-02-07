@@ -90,7 +90,7 @@ export const classroomExamGeneratePdf = authedProcedure
         .entities(UserClassroomEntity)
         .send();
 
-      if (classroomStudents === undefined) {
+      if (classroomStudents === undefined || classroomStudents.length === 0) {
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
 
