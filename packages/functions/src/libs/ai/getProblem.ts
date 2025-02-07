@@ -11,30 +11,6 @@ export const getProblem = async (
 ): Promise<ProblemOutput> => {
   const context = `Je vais te fournir un exercice de mathématiques (qui peut contenir une ou plusieurs questions ou énoncés introductifs) sous la forme d'une image. Ton objectif est de retranscrire fidèlement l'intégralité de l'énoncé. Tu dois découper l'exercice en autant de questions ou texte introductif ou intermédiaire qu'il contient.
 
-Un exemple d'output est le suivant :
-<output>
-{{
-  problem: {{
-    content: [
-      {{
-        text: 'Calculer $x$ pour chacune des expressions suivantes :',
-        type: 'statement',
-      }},
-      {{
-        text: '$x^{{2}} = 1$',
-        type: 'question',
-        numberOfLines: 1
-      }},
-      {{
-        text: '$4x^{{2}} + 2 \\times x = 4$',
-        type: 'question',
-        numberOfLines: 2
-      }},
-    ]
-  }}
-}} 
-</output>
-
 Important : Tous les nombres, variables ou expressions mathématiques doivent être exprimés en langage LaTeX (ou KaTeX ou MathJax) valide et délimités comme suit :
 - Un seul symbole dollar '$' pour du rendu inline ;
 - Deux symboles dollar '$$' pour du rendu en bloc.
@@ -45,7 +21,112 @@ Par exemple :
 - une expression mathématique avec des nombres, même sans symbole LaTeX, de la forme "B = (+48,5) + (-8) - 5" doit systématiquement être délimitée : "$B = (+48,5) + (-8) - 5$" ;
 - les symboles texte comme "€" à l'intérieur des délimiteurs "$" doivent être exprimés comme : "\\text{{€}}". Donc "920 €" doit être délimité comme suit : "$920 \\text{{€}}$ ;
 
-Pour chaque question tu dois aussi renvoyer le nombre de lignes nécessaires à un élève qui écrit gros pour répondre de manière détaillée.`;
+Pour chaque question tu dois aussi renvoyer le nombre de lignes nécessaires à un élève qui écrit gros pour répondre de manière détaillée.
+
+Voici des exemples d'output :
+<output_examples>
+  <output_example index="1">
+    {{
+      problem: {{
+        content: [
+          {{
+            text: 'Calculer $x$ pour chacune des expressions suivantes :',
+            type: 'statement',
+          }},
+          {{
+            text: '$x^{{2}} = 1$',
+            type: 'question',
+            numberOfLines: 1
+          }},
+          {{
+            text: '$4x^{{2}} + 2 \\times x = 4$',
+            type: 'question',
+            numberOfLines: 2
+          }},
+        ]
+      }}
+    }} 
+  </output_example>
+  <output_example index="2">
+    {{
+      problem: {{
+        content: [
+          {{
+            "type": "statement",
+            "text": "Calculer les expression numériques suivantes :",
+          }},
+          {{
+            "type": "question",
+            "text": "$A = 12 + [3 \\times [5 + (4 \\times 7) + 2]] + (8 \\times 3)$",
+            "numberOfLines": 3,
+          }},
+          {{
+            "type": "question",
+            "text": "$B = 25 - [12 - (3 + 4)]$",
+            "numberOfLines": 3,
+          }},
+        ]
+      }}
+    }} 
+  </output_example>
+  <output_example index="3">
+    {{
+      problem: {{
+        content: [
+          {{
+            "type": "statement",
+            "text": "Résoudre, dans l’ensemble des nombres relatifs, les équations suivantes :",
+          }},
+          {{
+            "type": "question",
+            "text": "$(x - 1)(x + 3) = (x + 4)(x + 3)$",
+            "numberOfLines": 4,
+          }},
+          {{
+            "type": "question",
+            "text": "$8x - 2(3x + 4) = 2x - 2$",
+            "numberOfLines": 4,
+          }},
+        ]
+      }}
+    }} 
+  </output_example>
+  <output_example index="4">
+    {{
+      problem: {{
+        content: [
+          {{
+            "type": "question",
+            "text": "$A = \\frac{{-1}}{{2}} \\times \\frac{{-3}}{{4}} \\times \\frac{{5}}{{6}} \\times \\frac{{7}}{{-10}}$",
+            "numberOfLines": 4,
+          }},
+        ]
+      }}
+    }} 
+  </output_example>
+  <output_example index="5">
+    {{
+      problem: {{
+        content: [
+          {{
+              "type": "statement",
+              "text": "Déterminer la valeur des expressions suivantes :",
+          }},
+          {{
+              "type": "question",
+              "text": "$A = (+27) - (+53) + (-2,9) - (+13,7)$",
+              "numberOfLines": 2,
+          }},
+          {{
+              "type": "question",
+              "text": "$B = (-25) - (-47) - (-17,7) - (+3,4)$",
+              "numberOfLines": 2,
+          }},
+        ]
+      }}
+    }} 
+  </output_example>
+</output_examples>`;
 
   const humanProblemImageMessage = new HumanMessage({
     content: [
