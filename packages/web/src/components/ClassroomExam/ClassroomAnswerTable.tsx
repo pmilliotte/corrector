@@ -1,7 +1,10 @@
 import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import { ClassroomExamAnswerStatus } from '@corrector/shared';
+
 import {
+  Badge,
   Table,
   TableBody,
   TableCell,
@@ -13,11 +16,16 @@ import {
 type ClassroomExamAnswer = {
   firstName?: string;
   lastName?: string;
-  status: string;
+  status: ClassroomExamAnswerStatus;
   userId: string;
 };
 type ClassroomExamAnswerTableProps = {
   classroomExamAnswers: ClassroomExamAnswer[];
+};
+
+const STATUS_TRANSLATION: { [key in ClassroomExamAnswerStatus]: string } = {
+  created: 'En attente',
+  uploaded: 'Téléchargé',
 };
 
 export const ClassroomExamAnswerTable = ({
@@ -39,8 +47,14 @@ export const ClassroomExamAnswerTable = ({
     {
       id: 'status',
       header: () => 'Statut',
-      cell: (classroomExamAnswer: ClassroomExamAnswer) =>
-        classroomExamAnswer.status,
+      cell: (classroomExamAnswer: ClassroomExamAnswer) => (
+        <Badge
+          variant="secondary"
+          className="whitespace-nowrap border-solid border-4 cursor-pointer"
+        >
+          {STATUS_TRANSLATION[classroomExamAnswer.status]}
+        </Badge>
+      ),
     },
   ];
 
@@ -56,15 +70,19 @@ export const ClassroomExamAnswerTable = ({
         </TableHeader>
         <TableBody>
           {classroomExamAnswers.length > 0 ? (
-            classroomExamAnswers.map(classroomExamAnswer => (
-              <TableRow key={classroomExamAnswer.userId}>
-                {columns.map(column => (
-                  <TableCell key={column.id}>
-                    {column.cell(classroomExamAnswer)}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+            classroomExamAnswers
+              .sort((answer1, answer2) =>
+                (answer1.lastName ?? '').localeCompare(answer2.lastName ?? ''),
+              )
+              .map(classroomExamAnswer => (
+                <TableRow key={classroomExamAnswer.userId}>
+                  {columns.map(column => (
+                    <TableCell key={column.id}>
+                      {column.cell(classroomExamAnswer)}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
