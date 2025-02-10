@@ -57,17 +57,6 @@ export const classroomExamGeneratePdf = authedProcedure
         0,
       );
 
-      const query: Query<typeof OrganizationTable> = {
-        partition: computeUserClassroomEntityPartitionKey({ organizationId }),
-        index: LSI1,
-        range: {
-          beginsWith: computeUserClassroomEntityLSI1Key({
-            classroomId,
-            userType: 'student',
-          }),
-        },
-      };
-
       const { Item: classroomExam } = await ClassroomExamEntity.build(
         GetItemCommand,
       )
@@ -82,6 +71,17 @@ export const classroomExamGeneratePdf = authedProcedure
       if (classroomExam === undefined) {
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
+
+      const query: Query<typeof OrganizationTable> = {
+        partition: computeUserClassroomEntityPartitionKey({ organizationId }),
+        index: LSI1,
+        range: {
+          beginsWith: computeUserClassroomEntityLSI1Key({
+            classroomId,
+            userType: 'student',
+          }),
+        },
+      };
 
       const { Items: classroomStudents } = await OrganizationTable.build(
         QueryCommand,

@@ -1,4 +1,4 @@
-import { examConfigureProblemsRouter } from './handlers/examConfigureProblems';
+import { aiInterfaceRouter } from './handlers/aiInterface';
 import { generatePdfRouter } from './handlers/generatePdf';
 import { mainRouter } from './handlers/main';
 import { pdfSplitToImagesRouter } from './handlers/pdfSplitToImages';
@@ -8,7 +8,7 @@ const appRouter = mergeRouters(
   mainRouter,
   generatePdfRouter,
   pdfSplitToImagesRouter,
-  examConfigureProblemsRouter,
+  aiInterfaceRouter,
 );
 
 // Exported for frontend

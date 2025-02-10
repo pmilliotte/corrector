@@ -13,14 +13,14 @@ export const savePdfToImages = async ({
   key: string;
   destination: string;
 }): Promise<void> => {
-  const { Body: rawData } = await s3Client.send(
+  const { Body: rawData, LastModified } = await s3Client.send(
     new GetObjectCommand({
       Key: key,
       Bucket: bucketName,
     }),
   );
 
-  if (rawData === undefined) {
+  if (rawData === undefined || LastModified === undefined) {
     throw new Error('File not found');
   }
 
@@ -47,7 +47,7 @@ export const savePdfToImages = async ({
     response.map(({ buffer }, index) =>
       s3Client.send(
         new PutObjectCommand({
-          Key: `${destination}/page-${index}.jpeg`,
+          Key: `${destination}/${LastModified.toISOString()}/page-${index}.jpeg`,
           Bucket: bucketName,
           ContentType: 'image/jpeg',
           Body: buffer,

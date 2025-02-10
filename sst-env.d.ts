@@ -13,6 +13,10 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
+    "ai-interface": {
+      "name": string
+      "type": "sst.aws.Function"
+    }
     "api": {
       "type": "sst.aws.ApiGatewayV2"
       "url": string
@@ -20,10 +24,6 @@ declare module "sst" {
     "exam-bucket": {
       "name": string
       "type": "sst.aws.Bucket"
-    }
-    "exam-configure-problems": {
-      "name": string
-      "type": "sst.aws.Function"
     }
     "exam-file-problem-uploaded": {
       "name": string

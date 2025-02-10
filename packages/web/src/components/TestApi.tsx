@@ -6,13 +6,11 @@ import { trpc } from '~/lib';
 import { LoadingButton } from './shared';
 
 export const TestApi = (): ReactElement => {
-  const { mutate, isPending } = trpc.pdfSplitToImages.useMutation();
+  const { isPending } = trpc.pdfSplitToImages.useMutation();
 
   return (
     <LoadingButton
-      onClick={() => {
-        mutate();
-      }}
+      onClick={() => {}}
       Icon={Play}
       loading={isPending}
       label="Test"

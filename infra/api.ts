@@ -13,6 +13,7 @@ enum Route {
   ExamGeneratePdf = 'POST /examGeneratePdf',
   ClassroomExamGeneratePdf = 'POST /classroomExamGeneratePdf',
   ExamConfigureProblems = 'POST /examConfigureProblems',
+  ExamAnswersSplit = 'POST /examAnswersSplit',
   PdfSplitToImages = 'POST /pdfSplitToImages',
 }
 
@@ -62,13 +63,20 @@ api.route(Route.MainPost, main.arn, {
   },
 });
 
-const examConfigureProblems = new sst.aws.Function('exam-configure-problems', {
-  handler: 'packages/functions/src/handlers/examConfigureProblems.handler',
+const aiInterfaceFunction = new sst.aws.Function('ai-interface', {
+  handler: 'packages/functions/src/handlers/aiInterface.handler',
   link: resources,
   timeout: '2 minutes',
   architecture: 'arm64',
 });
-api.route(Route.ExamConfigureProblems, examConfigureProblems.arn, {
+api.route(Route.ExamConfigureProblems, aiInterfaceFunction.arn, {
+  auth: {
+    jwt: {
+      authorizer: jwtAuthorizer.id,
+    },
+  },
+});
+api.route(Route.ExamAnswersSplit, aiInterfaceFunction.arn, {
   auth: {
     jwt: {
       authorizer: jwtAuthorizer.id,
