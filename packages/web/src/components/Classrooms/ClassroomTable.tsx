@@ -14,8 +14,10 @@ import {
 } from '~/components/ui';
 import { AppRoute } from '~/lib';
 
+type ClassroomWithSchoolName = Classroom & { schoolName?: string };
+
 type ClassroomTableProps = {
-  classrooms: Classroom[];
+  classrooms: ClassroomWithSchoolName[];
 };
 
 export const ClassroomTable = ({
@@ -27,17 +29,17 @@ export const ClassroomTable = ({
     {
       id: 'schoolName',
       header: () => <FormattedMessage id="classrooms.school" />,
-      cell: (classroom: Classroom) => classroom.schoolName,
+      cell: (classroom: ClassroomWithSchoolName) => classroom.schoolName,
     },
     {
       id: 'classroomName',
       header: () => <FormattedMessage id="classrooms.class" />,
-      cell: (classroom: Classroom) => classroom.classroomName,
+      cell: (classroom: ClassroomWithSchoolName) => classroom.classroomName,
     },
     {
       id: 'division',
       header: () => <FormattedMessage id="common.level" />,
-      cell: (classroom: Classroom) => (
+      cell: (classroom: ClassroomWithSchoolName) => (
         <FormattedMessage id={`common.divisions.${classroom.division}`} />
       ),
     },

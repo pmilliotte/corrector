@@ -3,6 +3,7 @@ import {
   BatchGetCommand,
   BatchGetRequest,
   executeBatchGet,
+  GetItemCommand,
   Query,
   QueryCommand,
 } from 'dynamodb-toolbox';
@@ -14,6 +15,7 @@ import {
   computeUserClassroomEntityPartitionKey,
   computeUserClassroomEntitySortKey,
   OrganizationTable,
+  SchoolEntity,
   UserClassroomEntity,
   validateOrganizationAccess,
 } from '~/libs';
@@ -70,5 +72,22 @@ export const classroomList = authedProcedure
       Responses: [classrooms],
     } = await executeBatchGet(classroomCommand);
 
-    return compact(classrooms);
+    const classroomsWithSchoolName = await Promise.all(
+      compact(classrooms).map(async classroom => {
+        const { Item: school } = await SchoolEntity.build(GetItemCommand)
+          .key({
+            id: classroom.schoolId,
+            organizationId,
+          })
+          .send();
+
+        if (school === undefined) {
+          throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        }
+
+        return { ...classroom, schoolName: school.name };
+      }),
+    );
+
+    return classroomsWithSchoolName;
   });

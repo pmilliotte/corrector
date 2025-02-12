@@ -4,6 +4,7 @@ export * from './classroomExamAnswer';
 export * from './exam';
 export * from './organization';
 export * from './response';
+export * from './school';
 export * from './user';
 export * from './userClassroom';
 export * from './userOrganization';

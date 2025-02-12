@@ -2,7 +2,11 @@ import { TRPCError } from '@trpc/server';
 import { GetItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
-import { ClassroomEntity, validateOrganizationAccess } from '~/libs';
+import {
+  ClassroomEntity,
+  SchoolEntity,
+  validateOrganizationAccess,
+} from '~/libs';
 import { authedProcedure } from '~/trpc';
 
 export const classroomGet = authedProcedure
@@ -27,6 +31,17 @@ export const classroomGet = authedProcedure
         throw new TRPCError({ code: 'NOT_FOUND' });
       }
 
-      return classroom;
+      const { Item: school } = await SchoolEntity.build(GetItemCommand)
+        .key({
+          id: classroom.schoolId,
+          organizationId,
+        })
+        .send();
+
+      if (school === undefined) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+      }
+
+      return { ...classroom, schoolName: school.name };
     },
   );

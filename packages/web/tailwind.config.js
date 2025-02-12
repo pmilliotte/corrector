@@ -62,6 +62,13 @@ const tailwindConfig = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
+  			},
+  			chart: {
+  				'1': 'hsl(var(--chart-1))',
+  				'2': 'hsl(var(--chart-2))',
+  				'3': 'hsl(var(--chart-3))',
+  				'4': 'hsl(var(--chart-4))',
+  				'5': 'hsl(var(--chart-5))'
   			}
   		},
   		borderRadius: {
@@ -112,7 +119,7 @@ const tailwindConfig = {
   		'95/100': '95%'
   	},
   	minWidth: {
-		0: '0',
+  		'0': '0',
   		'1/4': '25%',
   		'1/2': '50%',
   		'3/4': '75%',

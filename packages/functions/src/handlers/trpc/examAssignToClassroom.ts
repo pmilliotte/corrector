@@ -20,6 +20,7 @@ import {
   computeUserClassroomEntityPartitionKey,
   ExamTable,
   OrganizationTable,
+  SchoolEntity,
   UserClassroomEntity,
   validateExamOwnership,
   validateOrganizationAccess,
@@ -80,6 +81,17 @@ export const examAssignToClassroom = authedProcedure
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
       }
 
+      const { Item: school } = await SchoolEntity.build(GetItemCommand)
+        .key({
+          id: classroom.schoolId,
+          organizationId,
+        })
+        .send();
+
+      if (school === undefined) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+      }
+
       const command = ExamTable.build(BatchWriteCommand).requests(
         ...classroomStudents.map(({ userId: studentId, lastName, firstName }) =>
           ClassroomExamAnswerEntity.build(BatchPutRequest).item({
@@ -105,7 +117,7 @@ export const examAssignToClassroom = authedProcedure
           userId,
           examName: name,
           classroomName: classroom.classroomName,
-          schoolName: classroom.schoolName,
+          schoolName: school.name,
           subject,
         })
         .options({

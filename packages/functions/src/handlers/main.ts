@@ -25,6 +25,8 @@ import { examUploadedSubjectDelete } from './trpc/examUploadedSubjectDelete';
 import { examUploadFiles } from './trpc/examUploadFiles';
 import { organizationList } from './trpc/organizationList';
 import { pdfPresignedUrlGet } from './trpc/pdfPresignedUrlGet';
+import { schoolCreate } from './trpc/schoolCreate';
+import { schoolList } from './trpc/schoolList';
 import { studentCreate } from './trpc/studentCreate';
 
 export const mainRouter = router({
@@ -52,6 +54,8 @@ export const mainRouter = router({
   classroomExamGet,
   classroomExamUploadedFilePresignedUrlPost,
   classroomExamAnswerList,
+  schoolCreate,
+  schoolList,
 });
 
 export const handler = awsLambdaRequestHandler({

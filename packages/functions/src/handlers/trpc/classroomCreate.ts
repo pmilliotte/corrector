@@ -15,7 +15,7 @@ export const classroomCreate = authedProcedure
   .input(
     z.object({
       classroomName: z.string(),
-      schoolName: z.string(),
+      schoolId: z.string().uuid(),
       division: z.enum(DIVISIONS),
       organizationId: z.string(),
     }),
@@ -23,7 +23,7 @@ export const classroomCreate = authedProcedure
   .mutation(
     async ({
       ctx: { session },
-      input: { classroomName, organizationId, schoolName, division },
+      input: { classroomName, organizationId, schoolId, division },
     }) => {
       validateOrganizationAccess(organizationId, session);
 
@@ -35,7 +35,7 @@ export const classroomCreate = authedProcedure
         .item({
           id,
           classroomName,
-          schoolName,
+          schoolId,
           organizationId,
           division,
         })

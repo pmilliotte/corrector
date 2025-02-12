@@ -13,7 +13,7 @@ const classroomSchema = schema({
   division: string()
     .enum(...DIVISIONS)
     .required(),
-  schoolName: string().required(),
+  schoolId: string().required(),
   classroomName: string().required(),
 });
 
