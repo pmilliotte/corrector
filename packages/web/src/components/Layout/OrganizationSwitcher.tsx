@@ -60,7 +60,7 @@ export const OrganizationSwitcher = ({
                 >
                   {name}
                   {id === userOrganizations.selectedOrganization.id && (
-                    <Check className="ml-auto" />
+                    <Check className="ml-auto" size={16} />
                   )}
                 </DropdownMenuItem>
               ))}
