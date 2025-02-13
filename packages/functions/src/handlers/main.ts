@@ -28,6 +28,7 @@ import { pdfPresignedUrlGet } from './trpc/pdfPresignedUrlGet';
 import { schoolCreate } from './trpc/schoolCreate';
 import { schoolList } from './trpc/schoolList';
 import { studentCreate } from './trpc/studentCreate';
+import { studentsCreate } from './trpc/studentsCreate';
 
 export const mainRouter = router({
   organizationList,
@@ -36,6 +37,7 @@ export const mainRouter = router({
   classroomStudentList,
   classroomGet,
   studentCreate,
+  studentsCreate,
   examList,
   examGet,
   examCreate,

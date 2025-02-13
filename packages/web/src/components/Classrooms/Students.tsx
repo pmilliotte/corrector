@@ -45,11 +45,17 @@ export const Students = ({ classroomId }: StudentsProps): ReactElement => {
 
   return (
     <>
-      <StudentTable students={studentsData.students} />
+      <StudentTable
+        students={studentsData.students.sort((a, b) =>
+          (a.lastName ?? '').localeCompare(b.lastName ?? ''),
+        )}
+      />
       {createStudentDomNode !== null &&
         createPortal(
           <div className="flex items-center gap-2">
-            {studentsData.students.length === 0 && <ImportStudentsDialog />}
+            {studentsData.students.length === 0 && (
+              <ImportStudentsDialog classroomId={classroomId} />
+            )}
             <CreateStudentDialog
               classroomId={classroomId}
               maxIdentifier={

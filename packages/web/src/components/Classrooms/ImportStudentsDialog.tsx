@@ -13,6 +13,7 @@ import {
   ScrollArea,
   ScrollBar,
 } from '~/components/ui';
+import { trpc, useUserOrganizations } from '~/lib';
 
 import { LoadingButton } from '../shared';
 import { StudentTable } from './StudentTable';
@@ -23,6 +24,11 @@ const ACCEPTED_FILE_TYPES = [
 ];
 
 type StudentInfo = { Nom: string; ['Prénom']: string };
+type FormattedStudentInfo = {
+  firstName: string;
+  lastName: string;
+  identifier: number;
+};
 
 const capitalizeName = (name: string) =>
   name
@@ -42,10 +48,24 @@ const hasStudentsFormat = (data: unknown[]): data is StudentInfo[] =>
       typeof (item as Record<string, unknown>)['Prénom'] === 'string',
   );
 
-export const ImportStudentsDialog = (): ReactElement => {
+type ImportStudentsDialogProps = { classroomId: string };
+
+export const ImportStudentsDialog = ({
+  classroomId,
+}: ImportStudentsDialogProps): ReactElement => {
   const [open, setOpen] = useState(false);
   const [students, setStudents] = useState<StudentInfo[]>();
+  const [formattedStudents, setFormattedStudents] =
+    useState<FormattedStudentInfo[]>();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const utils = trpc.useUtils();
+  const { selectedOrganization } = useUserOrganizations();
+
+  const { mutate, isPending } = trpc.studentsCreate.useMutation({
+    onSettled: async () => {
+      await utils.classroomStudentList.invalidate();
+    },
+  });
 
   const handleButtonClick = () => {
     fileInputRef.current?.click(); // Open file dialog
@@ -83,6 +103,18 @@ export const ImportStudentsDialog = (): ReactElement => {
     }
   }, [open, setStudents]);
 
+  useEffect(() => {
+    setFormattedStudents(
+      students
+        ?.sort((a, b) => a['Nom'].localeCompare(b['Nom']))
+        .map((student, index) => ({
+          lastName: student['Nom'].toUpperCase(),
+          firstName: capitalizeName(student['Prénom']),
+          identifier: index + 1,
+        })),
+    );
+  }, [students, setFormattedStudents]);
+
   return (
     <div>
       <div className="flex items-center gap-2">
@@ -113,20 +145,32 @@ export const ImportStudentsDialog = (): ReactElement => {
           </DialogHeader>
           <ScrollArea className="max-h-[300px]">
             <StudentTable
-              students={(students ?? [])
-                .sort((a, b) => a['Nom'].localeCompare(b['Nom']))
-                .map((student, index) => ({
-                  lastName: student['Nom'].toUpperCase(),
-                  firstName: capitalizeName(student['Prénom']),
-                  identifier: index + 1,
-                  userId: (index + 1).toString(),
-                }))}
+              students={(formattedStudents ?? []).map(student => ({
+                ...student,
+                userId: student.identifier.toString(),
+              }))}
             />
             <ScrollBar orientation="vertical" />
           </ScrollArea>
 
           <DialogFooter>
-            <LoadingButton Icon={Save} label="Valider" loading={false} />
+            <LoadingButton
+              Icon={Save}
+              label="Valider"
+              loading={isPending}
+              onClick={() => {
+                formattedStudents !== undefined &&
+                  mutate({
+                    classroomId,
+                    organizationId: selectedOrganization.id,
+                    students: formattedStudents,
+                  });
+              }}
+              disabled={
+                formattedStudents === undefined ||
+                formattedStudents.length === 0
+              }
+            />
           </DialogFooter>
         </DialogContent>
       </Dialog>
