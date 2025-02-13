@@ -9,6 +9,7 @@ import {
 } from '~/lib';
 
 import { CreateStudentDialog } from './CreateStudentDialog';
+import { ImportStudentsDialog } from './ImportStudentsDialog';
 import { StudentTable } from './StudentTable';
 
 type StudentsProps = {
@@ -47,18 +48,21 @@ export const Students = ({ classroomId }: StudentsProps): ReactElement => {
       <StudentTable students={studentsData.students} />
       {createStudentDomNode !== null &&
         createPortal(
-          <CreateStudentDialog
-            classroomId={classroomId}
-            maxIdentifier={
-              studentsData.students.length === 0
-                ? 0
-                : Math.max(
-                    ...studentsData.students.map(
-                      ({ identifier }) => identifier ?? 0,
-                    ),
-                  )
-            }
-          />,
+          <div className="flex items-center gap-2">
+            {studentsData.students.length === 0 && <ImportStudentsDialog />}
+            <CreateStudentDialog
+              classroomId={classroomId}
+              maxIdentifier={
+                studentsData.students.length === 0
+                  ? 0
+                  : Math.max(
+                      ...studentsData.students.map(
+                        ({ identifier }) => identifier ?? 0,
+                      ),
+                    )
+              }
+            />
+          </div>,
           createStudentDomNode,
         )}
     </>
