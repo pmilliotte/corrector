@@ -135,17 +135,19 @@ export const LoginForm = ({
             )}
             <FormattedMessage id="login.letsGo" />
           </Button>
-          {form.formState.errors.email !== undefined ? (
-            <div className="text-sm text-destructive">
-              {form.formState.errors.email.message}
-            </div>
-          ) : form.formState.errors.password !== undefined ? (
-            <div className="text-sm text-destructive">
-              {form.formState.errors.password.message}
-            </div>
-          ) : (
-            <></>
-          )}
+          <div className="text-sm text-destructive absolute bottom-0 translate-y-full">
+            {form.formState.errors.email !== undefined ? (
+              <div className="text-sm text-destructive">
+                {form.formState.errors.email.message}
+              </div>
+            ) : form.formState.errors.password !== undefined ? (
+              <div className="text-sm text-destructive">
+                {form.formState.errors.password.message}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
         </form>
       </Form>
     </div>
