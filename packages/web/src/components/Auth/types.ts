@@ -2,6 +2,8 @@ export type LoginState =
   | 'login'
   | 'newPasswordRequired'
   | 'signup'
+  | 'resetPassword'
+  | 'confirmResetPassword'
   | 'confirmSignup';
 
 export const PASSWORD_REGEXP =

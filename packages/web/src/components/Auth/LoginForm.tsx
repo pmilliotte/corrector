@@ -80,7 +80,7 @@ export const LoginForm = ({
   });
 
   return (
-    <div className={cn('grid gap-6', className)} {...props}>
+    <div className={cn('grid gap-6 relative', className)} {...props}>
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
@@ -127,6 +127,16 @@ export const LoginForm = ({
               </FormItem>
             )}
           />
+          <div className="flex justify-end">
+            <Button
+              onClick={() => setLoginState('resetPassword')}
+              className="p-0 h-auto text-sm font-normal text-muted-foreground"
+              variant="link"
+              type="button"
+            >
+              Mot de passe oublié ?
+            </Button>
+          </div>
           <Button type="submit" className="p-2 gap-2" disabled={isPending}>
             {isPending ? (
               <Loader2 className="animate-spin" size={16} />
@@ -137,13 +147,9 @@ export const LoginForm = ({
           </Button>
           <div className="text-sm text-destructive absolute bottom-0 translate-y-full">
             {form.formState.errors.email !== undefined ? (
-              <div className="text-sm text-destructive">
-                {form.formState.errors.email.message}
-              </div>
+              form.formState.errors.email.message
             ) : form.formState.errors.password !== undefined ? (
-              <div className="text-sm text-destructive">
-                {form.formState.errors.password.message}
-              </div>
+              form.formState.errors.password.message
             ) : (
               <></>
             )}

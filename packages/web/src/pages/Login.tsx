@@ -11,6 +11,8 @@ import {
   SignupForm,
   UpdatePasswordForm,
 } from '~/components';
+import { ConfirmResetPasswordForm } from '~/components/Auth/ConfirmResetPasswordForm';
+import { ResetPasswordForm } from '~/components/Auth/ResetPasswordForm';
 import { Button } from '~/components/ui';
 import { AppRoute } from '~/lib';
 
@@ -18,6 +20,8 @@ const getLoginState = (stateSearchParam: string | null): LoginState => {
   switch (stateSearchParam) {
     case 'signup':
     case 'confirmSignup':
+    case 'resetPassword':
+    case 'confirmResetPassword':
       return stateSearchParam;
     default:
       return 'login';
@@ -76,6 +80,15 @@ export const Login = (): ReactElement => {
             </div>
             {loginState === 'login' && (
               <LoginForm
+                refetchAuthSession={refetch}
+                setLoginState={setLoginState}
+              />
+            )}
+            {loginState === 'resetPassword' && (
+              <ResetPasswordForm setLoginState={setLoginState} />
+            )}
+            {loginState === 'confirmResetPassword' && (
+              <ConfirmResetPasswordForm
                 refetchAuthSession={refetch}
                 setLoginState={setLoginState}
               />
