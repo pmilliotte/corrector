@@ -3,6 +3,7 @@
 interface ImportMetaEnv {
   readonly VITE_REACT_APP_PUBLIC_POSTHOG_HOST?: string;
   readonly VITE_REACT_APP_PUBLIC_POSTHOG_KEY?: string;
+  readonly VITE_SENTRY_DSN?: string;
 }
 
 interface ImportMeta {

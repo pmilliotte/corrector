@@ -1,4 +1,5 @@
 import { fetchAuthSession } from '@aws-amplify/auth';
+import * as Sentry from '@sentry/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpLink } from '@trpc/client';
 import { Amplify } from 'aws-amplify';
@@ -81,6 +82,16 @@ export const App = (): ReactElement => {
     'pdfjs-dist/build/pdf.worker.min.mjs',
     import.meta.url,
   ).toString();
+
+  Sentry.init({
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    integrations: [Sentry.browserTracingIntegration()],
+    // Performance Monitoring
+    tracesSampleRate: 1.0, //  Capture 100% of the transactions
+    // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
+    tracePropagationTargets: [/^https:\/\/app\.skloover\.fr/],
+    enabled: process.env.NODE_ENV !== 'development',
+  });
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
