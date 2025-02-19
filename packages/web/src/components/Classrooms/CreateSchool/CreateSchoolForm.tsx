@@ -81,7 +81,7 @@ export const CreateSchoolForm = ({
             render={({ field }) => (
               <FormItem className="grid grid-cols-subgrid col-span-2 items-center space-y-0">
                 <FormLabel htmlFor="name" className="text-right">
-                  Nom
+                  <span>Nom</span>
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -100,7 +100,7 @@ export const CreateSchoolForm = ({
             render={({ field }) => (
               <FormItem className="grid grid-cols-subgrid col-span-2 items-center space-y-0">
                 <FormLabel htmlFor="city" className="text-right">
-                  Ville
+                  <span>Ville</span>
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -121,7 +121,7 @@ export const CreateSchoolForm = ({
             type="button"
           >
             <RefreshCcw size={16} />
-            Réinitialiser
+            <span>Réinitialiser</span>
           </Button>
           <Button
             type="submit"

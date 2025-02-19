@@ -19,7 +19,7 @@ export const CreateSchoolDialog = (): ReactElement => {
       <DialogTrigger asChild>
         <Button size="sm" className="gap-1">
           <Plus size={16} />
-          Ajouter un établissement
+          <span>Ajouter un établissement</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">

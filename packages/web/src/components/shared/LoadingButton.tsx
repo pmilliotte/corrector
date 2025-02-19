@@ -18,12 +18,12 @@ export const LoadingButton = ({
   ...buttonProps
 }: LoadingButtonProps): ReactElement => (
   <Button className="flex items-center gap-2" {...buttonProps}>
-    {iconPosition === 'right' && label}
+    <span>{iconPosition === 'right' && label}</span>
     {loading ? (
       <Loader2 className="animate-spin" size={16} />
     ) : (
       <Icon size={16} />
     )}
-    {iconPosition === 'left' && label}
+    <span>{iconPosition === 'left' && label}</span>
   </Button>
 );

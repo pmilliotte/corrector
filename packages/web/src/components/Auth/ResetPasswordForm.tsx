@@ -87,7 +87,7 @@ export const ResetPasswordForm = ({
             ) : (
               <RefreshCcw size={16} />
             )}
-            Recevoir le code
+            <span>Recevoir le code</span>
           </Button>
           <div className="text-sm text-destructive absolute bottom-0 translate-y-full">
             {form.formState.errors.email !== undefined ? (

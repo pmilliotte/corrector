@@ -51,7 +51,7 @@ export const ClassroomExams = ({
           <Button size="sm" variant="outline" asChild>
             <Link to={AppRoute.Exams} className="gap-1">
               <Plus size={16} />
-              Assigner un examen
+              <span>Assigner un examen</span>
             </Link>
           </Button>,
           createStudentDomNode,

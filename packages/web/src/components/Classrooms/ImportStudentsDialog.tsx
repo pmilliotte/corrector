@@ -132,15 +132,19 @@ export const ImportStudentsDialog = ({
           onClick={handleButtonClick}
         >
           <Upload size={16} />
-          Importer la liste (.xlsx)
+          <span>Importer la liste (.xlsx)</span>
         </Button>
       </div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-[425px] max-h-9/10">
           <DialogHeader>
-            <DialogTitle>Liste des élèves</DialogTitle>
+            <DialogTitle>
+              <span>Liste des élèves</span>
+            </DialogTitle>
             <DialogDescription>
-              Valider pour créer les {students?.length} élèves suivants :
+              <span>
+                Valider pour créer les {students?.length} élèves suivants :
+              </span>
             </DialogDescription>
           </DialogHeader>
           <ScrollArea className="max-h-[300px]">

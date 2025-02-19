@@ -34,7 +34,8 @@ export const ExamUploadSubject = ({
   return (
     <div className="flex flex-col gap-2 h-full">
       <div className="font-semibold">
-        <FormattedMessage id="common.step" values={{ step: 1 }} /> :{' '}
+        <FormattedMessage id="common.step" values={{ step: 1 }} />
+        <span> : </span>
         <FormattedMessage id="exams.upload.problem.label" />
       </div>
       <Upload

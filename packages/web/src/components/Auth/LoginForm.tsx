@@ -134,7 +134,7 @@ export const LoginForm = ({
               variant="link"
               type="button"
             >
-              Mot de passe oublié ?
+              <span>Mot de passe oublié ?</span>
             </Button>
           </div>
           <Button type="submit" className="p-2 gap-2" disabled={isPending}>

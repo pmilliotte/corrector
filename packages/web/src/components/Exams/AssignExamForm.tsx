@@ -117,7 +117,9 @@ export const AssignExamForm = ({
                         {classroomByDivision[division].map(
                           ({ id, schoolName, classroomName }) => (
                             <SelectItem value={id} key={id}>
-                              {schoolName} - {classroomName}
+                              <span>
+                                {schoolName} - {classroomName}
+                              </span>
                             </SelectItem>
                           ),
                         )}
