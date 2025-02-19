@@ -147,9 +147,9 @@ export const LoginForm = ({
           </Button>
           <div className="text-sm text-destructive absolute bottom-0 translate-y-full">
             {form.formState.errors.email !== undefined ? (
-              form.formState.errors.email.message
+              <span>{form.formState.errors.email.message}</span>
             ) : form.formState.errors.password !== undefined ? (
-              form.formState.errors.password.message
+              <span>{form.formState.errors.password.message}</span>
             ) : (
               <></>
             )}
