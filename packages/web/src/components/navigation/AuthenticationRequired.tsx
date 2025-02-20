@@ -1,8 +1,8 @@
 import { fetchAuthSession, signOut } from '@aws-amplify/auth';
 import { QueryClientContext, useQuery } from '@tanstack/react-query';
 import posthog from 'posthog-js';
-import { ReactElement, useContext, useEffect } from 'react';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { ReactElement, useContext } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 
 import { getSession } from '@corrector/shared';
 
@@ -12,7 +12,6 @@ import { AppRoute, SessionContext } from '~/lib';
 import { Layout } from '../Layout';
 
 export const AuthenticationRequired = (): ReactElement => {
-  const navigate = useNavigate();
   const queryClient = useContext(QueryClientContext);
   const {
     data: authSession,
@@ -24,32 +23,12 @@ export const AuthenticationRequired = (): ReactElement => {
     retry: false,
   });
 
-  useEffect(() => {
-    const signoutAndNavigate = async () => {
-      await signOut({ global: true });
-      await queryClient?.invalidateQueries({ queryKey: ['authSession'] });
-      navigate(AppRoute.Login);
-    };
-    if (
-      isAuthSessionError ||
-      (authSession?.tokens === undefined && !isAuthSessionLoading)
-    ) {
-      void signoutAndNavigate();
-    }
-  }, [
-    authSession?.tokens,
-    navigate,
-    queryClient,
-    isAuthSessionError,
-    isAuthSessionLoading,
-  ]);
-
   const session =
     authSession?.tokens?.idToken?.payload === undefined
       ? undefined
       : getSession(authSession.tokens.idToken.payload);
 
-  if (isAuthSessionLoading || authSession?.tokens === undefined) {
+  if (isAuthSessionLoading) {
     return (
       <Layout>
         <div className="h-full flex items-center justify-around">
@@ -57,6 +36,13 @@ export const AuthenticationRequired = (): ReactElement => {
         </div>
       </Layout>
     );
+  }
+
+  if (authSession?.tokens === undefined || isAuthSessionError) {
+    void signOut({ global: true });
+    void queryClient?.invalidateQueries({ queryKey: ['authSession'] });
+
+    return <Navigate to={AppRoute.Login} />;
   }
 
   if (session === undefined) {
