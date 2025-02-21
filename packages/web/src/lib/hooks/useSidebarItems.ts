@@ -1,5 +1,5 @@
 import flatMapDeep from 'lodash/flatMapDeep';
-import { BookCheck, Network, Settings, Users } from 'lucide-react';
+import { BookCheck, Network, Settings } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 import { AppRoute } from '../constants';
@@ -17,11 +17,11 @@ export const useSidebarItems = (): {
       title: t.formatMessage({ id: 'common.sidebar.organization' }),
       displayTitle: true,
       items: [
-        {
-          title: t.formatMessage({ id: 'common.sidebar.people' }),
-          url: { type: 'url', path: AppRoute.People },
-          icon: Users,
-        },
+        // {
+        //   title: t.formatMessage({ id: 'common.sidebar.people' }),
+        //   url: { type: 'url', path: AppRoute.People },
+        //   icon: Users,
+        // },
         {
           title: t.formatMessage({ id: 'common.sidebar.classrooms' }),
           url: { type: 'url', path: AppRoute.Classrooms },
