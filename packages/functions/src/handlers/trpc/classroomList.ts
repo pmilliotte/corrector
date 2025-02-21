@@ -72,7 +72,7 @@ export const classroomList = authedProcedure
       Responses: [classrooms],
     } = await executeBatchGet(classroomCommand);
 
-    const classroomsWithSchoolName = await Promise.all(
+    const classroomsWithSchoolPseudo = await Promise.all(
       compact(classrooms).map(async classroom => {
         const { Item: school } = await SchoolEntity.build(GetItemCommand)
           .key({
@@ -85,9 +85,9 @@ export const classroomList = authedProcedure
           throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
         }
 
-        return { ...classroom, schoolName: school.name };
+        return { ...classroom, schoolPseudo: school.pseudo };
       }),
     );
 
-    return classroomsWithSchoolName;
+    return classroomsWithSchoolPseudo;
   });

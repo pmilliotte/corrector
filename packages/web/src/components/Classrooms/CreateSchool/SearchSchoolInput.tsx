@@ -110,6 +110,7 @@ export const SearchSchoolInput = ({
                           name: appellation_officielle,
                           city: libelle_commune,
                           uai: numero_uai,
+                          pseudo: appellation_officielle,
                         });
                         setSearch('');
                       }}

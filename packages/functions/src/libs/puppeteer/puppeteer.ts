@@ -42,7 +42,7 @@ export const generatePdfWithPuppeteer = async (
     mark,
     src,
     examName,
-    schoolName,
+    schoolPseudo,
     firstName,
     lastName,
   }: {
@@ -50,7 +50,7 @@ export const generatePdfWithPuppeteer = async (
     mark: number;
     src: string;
     examName: string;
-    schoolName: string;
+    schoolPseudo: string;
     firstName: string;
     lastName: string;
   },
@@ -221,7 +221,7 @@ export const generatePdfWithPuppeteer = async (
     <div class="left-content">
       <div class="qr-code"></div>
       <div class="exam">
-        <div>${schoolName}</div>
+        <div>${schoolPseudo}</div>
         <div>${examName}</div>
       </div>
     </div>

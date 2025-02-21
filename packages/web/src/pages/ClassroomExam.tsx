@@ -45,7 +45,7 @@ export const ClassroomExam = (): ReactElement => {
 
     setBreadcrumb([
       {
-        label: `${classroomExam.schoolName} - ${classroomExam.classroomName}`,
+        label: `${classroomExam.schoolPseudo} - ${classroomExam.classroomName}`,
         linkTo: `${AppRoute.Classrooms}/${classroomExam.classroomId}`,
       },
       { label: classroomExam.examName },

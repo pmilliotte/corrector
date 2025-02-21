@@ -21,7 +21,7 @@ export const SchoolTable = ({ schools }: SchoolTableProps): ReactElement => {
     {
       id: 'name',
       header: () => 'Nom',
-      cell: (school: School) => school.name,
+      cell: (school: School) => school.pseudo,
     },
     {
       id: 'city',

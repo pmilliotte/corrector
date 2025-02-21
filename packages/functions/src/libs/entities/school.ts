@@ -12,6 +12,7 @@ const schoolSchema = schema({
   name: string().required(),
   uai: string().optional(),
   city: string(),
+  pseudo: string(),
 });
 
 export const computeSchoolEntityPartitionKey = ({

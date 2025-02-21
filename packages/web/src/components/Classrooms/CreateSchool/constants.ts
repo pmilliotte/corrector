@@ -4,12 +4,14 @@ export const createSchoolFormSchema = z.object({
   name: z.string().min(1),
   uai: z.string().optional(),
   city: z.string(),
+  pseudo: z.string(),
 });
 
 export const DEFAULT_CREATE_SCHOOL_FORM_VALUES = {
   name: '',
   uai: undefined,
   city: '',
+  pseudo: '',
 };
 
 export const DATA_GOUV_API_URL = `https://data.education.gouv.fr/api/explore/v2.1/catalog/datasets/fr-en-adresse-et-geolocalisation-etablissements-premier-et-second-degre/records`;

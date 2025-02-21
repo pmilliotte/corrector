@@ -115,10 +115,10 @@ export const AssignExamForm = ({
                           />
                         </SelectLabel>
                         {classroomByDivision[division].map(
-                          ({ id, schoolName, classroomName }) => (
+                          ({ id, schoolPseudo, classroomName }) => (
                             <SelectItem value={id} key={id}>
                               <span>
-                                {schoolName} - {classroomName}
+                                {schoolPseudo} - {classroomName}
                               </span>
                             </SelectItem>
                           ),

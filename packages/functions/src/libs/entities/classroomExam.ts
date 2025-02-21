@@ -15,7 +15,7 @@ const classroomExamSchema = schema({
   examDate: string(),
   subject: string().enum(...SUBJECTS),
   examName: string(),
-  schoolName: string(),
+  schoolPseudo: string(),
   classroomName: string(),
 });
 

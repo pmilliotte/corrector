@@ -34,7 +34,7 @@ export const ClassroomWrapper = (): ReactElement => {
     }
 
     setBreadcrumb([
-      { label: `${classroom.schoolName} - ${classroom.classroomName}` },
+      { label: `${classroom.schoolPseudo} - ${classroom.classroomName}` },
     ]);
 
     return () => setBreadcrumb([]);

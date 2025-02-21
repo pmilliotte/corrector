@@ -18,12 +18,13 @@ export const schoolCreate = authedProcedure
       uai: z.string().optional(),
       organizationId: z.string(),
       city: z.string(),
+      pseudo: z.string(),
     }),
   )
   .mutation(
     async ({
       ctx: { session },
-      input: { uai, name, organizationId, city },
+      input: { uai, name, organizationId, city, pseudo },
     }) => {
       validateOrganizationAccess(organizationId, session);
 
@@ -53,6 +54,7 @@ export const schoolCreate = authedProcedure
           name,
           uai,
           city,
+          pseudo: pseudo === '' ? name : pseudo,
         })
         .options({
           condition: {

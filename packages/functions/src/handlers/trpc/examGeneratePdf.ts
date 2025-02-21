@@ -52,7 +52,7 @@ export const examGeneratePdf = authedProcedure
       src,
       firstName: 'Prénom',
       lastName: 'Nom',
-      schoolName: "Nom de l'établissement",
+      schoolPseudo: "Nom de l'établissement",
       examName: "Nom de l'examen",
     });
 

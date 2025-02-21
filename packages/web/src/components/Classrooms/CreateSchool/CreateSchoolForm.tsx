@@ -62,12 +62,14 @@ export const CreateSchoolForm = ({
     name,
     uai,
     city,
+    pseudo,
   }: z.infer<typeof createSchoolFormSchema>) => {
     mutate({
       name,
       uai,
       organizationId: selectedOrganization.id,
       city,
+      pseudo: pseudo === '' ? name : pseudo,
     });
   };
 
@@ -75,6 +77,24 @@ export const CreateSchoolForm = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid grid-cols-[min-content_1fr] gap-2 py-4">
+          <FormField
+            control={form.control}
+            name="pseudo"
+            render={({ field }) => (
+              <FormItem className="grid grid-cols-subgrid col-span-2 items-center space-y-0">
+                <FormLabel htmlFor="pseudo" className="text-right">
+                  <span>Pseudo</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="mt-0"
+                    {...field}
+                    disabled={searchInputValues === undefined}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="name"

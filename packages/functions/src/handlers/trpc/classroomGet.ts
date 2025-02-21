@@ -42,6 +42,6 @@ export const classroomGet = authedProcedure
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
       }
 
-      return { ...classroom, schoolName: school.name };
+      return { ...classroom, schoolPseudo: school.pseudo };
     },
   );

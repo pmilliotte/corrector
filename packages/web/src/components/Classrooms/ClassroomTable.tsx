@@ -14,10 +14,10 @@ import {
 } from '~/components/ui';
 import { AppRoute } from '~/lib';
 
-type ClassroomWithSchoolName = Classroom & { schoolName?: string };
+type ClassroomWithSchoolPseudo = Classroom & { schoolPseudo?: string };
 
 type ClassroomTableProps = {
-  classrooms: ClassroomWithSchoolName[];
+  classrooms: ClassroomWithSchoolPseudo[];
 };
 
 export const ClassroomTable = ({
@@ -27,19 +27,19 @@ export const ClassroomTable = ({
 
   const columns = [
     {
-      id: 'schoolName',
+      id: 'schoolPseudo',
       header: () => <FormattedMessage id="classrooms.school" />,
-      cell: (classroom: ClassroomWithSchoolName) => classroom.schoolName,
+      cell: (classroom: ClassroomWithSchoolPseudo) => classroom.schoolPseudo,
     },
     {
       id: 'classroomName',
       header: () => <FormattedMessage id="classrooms.class" />,
-      cell: (classroom: ClassroomWithSchoolName) => classroom.classroomName,
+      cell: (classroom: ClassroomWithSchoolPseudo) => classroom.classroomName,
     },
     {
       id: 'division',
       header: () => <FormattedMessage id="common.level" />,
-      cell: (classroom: ClassroomWithSchoolName) => (
+      cell: (classroom: ClassroomWithSchoolPseudo) => (
         <FormattedMessage id={`common.divisions.${classroom.division}`} />
       ),
     },

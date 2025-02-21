@@ -117,7 +117,7 @@ export const examAssignToClassroom = authedProcedure
           userId,
           examName: name,
           classroomName: classroom.classroomName,
-          schoolName: school.name,
+          schoolPseudo: school.pseudo,
           subject,
         })
         .options({

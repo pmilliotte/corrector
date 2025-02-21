@@ -108,7 +108,7 @@ export const classroomExamGeneratePdf = authedProcedure
             src,
             firstName,
             lastName,
-            schoolName: classroomExam.schoolName,
+            schoolPseudo: classroomExam.schoolPseudo,
             examName: classroomExam.examName,
           });
 
