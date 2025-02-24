@@ -1,1 +1,7 @@
-export const SUBJECTS = ['mathematics'] as const;
+export const SUBJECTS = [
+  'mathematics',
+  'biology',
+  'physics',
+  'history',
+  'dissertation',
+] as const;

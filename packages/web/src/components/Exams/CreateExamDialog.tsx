@@ -143,6 +143,7 @@ export const CreateExamDialog = (): ReactElement => {
                               value={subject}
                               key={subject}
                               className="max-w-100"
+                              disabled={subject !== 'mathematics'}
                             >
                               <FormattedMessage
                                 id={`common.subjects.${subject}`}

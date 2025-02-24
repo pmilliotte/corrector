@@ -41,6 +41,10 @@ export const commonMessages = {
     },
     subjects: {
       mathematics: 'Mathématiques',
+      biology: 'Sciences de la vie et de la Terre',
+      physics: 'Physique-chimie',
+      history: 'Histoire-géographie',
+      dissertation: 'Français',
     },
     level: 'Niveau',
     divisions: {
