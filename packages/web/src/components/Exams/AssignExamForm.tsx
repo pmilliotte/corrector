@@ -61,9 +61,7 @@ export const AssignExamForm = ({
   });
   const { mutate, isPending } = trpc.examAssignToClassroom.useMutation({
     onSuccess: (_, { classroomId }) => {
-      navigate(
-        `${AppRoute.Classrooms}/${classroomId}/${AppRoute.Exams}/${examId}`,
-      );
+      navigate(`${AppRoute.Classrooms}/${classroomId}/exams/${examId}`);
     },
   });
   const form = useForm<z.infer<typeof formSchema>>({

@@ -1,8 +1,5 @@
 import { TRPCError } from '@trpc/server';
 import {
-  BatchPutRequest,
-  BatchWriteCommand,
-  executeBatchWrite,
   GetItemCommand,
   PutItemCommand,
   Query,
@@ -18,7 +15,6 @@ import {
   ClassroomExamEntity,
   computeUserClassroomEntityLSI1Key,
   computeUserClassroomEntityPartitionKey,
-  ExamTable,
   OrganizationTable,
   SchoolEntity,
   UserClassroomEntity,
@@ -59,6 +55,21 @@ export const examAssignToClassroom = authedProcedure
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
 
+      const { Item: classroomExam } = await ClassroomExamEntity.build(
+        GetItemCommand,
+      )
+        .key({
+          examId,
+          classroomId: classroom.id,
+          organizationId,
+          userId,
+        })
+        .send();
+
+      if (classroomExam !== undefined) {
+        throw new TRPCError({ code: 'BAD_REQUEST' });
+      }
+
       const query: Query<typeof OrganizationTable> = {
         partition: computeUserClassroomEntityPartitionKey({ organizationId }),
         index: LSI1,
@@ -92,21 +103,21 @@ export const examAssignToClassroom = authedProcedure
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
       }
 
-      const command = ExamTable.build(BatchWriteCommand).requests(
-        ...classroomStudents.map(({ userId: studentId, lastName, firstName }) =>
-          ClassroomExamAnswerEntity.build(BatchPutRequest).item({
-            classroomId,
-            organizationId,
-            userId: studentId,
-            lastName,
-            firstName,
-            examId,
-            status: 'created',
-          }),
+      await Promise.all(
+        classroomStudents.map(({ userId: studentId, lastName, firstName }) =>
+          ClassroomExamAnswerEntity.build(PutItemCommand)
+            .item({
+              classroomId,
+              organizationId,
+              userId: studentId,
+              lastName,
+              firstName,
+              examId,
+              status: 'created',
+            })
+            .send(),
         ),
       );
-
-      await executeBatchWrite(command);
 
       await ClassroomExamEntity.build(PutItemCommand)
         .item({
@@ -119,24 +130,6 @@ export const examAssignToClassroom = authedProcedure
           classroomName: classroom.classroomName,
           schoolPseudo: school.pseudo,
           subject,
-        })
-        .options({
-          condition: {
-            and: [
-              {
-                attr: 'examId',
-                exists: false,
-              },
-              {
-                attr: 'organizationId',
-                exists: false,
-              },
-              {
-                attr: 'classroomId',
-                exists: false,
-              },
-            ],
-          },
         })
         .send();
     },
