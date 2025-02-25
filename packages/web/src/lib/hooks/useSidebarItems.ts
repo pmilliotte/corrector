@@ -1,5 +1,5 @@
 import flatMapDeep from 'lodash/flatMapDeep';
-import { BookCheck, Network, Settings } from 'lucide-react';
+import { FileInput, List, Network, Plus, Settings } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 import { AppRoute } from '../constants';
@@ -17,15 +17,15 @@ export const useSidebarItems = (): {
       title: t.formatMessage({ id: 'common.sidebar.organization' }),
       displayTitle: true,
       items: [
-        // {
-        //   title: t.formatMessage({ id: 'common.sidebar.people' }),
-        //   url: { type: 'url', path: AppRoute.People },
-        //   icon: Users,
-        // },
         {
           title: t.formatMessage({ id: 'common.sidebar.classrooms' }),
           url: { type: 'url', path: AppRoute.Classrooms },
           icon: Network,
+        },
+        {
+          title: 'Examens assignés',
+          url: { type: 'url', path: AppRoute.Home },
+          icon: FileInput,
         },
       ],
     },
@@ -34,33 +34,14 @@ export const useSidebarItems = (): {
       displayTitle: true,
       items: [
         {
-          title: t.formatMessage({ id: 'common.sidebar.exams.title' }),
-          icon: BookCheck,
-          disableActive: true,
+          title: 'Liste des examens',
           url: { type: 'url', path: AppRoute.Exams },
-          items: [
-            {
-              title: t.formatMessage({ id: 'common.sidebar.exams.list' }),
-              breadcrumbItems: [
-                t.formatMessage({ id: 'common.sidebar.exams.title' }),
-                t.formatMessage({ id: 'common.sidebar.exams.list' }),
-              ],
-              url: { type: 'url', path: AppRoute.Exams },
-            },
-            {
-              title: t.formatMessage({ id: 'common.sidebar.exams.edit' }),
-              breadcrumbItems: [
-                t.formatMessage({ id: 'common.sidebar.exam' }),
-                t.formatMessage({ id: 'common.sidebar.exams.edit' }),
-              ],
-              url: {
-                type: 'regexp',
-                path: new RegExp(
-                  `^${AppRoute.Exams}/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$`,
-                ),
-              },
-            },
-          ],
+          icon: List,
+        },
+        {
+          title: 'Créer un examen',
+          url: { type: 'url', path: AppRoute.Home },
+          icon: Plus,
         },
       ],
     },
