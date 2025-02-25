@@ -67,7 +67,7 @@ export const ClassroomExamTable = ({
               <TableRow
                 onClick={() =>
                   navigate(
-                    `${AppRoute.Classrooms}/${exam.classroomId}/${AppRoute.Exams}/${exam.examId}`,
+                    `${AppRoute.Classrooms}/${exam.classroomId}/exams/${exam.examId}`,
                   )
                 }
                 className="hover:cursor-pointer"
