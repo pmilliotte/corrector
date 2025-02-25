@@ -5,7 +5,6 @@ import { AppRoute } from '~/lib';
 import {
   ClassroomExam,
   Classrooms,
-  ClassroomWrapper,
   Error,
   Exams,
   ExamWrapper,
@@ -14,6 +13,9 @@ import {
   People,
   Settings,
 } from '~/pages';
+import { AssignedExams } from '~/pages/AssignedExams';
+import { ClassroomExams } from '~/pages/ClassroomExams';
+import { ClassroomUsers } from '~/pages/ClassroomUsers';
 
 import { Layout } from '../Layout';
 import { AuthenticationRequired } from './AuthenticationRequired';
@@ -27,14 +29,16 @@ export const AppRoutes = (): ReactElement => (
           <>
             <Route path={AppRoute.People} element={<People />} />
             <Route
-              path={`${AppRoute.Classrooms}/:classroomId/${AppRoute.Exams}/:examId`}
-              element={<ClassroomExam />}
+              path={AppRoute.ClassroomUsers}
+              element={<ClassroomUsers />}
             />
             <Route
-              path={`${AppRoute.Classrooms}/:classroomId`}
-              element={<ClassroomWrapper />}
+              path={AppRoute.ClassroomExams}
+              element={<ClassroomExams />}
             />
+            <Route path={AppRoute.ClassroomExam} element={<ClassroomExam />} />
             <Route path={AppRoute.Classrooms} element={<Classrooms />} />
+            <Route path={AppRoute.AssignedExams} element={<AssignedExams />} />
             <Route path={AppRoute.Settings} element={<Settings />} />
             <Route
               path={`${AppRoute.Exams}/:examId`}

@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Plus, Save } from 'lucide-react';
 import { ReactElement, useState } from 'react';
@@ -7,7 +6,6 @@ import { FormattedMessage } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
-import { School } from '@corrector/functions';
 import { DIVISIONS } from '@corrector/shared';
 
 import {
@@ -34,14 +32,13 @@ import { AppRoute, trpc, useIntl, useUserOrganizations } from '~/lib';
 
 const formSchema = z.object({
   classroomName: z.string().min(1),
-  schoolId: z.string().uuid(),
   division: z.enum(DIVISIONS),
 });
 
-type CreateClassroomDialogProps = { schools: School[] };
+type CreateClassroomDialogProps = { schoolId: string };
 
 export const CreateClassroomDialog = ({
-  schools,
+  schoolId,
 }: CreateClassroomDialogProps): ReactElement => {
   const t = useIntl();
   const navigate = useNavigate();
@@ -49,7 +46,7 @@ export const CreateClassroomDialog = ({
   const { selectedOrganization } = useUserOrganizations();
   const { mutate, isPending } = trpc.classroomCreate.useMutation({
     onSuccess: ({ id }) => {
-      navigate(`${AppRoute.Classrooms}/${id}`);
+      navigate(`${AppRoute.Classrooms}/${id}/users`);
     },
   });
   const form = useForm<z.infer<typeof formSchema>>({
@@ -57,13 +54,11 @@ export const CreateClassroomDialog = ({
     defaultValues: {
       classroomName: '',
       division: undefined,
-      schoolId: '',
     },
   });
 
   const onSubmit = ({
     classroomName,
-    schoolId,
     division,
   }: z.infer<typeof formSchema>) => {
     mutate({
@@ -81,9 +76,9 @@ export const CreateClassroomDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="gap-1" disabled={schools.length === 0}>
+        <Button size="sm" className="gap-1" variant="outline">
           <Plus size={16} />
-          <FormattedMessage id="classrooms.create" />
+          Ajouter une classe
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -95,50 +90,6 @@ export const CreateClassroomDialog = ({
               </DialogTitle>
             </DialogHeader>
             <div className="grid grid-cols-[min-content_1fr] gap-4 py-4">
-              <FormField
-                control={form.control}
-                name="schoolId"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-subgrid col-span-2 items-center space-y-0">
-                    <FormLabel htmlFor="schoolId" className="text-right">
-                      <FormattedMessage id="classrooms.school" />
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger
-                            id="schoolId"
-                            className="whitespace-normal [&>span]:text-left [&>svg]:shrink-0"
-                          >
-                            <SelectValue
-                              placeholder={t.formatMessage({
-                                id: 'common.select',
-                              })}
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent
-                          position="popper"
-                          className="max-w-[var(--radix-select-trigger-width)] overflow-y-auto max-h-[12rem]"
-                        >
-                          {schools.map(({ name, id }) => (
-                            <SelectItem
-                              value={id}
-                              key={id}
-                              className="max-w-100"
-                            >
-                              {name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name="classroomName"

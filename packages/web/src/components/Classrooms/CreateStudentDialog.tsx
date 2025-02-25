@@ -92,7 +92,7 @@ export const CreateStudentDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="gap-1">
+        <Button size="sm" className="gap-1" variant="outline">
           <Plus size={16} />
           <FormattedMessage id="classrooms.studentCreate" />
         </Button>

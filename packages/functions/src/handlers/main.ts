@@ -2,6 +2,7 @@ import { awsLambdaRequestHandler } from '@trpc/server/adapters/aws-lambda';
 
 import { createContext, router } from '~/trpc';
 
+import { classroomBySchoolList } from './trpc/classroomBySchoolList';
 import { classroomCreate } from './trpc/classroomCreate';
 import { classroomExamAnswerList } from './trpc/classroomExamAnswerList';
 import { classroomExamGet } from './trpc/classroomExamGet';
@@ -58,6 +59,7 @@ export const mainRouter = router({
   classroomExamAnswerList,
   schoolCreate,
   schoolList,
+  classroomBySchoolList,
 });
 
 export const handler = awsLambdaRequestHandler({

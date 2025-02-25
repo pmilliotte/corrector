@@ -70,7 +70,7 @@ export const CreateExamDialog = (): ReactElement => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm" className="gap-1">
+        <Button size="sm" className="gap-1" variant="outline">
           <Plus size={16} />
           <FormattedMessage id="exams.create" />
         </Button>

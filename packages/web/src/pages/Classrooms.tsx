@@ -1,25 +1,18 @@
-import { Loader2, TriangleAlert } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { ReactElement, useEffect } from 'react';
 
-import { ClassroomTable, CreateClassroomDialog } from '~/components/Classrooms';
 import { CreateSchoolDialog } from '~/components/Classrooms/CreateSchool/CreateSchoolDialog';
-import { SchoolTable } from '~/components/Classrooms/SchoolTable';
-import { Separator } from '~/components/ui';
+import { SchoolWithClassrooms } from '~/components/Classrooms/SchoolWithClassrooms';
 import { trpc, useBreadcrumb, useSession, useUserOrganizations } from '~/lib';
 
 export const Classrooms = (): ReactElement => {
   const { selectedOrganization } = useUserOrganizations();
   const { id: userId } = useSession();
-  const { data: classrooms, isLoading: classroomsLoading } =
-    trpc.classroomList.useQuery({
+  const { data: classroomsBySchool, isLoading: classroomsBySchoolLoading } =
+    trpc.classroomBySchoolList.useQuery({
       organizationId: selectedOrganization.id,
       userId,
     });
-  const { data: schools, isLoading: schoolsLoading } = trpc.schoolList.useQuery(
-    {
-      organizationId: selectedOrganization.id,
-    },
-  );
   const { setBreadcrumb } = useBreadcrumb();
   useEffect(() => {
     setBreadcrumb([{ label: 'Liste des classes' }]);
@@ -28,17 +21,10 @@ export const Classrooms = (): ReactElement => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (classroomsLoading || schoolsLoading) {
+  if (classroomsBySchoolLoading) {
     return (
       <div className="h-full flex items-center justify-around">
         <Loader2 className="animate-spin" />
-      </div>
-    );
-  }
-  if (classrooms === undefined || schools === undefined) {
-    return (
-      <div className="h-full flex items-center justify-around">
-        <TriangleAlert />
       </div>
     );
   }
@@ -50,15 +36,14 @@ export const Classrooms = (): ReactElement => {
           <div className="font-semibold">Mes établissements</div>
           <CreateSchoolDialog />
         </div>
-        <SchoolTable schools={schools} />
-      </div>
-      <Separator />
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <div className="font-semibold">Mes classes</div>
-          <CreateClassroomDialog schools={schools} />
-        </div>
-        <ClassroomTable classrooms={classrooms} />
+        {classroomsBySchool
+          ?.sort((a, b) => a.pseudo.localeCompare(b.pseudo))
+          .map(schoolWithClassrooms => (
+            <SchoolWithClassrooms
+              key={schoolWithClassrooms.id}
+              schoolWithClassrooms={schoolWithClassrooms}
+            />
+          ))}
       </div>
     </div>
   );

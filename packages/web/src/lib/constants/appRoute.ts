@@ -12,4 +12,7 @@ export enum AppRoute {
   Exams = '/exams',
   Classrooms = '/classrooms',
   ClassroomExam = '/classrooms/:classroomId/exams/:examId',
+  ClassroomExams = '/classrooms/:classroomId/exams',
+  ClassroomUsers = '/classrooms/:classroomId/users',
+  AssignedExams = '/exams/classrooms',
 }

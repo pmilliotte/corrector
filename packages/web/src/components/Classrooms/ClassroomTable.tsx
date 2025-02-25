@@ -1,10 +1,12 @@
+import { FileText, Users } from 'lucide-react';
 import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { Classroom } from '@corrector/functions';
 
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -14,59 +16,72 @@ import {
 } from '~/components/ui';
 import { AppRoute } from '~/lib';
 
-type ClassroomWithSchoolPseudo = Classroom & { schoolPseudo?: string };
+type ReducedClassroom = Pick<Classroom, 'id' | 'classroomName' | 'division'>;
 
 type ClassroomTableProps = {
-  classrooms: ClassroomWithSchoolPseudo[];
+  classrooms: ReducedClassroom[];
 };
 
 export const ClassroomTable = ({
   classrooms,
 }: ClassroomTableProps): ReactElement => {
-  const navigate = useNavigate();
-
   const columns = [
-    {
-      id: 'schoolPseudo',
-      header: () => <FormattedMessage id="classrooms.school" />,
-      cell: (classroom: ClassroomWithSchoolPseudo) => classroom.schoolPseudo,
-    },
     {
       id: 'classroomName',
       header: () => <FormattedMessage id="classrooms.class" />,
-      cell: (classroom: ClassroomWithSchoolPseudo) => classroom.classroomName,
+      cell: (classroom: ReducedClassroom) => classroom.classroomName,
     },
     {
       id: 'division',
       header: () => <FormattedMessage id="common.level" />,
-      cell: (classroom: ClassroomWithSchoolPseudo) => (
+      cell: (classroom: ReducedClassroom) => (
         <FormattedMessage id={`common.divisions.${classroom.division}`} />
+      ),
+    },
+    {
+      id: 'actions',
+      header: () => null,
+      cell: (classroom: ReducedClassroom) => (
+        <div className="flex items-center gap-1 justify-end">
+          <Button size="icon" variant="outline" asChild>
+            <Link to={`${AppRoute.Classrooms}/${classroom.id}/users`}>
+              <Users size={16} />
+            </Link>
+          </Button>
+          <Button size="icon" variant="outline" asChild>
+            <Link to={`${AppRoute.Classrooms}/${classroom.id}/exams`}>
+              <FileText size={16} />
+            </Link>
+          </Button>
+        </div>
       ),
     },
   ];
 
   return (
-    <div className="rounded-md border">
+    <div className="rounded-md border w-full">
       <Table>
         <TableHeader className="bg-secondary">
           <TableRow>
             {columns.map(column => (
-              <TableHead key={column.id}>{column.header()}</TableHead>
+              <TableHead
+                key={column.id}
+                className={column.id === 'actions' ? 'text-right' : ''}
+              >
+                {column.header()}
+              </TableHead>
             ))}
           </TableRow>
         </TableHeader>
         <TableBody>
           {classrooms.length > 0 ? (
             classrooms.map(classroom => (
-              <TableRow
-                onClick={() =>
-                  navigate(`${AppRoute.Classrooms}/${classroom.id}`)
-                }
-                className="hover:cursor-pointer"
-                key={classroom.id}
-              >
+              <TableRow key={classroom.id}>
                 {columns.map(column => (
-                  <TableCell key={column.id}>
+                  <TableCell
+                    key={column.id}
+                    className={column.id === 'actions' ? 'text-right' : ''}
+                  >
                     {column.cell(classroom)}
                   </TableCell>
                 ))}
