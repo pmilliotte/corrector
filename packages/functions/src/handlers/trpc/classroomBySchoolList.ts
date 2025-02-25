@@ -63,6 +63,16 @@ export const classroomBySchoolList = authedProcedure
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
     }
 
+    if (userClassrooms.length === 0) {
+      return schools.map(({ name, id, city, pseudo }) => ({
+        name,
+        id,
+        city,
+        pseudo,
+        classrooms: [],
+      }));
+    }
+
     const classroomCommand = OrganizationTable.build(BatchGetCommand).requests(
       ...userClassrooms.map(({ classroomId }) =>
         ClassroomEntity.build(BatchGetRequest).key({
@@ -83,10 +93,11 @@ export const classroomBySchoolList = authedProcedure
       pseudo,
       classrooms: compact(classrooms)
         .filter(classroom => classroom.schoolId === id)
-        .map(({ id: classroomId, division, classroomName }) => ({
+        .map(({ id: classroomId, division, classroomName, schoolYear }) => ({
           id: classroomId,
           division,
           classroomName,
+          schoolYear,
         })),
     }));
   });

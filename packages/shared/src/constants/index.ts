@@ -12,5 +12,6 @@ export * from './numberOfLines';
 export * from './payload';
 export * from './problemStatuses';
 export * from './responseOutput';
+export * from './schoolYears';
 export * from './subjects';
 export * from './userTypes';

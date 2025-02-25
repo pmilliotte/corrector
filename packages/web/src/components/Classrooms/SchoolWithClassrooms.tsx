@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { Division } from '@corrector/shared';
+import { Division, SchoolYear } from '@corrector/shared';
 
 import {
   Card,
@@ -18,7 +18,12 @@ type SchoolWithClassroomsProps = {
     name: string;
     city: string;
     id: string;
-    classrooms: { classroomName: string; id: string; division: Division }[];
+    classrooms: {
+      classroomName: string;
+      id: string;
+      division: Division;
+      schoolYear: SchoolYear;
+    }[];
   };
 };
 
@@ -37,7 +42,11 @@ export const SchoolWithClassrooms = ({
       <></>
     ) : (
       <CardContent className="flex items-center justify-center">
-        <ClassroomTable classrooms={schoolWithClassrooms.classrooms} />
+        <ClassroomTable
+          classrooms={schoolWithClassrooms.classrooms.sort((a, b) =>
+            a.schoolYear.localeCompare(b.schoolYear),
+          )}
+        />
       </CardContent>
     )}
   </Card>

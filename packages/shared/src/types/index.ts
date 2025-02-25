@@ -5,6 +5,7 @@ export * from './examUploadedFileStatus';
 export * from './fileType';
 export * from './formattedStatement';
 export * from './removeField';
+export * from './schoolYear';
 export * from './session';
 export * from './subject';
 export * from './userType';

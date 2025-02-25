@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Plus, Save } from 'lucide-react';
 import { ReactElement, useState } from 'react';
@@ -6,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
-import { DIVISIONS } from '@corrector/shared';
+import { DIVISIONS, SCHOOL_YEARS } from '@corrector/shared';
 
 import {
   Button,
@@ -33,6 +34,7 @@ import { AppRoute, trpc, useIntl, useUserOrganizations } from '~/lib';
 const formSchema = z.object({
   classroomName: z.string().min(1),
   division: z.enum(DIVISIONS),
+  schoolYear: z.enum(SCHOOL_YEARS),
 });
 
 type CreateClassroomDialogProps = { schoolId: string };
@@ -54,18 +56,21 @@ export const CreateClassroomDialog = ({
     defaultValues: {
       classroomName: '',
       division: undefined,
+      schoolYear: SCHOOL_YEARS[SCHOOL_YEARS.length - 1],
     },
   });
 
   const onSubmit = ({
     classroomName,
     division,
+    schoolYear,
   }: z.infer<typeof formSchema>) => {
     mutate({
       classroomName,
       schoolId,
       division,
       organizationId: selectedOrganization.id,
+      schoolYear,
     });
   };
 
@@ -95,12 +100,60 @@ export const CreateClassroomDialog = ({
                 name="classroomName"
                 render={({ field }) => (
                   <FormItem className="grid grid-cols-subgrid col-span-2 items-center space-y-0">
-                    <FormLabel htmlFor="classroomName" className="text-right">
-                      <FormattedMessage id="classrooms.class" />
+                    <FormLabel
+                      htmlFor="classroomName"
+                      className="text-right whitespace-nowrap"
+                    >
+                      Nom de la classe
                     </FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="schoolYear"
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-subgrid col-span-2 items-center space-y-0">
+                    <FormLabel
+                      htmlFor="schoolYear"
+                      className="text-right whitespace-nowrap"
+                    >
+                      Année scolaire
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger
+                          id="schoolYear"
+                          className="whitespace-normal [&>span]:text-left [&>svg]:shrink-0"
+                        >
+                          <SelectValue
+                            placeholder={t.formatMessage({
+                              id: 'common.select',
+                            })}
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent
+                        position="popper"
+                        className="max-w-[var(--radix-select-trigger-width)] overflow-y-auto max-h-[12rem]"
+                      >
+                        {SCHOOL_YEARS.map(schoolYear => (
+                          <SelectItem
+                            value={schoolYear}
+                            key={schoolYear}
+                            className="max-w-100"
+                          >
+                            {schoolYear}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormItem>
                 )}
               />

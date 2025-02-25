@@ -16,7 +16,10 @@ import {
 } from '~/components/ui';
 import { AppRoute } from '~/lib';
 
-type ReducedClassroom = Pick<Classroom, 'id' | 'classroomName' | 'division'>;
+type ReducedClassroom = Pick<
+  Classroom,
+  'id' | 'classroomName' | 'division' | 'schoolYear'
+>;
 
 type ClassroomTableProps = {
   classrooms: ReducedClassroom[];
@@ -26,6 +29,11 @@ export const ClassroomTable = ({
   classrooms,
 }: ClassroomTableProps): ReactElement => {
   const columns = [
+    {
+      id: 'schoolYear',
+      header: () => 'Année scolaire',
+      cell: (classroom: ReducedClassroom) => classroom.schoolYear,
+    },
     {
       id: 'classroomName',
       header: () => <FormattedMessage id="classrooms.class" />,

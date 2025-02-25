@@ -48,7 +48,7 @@ export const CreateSchoolForm = ({
   }, [reset, resetSearch]);
   const { mutate, isPending } = trpc.schoolCreate.useMutation({
     onSuccess: async () => {
-      await utils.schoolList.invalidate();
+      await utils.classroomBySchoolList.invalidate();
 
       setOpen(false);
       resetForm();

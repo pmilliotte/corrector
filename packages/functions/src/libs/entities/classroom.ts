@@ -1,7 +1,7 @@
 import { Entity, FormattedItem, schema, string } from 'dynamodb-toolbox';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
-import { DIVISIONS } from '@corrector/shared';
+import { DIVISIONS, SCHOOL_YEARS } from '@corrector/shared';
 
 import { OrganizationTable } from '../tables';
 
@@ -12,6 +12,9 @@ const classroomSchema = schema({
   organizationId: string().key(),
   division: string()
     .enum(...DIVISIONS)
+    .required(),
+  schoolYear: string()
+    .enum(...SCHOOL_YEARS)
     .required(),
   schoolId: string().required(),
   classroomName: string().required(),

@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { PutItemCommand } from 'dynamodb-toolbox';
 import { z } from 'zod';
 
-import { DIVISIONS } from '@corrector/shared';
+import { DIVISIONS, SCHOOL_YEARS } from '@corrector/shared';
 
 import {
   ClassroomEntity,
@@ -17,13 +17,14 @@ export const classroomCreate = authedProcedure
       classroomName: z.string(),
       schoolId: z.string().uuid(),
       division: z.enum(DIVISIONS),
+      schoolYear: z.enum(SCHOOL_YEARS),
       organizationId: z.string(),
     }),
   )
   .mutation(
     async ({
       ctx: { session },
-      input: { classroomName, organizationId, schoolId, division },
+      input: { classroomName, organizationId, schoolId, division, schoolYear },
     }) => {
       validateOrganizationAccess(organizationId, session);
 
@@ -38,6 +39,7 @@ export const classroomCreate = authedProcedure
           schoolId,
           organizationId,
           division,
+          schoolYear,
         })
         .options({
           condition: {
