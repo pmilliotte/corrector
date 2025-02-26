@@ -7,7 +7,7 @@ import { ExamReady } from '~/components/Exams/ExamReady';
 import { ExamUploadFiles } from '~/components/Exams/ExamUploadFiles';
 import { ExamUploadSubject } from '~/components/Exams/ExamUploadSubject';
 import { UploadSelect } from '~/components/Exams/UploadSelect';
-import { trpc, useBreadcrumb } from '~/lib';
+import { AppRoute, trpc, useBreadcrumb } from '~/lib';
 
 export const ExamWrapper = (): ReactElement => {
   const { examId } = useParams() as { examId: string };
@@ -23,7 +23,10 @@ export const ExamWrapper = (): ReactElement => {
       return;
     }
 
-    setBreadcrumb([{ label: exam.name }]);
+    setBreadcrumb([
+      { label: 'Examens', linkTo: AppRoute.Exams },
+      { label: exam.name },
+    ]);
 
     return () => setBreadcrumb([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
