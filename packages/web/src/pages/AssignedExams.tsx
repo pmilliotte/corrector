@@ -37,9 +37,12 @@ export const AssignedExams = (): ReactElement => {
   }
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <div className="flex flex-col gap-2">
-        {/* <div className="font-semibold">Examens assignés</div> */}
+    <div className="flex flex-col gap-4 p-4 h-full">
+      {classroomsByExam !== undefined && classroomsByExam.length === 0 ? (
+        <div className="flex items-center justify-around h-full text-muted-foreground text-sm">
+          Aucun examen assigné
+        </div>
+      ) : (
         <Accordion type="single" collapsible className="w-full">
           {classroomsByExam?.map(
             ({ examId, examName, subject, classrooms }) => (
@@ -80,7 +83,7 @@ export const AssignedExams = (): ReactElement => {
             ),
           )}
         </Accordion>
-      </div>
+      )}
     </div>
   );
 };

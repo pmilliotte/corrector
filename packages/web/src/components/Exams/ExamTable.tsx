@@ -31,8 +31,8 @@ export const ExamTable = ({ exams }: ExamTableProps): ReactElement => {
     },
     {
       id: 'created',
-      header: () => <FormattedMessage id="exams.created" />,
-      cell: (exam: Exam) => new Date(exam.created).toISOString().slice(0, 10),
+      header: () => 'Créé le',
+      cell: (exam: Exam) => new Date(exam.created).toLocaleDateString('fr-FR'),
     },
     {
       id: 'subject',
