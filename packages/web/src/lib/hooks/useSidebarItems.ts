@@ -1,5 +1,5 @@
 import flatMapDeep from 'lodash/flatMapDeep';
-import { FileInput, List, Network, Settings } from 'lucide-react';
+import { FileInput, List, Network, Plus, Settings } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 import { AppRoute } from '../constants';
@@ -38,11 +38,11 @@ export const useSidebarItems = (): {
           url: { type: 'url', path: AppRoute.Exams },
           icon: List,
         },
-        // {
-        //   title: 'Créer un examen',
-        //   url: { type: 'url', path: AppRoute.Home },
-        //   icon: Plus,
-        // },
+        {
+          title: 'Créer un examen',
+          url: { type: 'url', path: AppRoute.CreateExam },
+          icon: Plus,
+        },
       ],
     },
     {

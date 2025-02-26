@@ -175,9 +175,7 @@ export const AssignExamForm = ({
             loading={isPending}
             label={t.formatMessage({ id: 'exams.ready.distribute' })}
             Icon={BookUser}
-          >
-            <FormattedMessage id="exams.ready.distribute" />
-          </LoadingButton>
+          />
         </div>
       </form>
     </Form>

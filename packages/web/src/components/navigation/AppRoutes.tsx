@@ -16,6 +16,7 @@ import {
 import { AssignedExams } from '~/pages/AssignedExams';
 import { ClassroomExams } from '~/pages/ClassroomExams';
 import { ClassroomUsers } from '~/pages/ClassroomUsers';
+import { CreateExam } from '~/pages/CreateExam';
 
 import { Layout } from '../Layout';
 import { AuthenticationRequired } from './AuthenticationRequired';
@@ -36,6 +37,7 @@ export const AppRoutes = (): ReactElement => (
               path={AppRoute.ClassroomExams}
               element={<ClassroomExams />}
             />
+            <Route path={AppRoute.CreateExam} element={<CreateExam />} />
             <Route path={AppRoute.ClassroomExam} element={<ClassroomExam />} />
             <Route path={AppRoute.Classrooms} element={<Classrooms />} />
             <Route path={AppRoute.AssignedExams} element={<AssignedExams />} />
