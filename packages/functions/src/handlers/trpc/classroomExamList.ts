@@ -20,11 +20,13 @@ export const classroomExamList = authedProcedure
 
       const query: Query<typeof ExamTable> = {
         partition: computeClassroomExamEntityPartitionKey({
-          classroomId,
           organizationId,
         }),
         range: {
-          beginsWith: computeClassroomExamEntitySortKey({ userId }),
+          beginsWith: computeClassroomExamEntitySortKey({
+            userId,
+            classroomId,
+          }),
         },
       };
 
