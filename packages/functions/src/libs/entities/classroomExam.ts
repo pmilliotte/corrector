@@ -1,7 +1,7 @@
 import { Entity, FormattedItem, schema, string } from 'dynamodb-toolbox';
 
 import { PARTITION_KEY, SORT_KEY } from '@corrector/backend-shared';
-import { SUBJECTS } from '@corrector/shared';
+import { SCHOOL_YEARS, SUBJECTS } from '@corrector/shared';
 
 import { ExamTable } from '../tables';
 
@@ -14,32 +14,35 @@ const classroomExamSchema = schema({
   userId: string().key(),
   examDate: string(),
   subject: string().enum(...SUBJECTS),
+  schoolYear: string().enum(...SCHOOL_YEARS),
   examName: string(),
   schoolPseudo: string(),
   classroomName: string(),
 });
 
 export const computeClassroomExamEntityPartitionKey = ({
-  classroomId,
   organizationId,
 }: {
-  classroomId: string;
   organizationId: string;
-}): string =>
-  `${CLASSROOM_EXAM_ENTITY_NAME}#organizationId=${organizationId}#classroomId=${classroomId}`;
+}): string => `${CLASSROOM_EXAM_ENTITY_NAME}#organizationId=${organizationId}`;
 
 export const computeClassroomExamEntitySortKey = ({
   examId,
   userId,
+  classroomId,
 }: {
   examId?: string;
   userId: string;
+  classroomId?: string;
 }): string => {
-  if (examId === undefined) {
+  if (classroomId === undefined) {
     return `userId=${userId}#`;
   }
+  if (examId === undefined) {
+    return `userId=${userId}#classroomId=${classroomId}#`;
+  }
 
-  return `userId=${userId}#examId=${examId}`;
+  return `userId=${userId}#classroomId=${classroomId}#examId=${examId}`;
 };
 
 export const ClassroomExamEntity = new Entity({
@@ -47,12 +50,12 @@ export const ClassroomExamEntity = new Entity({
   schema: classroomExamSchema,
   table: ExamTable,
   entityAttributeHidden: false,
-  computeKey: ({ classroomId, examId, organizationId, userId }) => ({
+  computeKey: ({ examId, classroomId, organizationId, userId }) => ({
     [PARTITION_KEY]: computeClassroomExamEntityPartitionKey({
       organizationId,
-      classroomId,
     }),
     [SORT_KEY]: computeClassroomExamEntitySortKey({
+      classroomId,
       examId,
       userId,
     }),

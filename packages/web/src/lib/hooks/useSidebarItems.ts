@@ -24,7 +24,7 @@ export const useSidebarItems = (): {
         },
         {
           title: 'Examens assignés',
-          url: { type: 'url', path: AppRoute.Home },
+          url: { type: 'url', path: AppRoute.AssignedExams },
           icon: FileInput,
         },
       ],

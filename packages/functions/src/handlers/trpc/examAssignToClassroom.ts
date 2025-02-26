@@ -130,6 +130,7 @@ export const examAssignToClassroom = authedProcedure
           classroomName: classroom.classroomName,
           schoolPseudo: school.pseudo,
           subject,
+          schoolYear: classroom.schoolYear,
         })
         .send();
     },
