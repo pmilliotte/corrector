@@ -28,7 +28,9 @@ import { examUploadFiles } from './trpc/examUploadFiles';
 import { organizationList } from './trpc/organizationList';
 import { pdfPresignedUrlGet } from './trpc/pdfPresignedUrlGet';
 import { schoolCreate } from './trpc/schoolCreate';
+import { schoolGet } from './trpc/schoolGet';
 import { schoolList } from './trpc/schoolList';
+import { schoolUpdate } from './trpc/schoolUpdate';
 import { studentCreate } from './trpc/studentCreate';
 import { studentsCreate } from './trpc/studentsCreate';
 
@@ -62,6 +64,8 @@ export const mainRouter = router({
   schoolList,
   classroomBySchoolList,
   classroomByExamList,
+  schoolGet,
+  schoolUpdate,
 });
 
 export const handler = awsLambdaRequestHandler({

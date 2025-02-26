@@ -172,9 +172,7 @@ export const CreateExamForm = ({
             Icon={Save}
             iconPosition="left"
             disabled={isPending || Object.keys(errors).length > 0}
-          >
-            <FormattedMessage id="exams.ready.distribute" />
-          </LoadingButton>
+          />
         </div>
       </form>
     </Form>

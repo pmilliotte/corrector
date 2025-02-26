@@ -51,14 +51,26 @@ export const ClassroomTable = ({
       header: () => null,
       cell: (classroom: ReducedClassroom) => (
         <div className="flex items-center gap-1 justify-end">
-          <Button size="icon" variant="outline" asChild>
+          <Button
+            size="sm"
+            variant="outline"
+            asChild
+            className="flex items-center gap-2"
+          >
             <Link to={`${AppRoute.Classrooms}/${classroom.id}/users`}>
               <Users size={16} />
+              Élèves
             </Link>
           </Button>
-          <Button size="icon" variant="outline" asChild>
+          <Button
+            size="sm"
+            variant="outline"
+            asChild
+            className="flex items-center gap-2"
+          >
             <Link to={`${AppRoute.Classrooms}/${classroom.id}/exams`}>
               <FileText size={16} />
+              Examens
             </Link>
           </Button>
         </div>
@@ -84,7 +96,7 @@ export const ClassroomTable = ({
         <TableBody>
           {classrooms.length > 0 ? (
             classrooms.map(classroom => (
-              <TableRow key={classroom.id}>
+              <TableRow key={classroom.id} className="hover:bg-none!">
                 {columns.map(column => (
                   <TableCell
                     key={column.id}

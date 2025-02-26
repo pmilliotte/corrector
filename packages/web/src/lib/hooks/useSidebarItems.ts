@@ -18,7 +18,7 @@ export const useSidebarItems = (): {
       displayTitle: true,
       items: [
         {
-          title: t.formatMessage({ id: 'common.sidebar.classrooms' }),
+          title: 'Établissements / classes',
           url: { type: 'url', path: AppRoute.Classrooms },
           icon: Network,
         },

@@ -1,8 +1,11 @@
+import { Settings } from 'lucide-react';
 import { ReactElement } from 'react';
+import { Link } from 'react-router-dom';
 
 import { Division, SchoolYear } from '@corrector/shared';
 
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
@@ -36,7 +39,20 @@ export const SchoolWithClassrooms = ({
         <CardTitle>{schoolWithClassrooms.pseudo}</CardTitle>
         <CardDescription>{schoolWithClassrooms.city}</CardDescription>
       </div>
-      <CreateClassroomDialog schoolId={schoolWithClassrooms.id} />
+      <div className="flex items-center gap-1">
+        <Button
+          asChild
+          className="flex items-center gap-2"
+          size="sm"
+          variant="outline"
+        >
+          <Link to={`/schools/${schoolWithClassrooms.id}`}>
+            <Settings size={16} />
+            Modifier l&lsquo;établissement
+          </Link>
+        </Button>
+        <CreateClassroomDialog schoolId={schoolWithClassrooms.id} />
+      </div>
     </CardHeader>
     {schoolWithClassrooms.classrooms.length === 0 ? (
       <></>
