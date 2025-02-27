@@ -1,10 +1,17 @@
 import { ExternalLink } from 'lucide-react';
 import { ReactElement, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { ClassroomExamUploadAnswers } from '~/components/ClassroomExam/ClassroomExamUploadAnswers';
 import { LoadingButton } from '~/components/shared';
-import { AppRoute, trpc, useBreadcrumb, useUserOrganizations } from '~/lib';
+import {
+  AppRoute,
+  trpc,
+  useBreadcrumb,
+  useIntl,
+  useUserOrganizations,
+} from '~/lib';
 
 export const ClassroomExam = (): ReactElement => {
   const { classroomId, examId } = useParams() as {
@@ -13,6 +20,7 @@ export const ClassroomExam = (): ReactElement => {
   };
   const { selectedOrganization } = useUserOrganizations();
   const utils = trpc.useUtils();
+  const t = useIntl();
 
   const { mutate: generatePdf, isPending: generatePdfPending } =
     trpc.classroomExamGeneratePdf.useMutation({
@@ -26,6 +34,17 @@ export const ClassroomExam = (): ReactElement => {
         });
 
         data.exists && window.open(data.url, '_blank', 'noopener,noreferrer');
+      },
+      onError: error => {
+        if (error.message === 'BAD_REQUEST') {
+          toast("Une erreur s'est produite", {
+            description: "Vérifier que la liste des élève n'est pas vide",
+            action: {
+              label: t.formatMessage({ id: 'common.close' }),
+              onClick: () => {},
+            },
+          });
+        }
       },
     });
 
@@ -57,7 +76,10 @@ export const ClassroomExam = (): ReactElement => {
 
   return (
     <div className="flex flex-col gap-2 p-4">
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-between">
+        <div className="font-semibold text-lg">
+          Correction de l&lsquo;examen
+        </div>
         <LoadingButton
           Icon={ExternalLink}
           className="self-end flex gap-2"
