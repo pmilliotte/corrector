@@ -41,7 +41,7 @@ export const CreateStudentDialog = ({
   const { selectedOrganization } = useUserOrganizations();
   const { mutate, isPending } = trpc.studentCreate.useMutation({
     onSuccess: async () => {
-      await utils.classroomStudentList.refetch();
+      await utils.classroomStudentList.invalidate();
       setOpen(false);
       form.reset();
     },
