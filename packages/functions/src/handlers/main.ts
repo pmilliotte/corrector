@@ -6,6 +6,7 @@ import { classroomByExamList } from './trpc/classroomByExamList';
 import { classroomBySchoolList } from './trpc/classroomBySchoolList';
 import { classroomCreate } from './trpc/classroomCreate';
 import { classroomExamAnswerList } from './trpc/classroomExamAnswerList';
+import { classroomExamAnswerRefresh } from './trpc/classroomExamAnswerRefresh';
 import { classroomExamGet } from './trpc/classroomExamGet';
 import { classroomExamList } from './trpc/classroomExamList';
 import { classroomExamUploadedFilePresignedUrlPost } from './trpc/classroomExamUploadedFilePresignedUrlPost';
@@ -66,6 +67,7 @@ export const mainRouter = router({
   classroomByExamList,
   schoolGet,
   schoolUpdate,
+  classroomExamAnswerRefresh,
 });
 
 export const handler = awsLambdaRequestHandler({
