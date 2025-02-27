@@ -10,9 +10,6 @@ import { SVG } from 'mathjax-full/js/output/svg.js';
 import puppeteer from 'puppeteer-core';
 import sanitizeHtml from 'sanitize-html';
 
-const YOUR_LOCAL_CHROMIUM_PATH =
-  '/tmp/localChromium/chromium/mac_arm-1424481/chrome-mac/Chromium.app/Contents/MacOS/Chromium';
-
 const LATEX_REGEX = /\$([^$]+)\$/g; // Inline math $...$
 const BLOCK_LATEX_REGEX = /\$\$([^$]+)\$\$/g; // Block math $$...$$
 const HTML_TAGS_REGEX = /<[^>]*>/g;
@@ -45,6 +42,7 @@ export const generatePdfWithPuppeteer = async (
     schoolPseudo,
     firstName,
     lastName,
+    executablePath,
   }: {
     problems: { content: Statement[] }[];
     mark: number;
@@ -53,6 +51,7 @@ export const generatePdfWithPuppeteer = async (
     schoolPseudo: string;
     firstName: string;
     lastName: string;
+    executablePath: string;
   },
   // outputPath: string,
 ): Promise<Buffer> => {
@@ -102,12 +101,10 @@ export const generatePdfWithPuppeteer = async (
   const browser = await puppeteer.launch({
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
-    executablePath:
-      process.env.SST_DEV === 'true'
-        ? YOUR_LOCAL_CHROMIUM_PATH
-        : await chromium.executablePath(),
+    executablePath,
     headless: chromium.headless,
   });
+
   const page = await browser.newPage();
 
   // Prepare HTML content

@@ -87,6 +87,7 @@ api.route(Route.ExamAnswersSplit, aiInterfaceFunction.arn, {
 const generatePdf = new sst.aws.Function('generate-pdf', {
   handler: 'packages/functions/src/handlers/generatePdf.handler',
   link: resources,
+  memory: '10240 MB',
   architecture: 'x86_64',
   nodejs: {
     install: ['@sparticuz/chromium'],

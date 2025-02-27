@@ -1,4 +1,5 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
+import Chromium from '@sparticuz/chromium';
 import { TRPCError } from '@trpc/server';
 import { GetItemCommand } from 'dynamodb-toolbox';
 import { toDataURL } from 'qrcode';
@@ -7,7 +8,10 @@ import { z } from 'zod';
 
 import { s3Client } from '~/clients';
 import { ExamEntity } from '~/libs';
-import { generatePdfWithPuppeteer } from '~/libs/puppeteer';
+import {
+  generatePdfWithPuppeteer,
+  YOUR_LOCAL_CHROMIUM_PATH,
+} from '~/libs/puppeteer';
 import { authedProcedure } from '~/trpc';
 
 export const examGeneratePdf = authedProcedure
@@ -46,6 +50,11 @@ export const examGeneratePdf = authedProcedure
 
     const src = await toDataURL(exam.name);
 
+    const executablePath =
+      process.env.SST_DEV === 'true'
+        ? YOUR_LOCAL_CHROMIUM_PATH
+        : await Chromium.executablePath();
+
     const pdfBuffer = await generatePdfWithPuppeteer({
       problems: configureProblems,
       mark,
@@ -54,6 +63,7 @@ export const examGeneratePdf = authedProcedure
       lastName: 'Nom',
       schoolPseudo: "Nom de l'établissement",
       examName: "Nom de l'examen",
+      executablePath,
     });
 
     const fileKey = `users/${userId}/exams/${exam.id}/subject.pdf`;

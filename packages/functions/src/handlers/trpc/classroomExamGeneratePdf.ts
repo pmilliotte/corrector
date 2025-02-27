@@ -1,6 +1,8 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
+import Chromium from '@sparticuz/chromium';
 import { TRPCError } from '@trpc/server';
 import { GetItemCommand, Query, QueryCommand } from 'dynamodb-toolbox';
+import chunk from 'lodash/chunk';
 import compact from 'lodash/compact';
 import { PDFDocument } from 'pdf-lib';
 import { toDataURL } from 'qrcode';
@@ -19,7 +21,10 @@ import {
   validateExamOwnership,
   validateOrganizationAccess,
 } from '~/libs';
-import { generatePdfWithPuppeteer } from '~/libs/puppeteer';
+import {
+  generatePdfWithPuppeteer,
+  YOUR_LOCAL_CHROMIUM_PATH,
+} from '~/libs/puppeteer';
 import { authedProcedure } from '~/trpc';
 
 export const classroomExamGeneratePdf = authedProcedure
@@ -94,30 +99,43 @@ export const classroomExamGeneratePdf = authedProcedure
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
 
-      const buffers = await Promise.all(
-        classroomStudents.map(async ({ lastName, firstName }) => {
-          if (firstName === undefined || lastName === undefined) {
-            return;
-          }
+      const executablePath =
+        process.env.SST_DEV === 'true'
+          ? YOUR_LOCAL_CHROMIUM_PATH
+          : await Chromium.executablePath();
 
-          const src = await toDataURL(`${firstName} ${lastName}`);
+      const buffers: Buffer[] = [];
 
-          const pdfBuffer = await generatePdfWithPuppeteer({
-            problems: configureProblems,
-            mark,
-            src,
-            firstName,
-            lastName,
-            schoolPseudo: classroomExam.schoolPseudo,
-            examName: classroomExam.examName,
-          });
+      // Avoid /tmp usage failure
+      for (const students of chunk(classroomStudents, 10)) {
+        const studentBuffers = await Promise.all(
+          students.map(async ({ lastName, firstName }) => {
+            if (firstName === undefined || lastName === undefined) {
+              return;
+            }
 
-          return pdfBuffer;
-        }),
-      );
+            const src = await toDataURL(`${firstName} ${lastName}`);
+
+            const pdfBuffer = await generatePdfWithPuppeteer({
+              problems: configureProblems,
+              mark,
+              src,
+              firstName,
+              lastName,
+              schoolPseudo: classroomExam.schoolPseudo,
+              examName: classroomExam.examName,
+              executablePath,
+            });
+
+            return pdfBuffer;
+          }),
+        );
+
+        buffers.push(...compact(studentBuffers));
+      }
 
       const mergedPdf = await PDFDocument.create();
-      for (const pdfBytes of compact(buffers)) {
+      for (const pdfBytes of buffers) {
         const pdf = await PDFDocument.load(pdfBytes);
         const copiedPages = await mergedPdf.copyPages(
           pdf,
