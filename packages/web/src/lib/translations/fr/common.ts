@@ -48,6 +48,7 @@ export const commonMessages = {
     },
     level: 'Niveau',
     divisions: {
+      '7': 'Cinquième',
       '8': 'Quatrième',
       '9': 'Troisième',
       '10': 'Seconde',
