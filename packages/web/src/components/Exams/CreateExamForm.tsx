@@ -61,109 +61,93 @@ export const CreateExamForm = ({
     });
   };
 
+  const wrapperClassName = labelPosition === 'top' ? '' : 'grid gap-4 py-4';
+  const itemClassName =
+    labelPosition === 'top' ? '' : 'grid grid-cols-4 items-center gap-4';
+
   const {
     formState: { errors },
   } = form;
 
-  const FormWrapper = ({ children }: { children?: ReactElement }) =>
-    labelPosition === 'top' ? (
-      children
-    ) : (
-      <div className="grid gap-4 py-4">{children}</div>
-    );
-  const ItemWrapper = ({ children }: { children?: ReactElement }) =>
-    labelPosition === 'top' ? (
-      children
-    ) : (
-      <div className="grid grid-cols-4 items-center gap-4">{children}</div>
-    );
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-        <FormWrapper>
-          <>
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <ItemWrapper>
-                    <>
-                      <FormLabel
-                        htmlFor="name"
-                        className={labelPosition === 'left' ? 'text-right' : ''}
+        <div className={wrapperClassName}>
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <div className={itemClassName}>
+                  <FormLabel
+                    htmlFor="name"
+                    className={labelPosition === 'left' ? 'text-right' : ''}
+                  >
+                    <FormattedMessage id="exams.name" />
+                  </FormLabel>
+                  <FormControl className="min-w-[240px]">
+                    <Input
+                      className="col-span-3"
+                      placeholder={t.formatMessage({
+                        id: 'exams.namePlaceholder',
+                      })}
+                      {...field}
+                    />
+                  </FormControl>
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="subject"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <div className={itemClassName}>
+                  <FormLabel
+                    htmlFor="subject"
+                    className={labelPosition === 'left' ? 'text-right' : ''}
+                  >
+                    <FormattedMessage id="exams.subject" />
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl className="min-w-[240px]">
+                      <SelectTrigger
+                        id="subject"
+                        className="whitespace-normal [&>span]:text-left [&>svg]:shrink-0 col-span-3"
                       >
-                        <FormattedMessage id="exams.name" />
-                      </FormLabel>
-                      <FormControl className="min-w-[240px]">
-                        <Input
-                          className="col-span-3"
+                        <SelectValue
                           placeholder={t.formatMessage({
-                            id: 'exams.namePlaceholder',
+                            id: 'common.select',
                           })}
-                          {...field}
                         />
-                      </FormControl>
-                    </>
-                  </ItemWrapper>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="subject"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <ItemWrapper>
-                    <>
-                      <FormLabel
-                        htmlFor="subject"
-                        className={labelPosition === 'left' ? 'text-right' : ''}
-                      >
-                        <FormattedMessage id="exams.subject" />
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl className="min-w-[240px]">
-                          <SelectTrigger
-                            id="subject"
-                            className="whitespace-normal [&>span]:text-left [&>svg]:shrink-0 col-span-3"
-                          >
-                            <SelectValue
-                              placeholder={t.formatMessage({
-                                id: 'common.select',
-                              })}
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent
-                          position="popper"
-                          className="max-w-[var(--radix-select-trigger-width)] overflow-y-auto max-h-[12rem]"
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent
+                      position="popper"
+                      className="max-w-[var(--radix-select-trigger-width)] overflow-y-auto max-h-[12rem]"
+                    >
+                      {SUBJECTS.map(subject => (
+                        <SelectItem
+                          value={subject}
+                          key={subject}
+                          className="max-w-100"
+                          disabled={subject !== 'mathematics'}
                         >
-                          {SUBJECTS.map(subject => (
-                            <SelectItem
-                              value={subject}
-                              key={subject}
-                              className="max-w-100"
-                              disabled={subject !== 'mathematics'}
-                            >
-                              <FormattedMessage
-                                id={`common.subjects.${subject}`}
-                              />
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </>
-                  </ItemWrapper>
-                </FormItem>
-              )}
-            />
-          </>
-        </FormWrapper>
+                          <FormattedMessage id={`common.subjects.${subject}`} />
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </FormItem>
+            )}
+          />
+        </div>
+
         <div className="flex justify-end">
           <LoadingButton
             type="submit"
