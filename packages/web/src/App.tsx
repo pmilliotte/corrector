@@ -90,7 +90,7 @@ export const App = (): ReactElement => {
     tracesSampleRate: 1.0, //  Capture 100% of the transactions
     // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
     tracePropagationTargets: [/^https:\/\/d2pip0kzoiq1ck\.cloudfront\.net/],
-    enabled: process.env.NODE_ENV !== 'development',
+    enabled: process.env.NODE_ENV === 'production',
   });
 
   return (
