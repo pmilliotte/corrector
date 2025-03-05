@@ -25,7 +25,7 @@ Par exemple :
 
 Pour chaque question tu dois aussi renvoyer le nombre de lignes nécessaires à un élève qui écrit gros pour répondre de manière détaillée.
 
-Voici des exemples de ce que tu dois renvoyer versus ce que tu ne dois jamais renvoyer :
+Voici des exemples de ce que tu dois renvoyer ("good examples") versus ce que tu ne dois jamais renvoyer ("bad examples") :
 <output_examples>
   <output_example index="1">
     <good_example>
@@ -74,18 +74,18 @@ Voici des exemples de ce que tu dois renvoyer versus ce que tu ne dois jamais re
     </bad_example>
   </output_example>
   <output_example index="2">
-  <good_example>
-  {{
-    problem: {{
-      content: [
-        {{
-          "type": "statement",
-          "text": "Calculer les expression numériques suivantes :",
-          }},
-          {{
-            "type": "question",
-            "text": "$A = 12 + [3 \\times [5 + (4 \\times 7) + 2]] + (8 \\times 3)$",
-            "numberOfLines": 3,
+    <good_example>
+      {{
+        problem: {{
+          content: [
+            {{
+              "type": "statement",
+              "text": "Calculer les expression numériques suivantes :",
+            }},
+            {{
+              "type": "question",
+              "text": "$A = 12 + [3 \\times [5 + (4 \\times 7) + 2]] + (8 \\times 3)$",
+              "numberOfLines": 3,
             }},
             {{
               "type": "question",
@@ -101,6 +101,33 @@ Voici des exemples de ce que tu dois renvoyer versus ce que tu ne dois jamais re
         }}
       }} 
     </good_example>
+    <bad_example>
+      {{
+        problem: {{
+          content: [
+            {{
+              "type": "statement",
+              "text": "Calculer les expression numériques suivantes :",
+            }},
+            {{
+              "type": "question",
+              "text": "A = 12 + [3 \\times [5 + (4 \\times 7) + 2]] + (8 \\times 3)",
+              "numberOfLines": 3,
+            }},
+            {{
+              "type": "question",
+              "text": "B = 25 - [12 - (3 + 4)]",
+              "numberOfLines": 3,
+            }},
+            {{
+              "type": "question",
+              "text": "B = 6 \\div (5 - 3) + 8 + 2 \\times 2 =",
+              "numberOfLines": 3,
+            }},
+          ]
+        }}
+      }} 
+    </bad_example>
   </output_example>
   <output_example index="3">
     <good_example>
@@ -109,7 +136,7 @@ Voici des exemples de ce que tu dois renvoyer versus ce que tu ne dois jamais re
           content: [
             {{
               "type": "statement",
-              "text": "Résoudre, dans l’ensemble des nombres relatifs, les équations suivantes :",
+              "text": "Résoudre, dans l'ensemble des nombres relatifs, les équations suivantes :",
             }},
             {{
               "type": "question",
@@ -125,6 +152,28 @@ Voici des exemples de ce que tu dois renvoyer versus ce que tu ne dois jamais re
         }}
       }} 
     </good_example>
+    <bad_example>
+      {{
+        problem: {{
+          content: [
+            {{
+              "type": "statement",
+              "text": "Résoudre, dans l'ensemble des nombres relatifs, les équations suivantes :",
+            }},
+            {{
+              "type": "question",
+              "text": "(x - 1)(x + 3) = (x + 4)(x + 3)",
+              "numberOfLines": 4,
+            }},
+            {{
+              "type": "question",
+              "text": "8x - 2(3x + 4) = 2x - 2",
+              "numberOfLines": 4,
+            }},
+          ]
+        }}
+      }} 
+    </bad_example>
   </output_example>
   <output_example index="4">
     <good_example>
@@ -140,6 +189,19 @@ Voici des exemples de ce que tu dois renvoyer versus ce que tu ne dois jamais re
         }}
       }} 
     </good_example>
+    <bad_example>
+      {{
+        problem: {{
+          content: [
+            {{
+              "type": "question",
+              "text": "A = \\frac{{-1}}{{2}} \\times \\frac{{-3}}{{4}} \\times \\frac{{5}}{{6}} \\times \\frac{{7}}{{-10}}",
+              "numberOfLines": 4,
+            }},
+          ]
+        }}
+      }} 
+    </bad_example>
   </output_example>
   <output_example index="5">
     <good_example>
@@ -164,6 +226,28 @@ Voici des exemples de ce que tu dois renvoyer versus ce que tu ne dois jamais re
         }}
       }} 
     </good_example>
+    <bad_example>
+      {{
+        problem: {{
+          content: [
+            {{
+                "type": "statement",
+                "text": "Déterminer la valeur des expressions suivantes :",
+            }},
+            {{
+                "type": "question",
+                "text": "A = (+27) - (+53) + (-2,9) - (+13,7)",
+                "numberOfLines": 2,
+            }},
+            {{
+                "type": "question",
+                "text": "B = (-25) - (-47) - (-17,7) - (+3,4)",
+                "numberOfLines": 2,
+            }},
+          ]
+        }}
+      }} 
+    </bad_example>
   </output_example>
 </output_examples>`;
 
