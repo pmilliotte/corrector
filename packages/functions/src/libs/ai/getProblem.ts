@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { HumanMessage } from '@langchain/core/messages';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
@@ -19,112 +20,150 @@ Par exemple :
 - une expression mathématique de la forme "A = ..." doit systématiquement être délimitée : "$A = \\ldots$" ;
 - une suite de nombres de la forme "17 + 5" même sans symbole LaTeX, doit systématiquement être délimitée : "$17 + 5$" ;
 - une expression mathématique avec des nombres, même sans symbole LaTeX, de la forme "B = (+48,5) + (-8) - 5" doit systématiquement être délimitée : "$B = (+48,5) + (-8) - 5$" ;
+- une expression mathématique avec des nombres, avec des symboles LaTeX, de la forme "B = 6 \\div (5-3) + 2 \\times 2" doit systématiquement être délimitée : "$B = 6 \\div (5-3) + 2 \\times 2$" ;
 - les symboles texte comme "€" à l'intérieur des délimiteurs "$" doivent être exprimés comme : "\\text{{€}}". Donc "920 €" doit être délimité comme suit : "$920 \\text{{€}}$ ;
 
 Pour chaque question tu dois aussi renvoyer le nombre de lignes nécessaires à un élève qui écrit gros pour répondre de manière détaillée.
 
-Voici des exemples d'output :
+Voici des exemples de ce que tu dois renvoyer versus ce que tu ne dois jamais renvoyer :
 <output_examples>
   <output_example index="1">
-    {{
-      problem: {{
-        content: [
-          {{
-            text: 'Calculer $x$ pour chacune des expressions suivantes :',
-            type: 'statement',
-          }},
-          {{
-            text: '$x^{{2}} = 1$',
-            type: 'question',
-            numberOfLines: 1
-          }},
-          {{
-            text: '$4x^{{2}} + 2 \\times x = 4$',
-            type: 'question',
-            numberOfLines: 2
-          }},
-        ]
-      }}
-    }} 
+    <good_example>
+      {{
+        problem: {{
+          content: [
+            {{
+              text: 'Calculer $x$ pour chacune des expressions suivantes :',
+              type: 'statement',
+            }},
+            {{
+              text: '$x^{{2}} = 1$',
+              type: 'question',
+              numberOfLines: 1
+            }},
+            {{
+              text: '$4x^{{2}} + 2 \\times x = 4$',
+              type: 'question',
+              numberOfLines: 2
+            }},
+          ]
+        }}
+      }} 
+    </good_example>
+    <bad_example>
+      {{
+        problem: {{
+          content: [
+            {{
+              text: 'Calculer x pour chacune des expressions suivantes :',
+              type: 'statement',
+            }},
+            {{
+              text: 'x^{{2}} = 1',
+              type: 'question',
+              numberOfLines: 1
+            }},
+            {{
+              text: '4x^{{2}} + 2 \\times x = 4',
+              type: 'question',
+              numberOfLines: 2
+            }},
+          ]
+        }}
+      }} 
+    </bad_example>
   </output_example>
   <output_example index="2">
-    {{
-      problem: {{
-        content: [
-          {{
-            "type": "statement",
-            "text": "Calculer les expression numériques suivantes :",
+  <good_example>
+  {{
+    problem: {{
+      content: [
+        {{
+          "type": "statement",
+          "text": "Calculer les expression numériques suivantes :",
           }},
           {{
             "type": "question",
             "text": "$A = 12 + [3 \\times [5 + (4 \\times 7) + 2]] + (8 \\times 3)$",
             "numberOfLines": 3,
-          }},
-          {{
-            "type": "question",
-            "text": "$B = 25 - [12 - (3 + 4)]$",
-            "numberOfLines": 3,
-          }},
-        ]
-      }}
-    }} 
+            }},
+            {{
+              "type": "question",
+              "text": "$B = 25 - [12 - (3 + 4)]$",
+              "numberOfLines": 3,
+            }},
+            {{
+              "type": "question",
+              "text": "$B = 6 \\div (5 - 3) + 8 + 2 \\times 2 =$",
+              "numberOfLines": 3,
+            }},
+          ]
+        }}
+      }} 
+    </good_example>
   </output_example>
   <output_example index="3">
-    {{
-      problem: {{
-        content: [
-          {{
-            "type": "statement",
-            "text": "Résoudre, dans l’ensemble des nombres relatifs, les équations suivantes :",
-          }},
-          {{
-            "type": "question",
-            "text": "$(x - 1)(x + 3) = (x + 4)(x + 3)$",
-            "numberOfLines": 4,
-          }},
-          {{
-            "type": "question",
-            "text": "$8x - 2(3x + 4) = 2x - 2$",
-            "numberOfLines": 4,
-          }},
-        ]
-      }}
-    }} 
+    <good_example>
+      {{
+        problem: {{
+          content: [
+            {{
+              "type": "statement",
+              "text": "Résoudre, dans l’ensemble des nombres relatifs, les équations suivantes :",
+            }},
+            {{
+              "type": "question",
+              "text": "$(x - 1)(x + 3) = (x + 4)(x + 3)$",
+              "numberOfLines": 4,
+            }},
+            {{
+              "type": "question",
+              "text": "$8x - 2(3x + 4) = 2x - 2$",
+              "numberOfLines": 4,
+            }},
+          ]
+        }}
+      }} 
+    </good_example>
   </output_example>
   <output_example index="4">
-    {{
-      problem: {{
-        content: [
-          {{
-            "type": "question",
-            "text": "$A = \\frac{{-1}}{{2}} \\times \\frac{{-3}}{{4}} \\times \\frac{{5}}{{6}} \\times \\frac{{7}}{{-10}}$",
-            "numberOfLines": 4,
-          }},
-        ]
-      }}
-    }} 
+    <good_example>
+      {{
+        problem: {{
+          content: [
+            {{
+              "type": "question",
+              "text": "$A = \\frac{{-1}}{{2}} \\times \\frac{{-3}}{{4}} \\times \\frac{{5}}{{6}} \\times \\frac{{7}}{{-10}}$",
+              "numberOfLines": 4,
+            }},
+          ]
+        }}
+      }} 
+    </good_example>
   </output_example>
   <output_example index="5">
-    {{
-      problem: {{
-        content: [
-          {{
-              "type": "statement",
-              "text": "Déterminer la valeur des expressions suivantes :",
-          }},
-          {{
-              "type": "question",
-              "text": "$A = (+27) - (+53) + (-2,9) - (+13,7)$",
-              "numberOfLines": 2,
-          }},
-          {{
-              "type": "question",
-              "text": "$B = (-25) - (-47) - (-17,7) - (+3,4)$",
-              "numberOfLines": 2,
-          }},
-        ]
-      }}
-    }} 
+    <good_example>
+      {{
+        problem: {{
+          content: [
+            {{
+                "type": "statement",
+                "text": "Déterminer la valeur des expressions suivantes :",
+            }},
+            {{
+                "type": "question",
+                "text": "$A = (+27) - (+53) + (-2,9) - (+13,7)$",
+                "numberOfLines": 2,
+            }},
+            {{
+                "type": "question",
+                "text": "$B = (-25) - (-47) - (-17,7) - (+3,4)$",
+                "numberOfLines": 2,
+            }},
+          ]
+        }}
+      }} 
+    </good_example>
   </output_example>
 </output_examples>`;
 
