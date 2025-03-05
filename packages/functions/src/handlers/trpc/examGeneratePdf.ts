@@ -64,6 +64,8 @@ export const examGeneratePdf = authedProcedure
       schoolPseudo: "Nom de l'établissement",
       examName: "Nom de l'examen",
       executablePath,
+      examDate: "Date de l'examen",
+      classroomName: 'Nom de la classe',
     });
 
     const fileKey = `users/${userId}/exams/${exam.id}/subject.pdf`;

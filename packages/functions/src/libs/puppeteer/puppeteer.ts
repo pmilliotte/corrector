@@ -43,6 +43,8 @@ export const generatePdfWithPuppeteer = async (
     firstName,
     lastName,
     executablePath,
+    examDate,
+    classroomName,
   }: {
     problems: { content: Statement[] }[];
     mark: number;
@@ -52,6 +54,8 @@ export const generatePdfWithPuppeteer = async (
     firstName: string;
     lastName: string;
     executablePath: string;
+    examDate: string;
+    classroomName: string;
   },
   // outputPath: string,
 ): Promise<Buffer> => {
@@ -183,6 +187,11 @@ export const generatePdfWithPuppeteer = async (
         align-items: center;
         gap: 8px;
     }
+    .center-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
     .right-content {
         display: flex;
         align-items: center;
@@ -219,8 +228,12 @@ export const generatePdfWithPuppeteer = async (
       <div class="qr-code"></div>
       <div class="exam">
         <div>${schoolPseudo}</div>
-        <div>${examName}</div>
+        <div>${classroomName}</div>
       </div>
+    </div>
+    <div class="center-content">
+      <div>${examName}</div>
+      <div>${new Date(examDate).toLocaleDateString('fr-FR')}</div>
     </div>
     <div class="right-content">
       <div class="name">

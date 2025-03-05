@@ -125,6 +125,8 @@ export const classroomExamGeneratePdf = authedProcedure
               schoolPseudo: classroomExam.schoolPseudo,
               examName: classroomExam.examName,
               executablePath,
+              examDate: classroomExam.examDate,
+              classroomName: classroomExam.classroomName,
             });
 
             return pdfBuffer;
