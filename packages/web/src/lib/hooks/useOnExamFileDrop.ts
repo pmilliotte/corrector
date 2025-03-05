@@ -34,7 +34,20 @@ export const useOnExamFileDrop = (
     ({ examId }: { examId: string }) =>
       (acceptedFiles: File[]) => {
         setIsLoading(true);
-        const uploadedFile = acceptedFiles[0];
+        const uploadedFile =
+          acceptedFiles.length > 0 ? acceptedFiles[0] : undefined;
+        if (uploadedFile === undefined) {
+          toast("Une erreur s'est produite", {
+            description: 'Impossible de télécharger le fichier',
+            action: {
+              label: t.formatMessage({ id: 'common.close' }),
+              onClick: () => {},
+            },
+          });
+          setIsLoading(false);
+
+          return;
+        }
         mutate(
           {
             fileName: uploadedFile.name,
@@ -56,7 +69,7 @@ export const useOnExamFileDrop = (
           },
         );
       },
-    [mutate, onError, callback, type],
+    [mutate, onError, callback, type, t],
   );
 
   return { onDrop, isLoading };
