@@ -14,7 +14,7 @@ export const getFileExtension = (
     return 'jpg';
   }
 
-  if (!['pdf', 'png'].includes(extensionLowerCase)) {
+  if (!['pdf', 'png', 'jpg'].includes(extensionLowerCase)) {
     return undefined;
   }
 

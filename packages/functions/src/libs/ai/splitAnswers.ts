@@ -101,7 +101,7 @@ Alors tu dois me renvoyer :
     configuration: {
       project: Resource.OpenaiProjectId.value,
     },
-    verbose: process.env.STAGE === 'local',
+    verbose: Resource.App.stage === 'dev',
   }).withStructuredOutput(splitAnswersSchema);
 
   const prompt = ChatPromptTemplate.fromMessages([

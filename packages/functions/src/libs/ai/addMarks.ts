@@ -50,7 +50,8 @@ export const addMarks = async (
     configuration: {
       project: Resource.OpenaiProjectId.value,
     },
-    verbose: process.env.STAGE === 'local',
+    verbose: false,
+    // verbose: Resource.App.stage === 'dev',
   });
 
   const prompt = ChatPromptTemplate.fromMessages([humanProblemsMarksMessage]);

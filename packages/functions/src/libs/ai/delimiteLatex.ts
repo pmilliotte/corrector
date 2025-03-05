@@ -48,7 +48,7 @@ Ainsi tu dois modifier uniquement la forme du texte, pas le fond, et chaque expr
     configuration: {
       project: Resource.OpenaiProjectId.value,
     },
-    verbose: process.env.STAGE === 'local',
+    verbose: Resource.App.stage === 'dev',
   }).withStructuredOutput(problemOutputSchema);
 
   const prompt = ChatPromptTemplate.fromMessages<{

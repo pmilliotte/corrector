@@ -36,7 +36,8 @@ export const hasOneProblemOnly = async (
     configuration: {
       project: Resource.OpenaiProjectId.value,
     },
-    verbose: process.env.STAGE === 'local',
+    // verbose: Resource.App.stage === 'dev',
+    verbose: false,
   }).withStructuredOutput(
     z.object({
       isOneProblem: z
